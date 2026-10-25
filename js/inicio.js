@@ -3,7 +3,8 @@ import { listar, obter, vagasDisponiveis } from "./dados.js";
 import { usuarioAtual } from "./sessao.js";
 
 export function telaInicio() {
-  const caronas = listar("caronas");
+  const agora = new Date();
+  const caronas = listar("caronas").filter((c) => c.status === "aberta" && new Date(c.dataHoraSaida) > agora); // sem canceladas nem vencidas
   const itens = caronas.map((c) => {
     const motorista = obter("usuarios", c.motoristaId);
     const vagas = vagasDisponiveis(c);
@@ -20,5 +21,5 @@ export function telaInicio() {
     el("h2", {}, "Caronas para o UDF"),
     aviso("info", "Protótipo acadêmico: as caronas abaixo são fictícias. Para solicitar uma vaga, use a busca."),
     el("p", {}, linkBotao("Buscar carona", "#/buscar"), " ", !usuarioAtual() && linkBotao("Entrar com e-mail institucional", "#/acesso", "secundario")),
-    el("ul", { class: "lista-caronas", "aria-label": "Caronas de exemplo" }, itens));
+    itens.length ? el("ul", { class: "lista-caronas", "aria-label": "Caronas de exemplo" }, itens) : el("p", { class: "nota" }, "Nenhuma carona aberta no momento."));
 }

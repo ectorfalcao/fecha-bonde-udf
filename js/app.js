@@ -9,6 +9,7 @@ import { telaOferecer } from "./oferecer.js";
 import { telaMinhasCaronas } from "./minhas.js";
 import { usuarioAtual } from "./sessao.js";
 import { naoLidas } from "./notificacoes.js";
+import { modoDemo } from "./demo.js";
 import { el, aviso, linkBotao } from "./componentes.js";
 
 // Itens da navegação inferior (RNF09: tarefas principais a 1 toque da tela inicial)
@@ -36,6 +37,13 @@ const atualizarAvisos = () => {
   n ? linkCaronas.setAttribute("aria-label", `Caronas, ${n} aviso(s) novo(s)`) : linkCaronas.removeAttribute("aria-label");
 };
 addEventListener("avisos-alterados", atualizarAvisos);
+
+// Modo demonstração (Etapa 8.1): quando ligado, o cabeçalho avisa em qualquer tela.
+const seloDemo = document.querySelector(".selo-demo");
+const textoSelo = seloDemo?.textContent ?? "";
+const atualizarSelo = () => { if (seloDemo) seloDemo.textContent = modoDemo() ? `${textoSelo} · MODO DEMONSTRAÇÃO LIGADO` : textoSelo; };
+addEventListener("demo-alterado", atualizarSelo);
+atualizarSelo();
 
 iniciarDados();
 iniciar(document.getElementById("conteudo"), (caminho) => {

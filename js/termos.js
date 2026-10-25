@@ -19,7 +19,7 @@ export async function pedirAceiteUso(usuario) {
   const ok = await dialogoConfirmar({ titulo: "Termos de uso", corpo: corpo(USO), aceitar: "Aceitar e continuar", recusar: "Não aceito" });
   return ok ? registrarAceiteUso(usuario.id) : null;
 }
-// Pronto para a Etapa 7 (RF03/RN03): ainda NÃO está ligado a nenhuma tela.
+// RF03/RN03: chamado por buscar.js na primeira solicitação de vaga (Etapa 7).
 export async function pedirAceiteConvivencia(usuario) {
   const ok = await dialogoConfirmar({ titulo: "Termos de convivência da comunidade", corpo: corpo(CONVIVENCIA), aceitar: "Aceitar", recusar: "Cancelar" });
   return ok ? registrarAceiteConvivencia(usuario.id) : null;

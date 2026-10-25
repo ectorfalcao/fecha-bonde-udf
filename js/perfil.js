@@ -9,7 +9,7 @@ const digitos = (t) => String(t ?? "").replace(/\D/g, "");
 export function telaPerfil() {
   const raiz = el("div");
   let codigoTel = null, aviso0 = null;
-  const desenhar = () => { raiz.replaceChildren(...conteudo()); aviso0 = null; };
+  const desenhar = () => { raiz.replaceChildren(...conteudo().filter(Boolean)); aviso0 = null; }; // filter: replaceChildren(null) escreveria "null" na tela
 
   function conteudo() {
     const u = usuarioAtual(), v = veiculoDe(u) ?? {}, pend = pendenciasDe(u);

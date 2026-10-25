@@ -13,8 +13,11 @@ const ROTULOS = {
   recusada: "✖ Recusada pelo motorista",
   cancelada: "✖ Cancelada"
 };
-export function rotuloStatus(s) {
+export function rotuloStatus(s, carona = null) {
   if (s.status === "cancelada" && s.canceladaPor === "motorista") return "✖ Carona cancelada pelo motorista";
+  if (s.status === "cancelada" && s.canceladaPor === "sistema") return "✖ Não atendida: a viagem já começou";   // Etapa 8.1
+  if (s.status === "confirmada" && carona?.status === "em_andamento") return "🚗 Viagem em andamento";
+  if (s.status === "confirmada" && carona?.status === "concluida") return "🏁 Viagem concluída";
   return ROTULOS[s.status] ?? s.status;
 }
 

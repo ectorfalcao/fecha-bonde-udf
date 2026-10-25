@@ -63,6 +63,7 @@ export function aprovar(solId, motoristaId) {
 export function recusar(solId, motoristaId) {
   const x = doMotorista(solId, motoristaId);
   if (!x) return NAO_ENCONTRADA;
+  if (x.c.status !== "aberta") return { ok: false, motivo: "A carona não está aberta.", codigo: "indisponivel" };
   if (x.s.status !== "pendente") return { ok: false, motivo: "Só é possível recusar solicitações pendentes.", codigo: "estado" };
   if (!atualizar("solicitacoes", x.s.id, { status: "recusada", respondidaEm: agoraISO() })) return ERRO_GRAVAR;
   notificar(x.s.passageiroId, `O motorista recusou sua solicitação na carona ${rotaDe(x.c)}.`);
@@ -75,6 +76,7 @@ export function cancelarSolicitacao(solId, passageiroId) {
   const s = obter("solicitacoes", solId), c = s && obter("caronas", s.caronaId);
   if (!s || !c || s.passageiroId !== passageiroId) return NAO_ENCONTRADA;
   if (!ATIVAS.includes(s.status)) return { ok: false, motivo: "Esta solicitação já não está ativa.", codigo: "estado" };
+  if (c.status === "em_andamento" || c.status === "concluida") return { ok: false, motivo: "A viagem já começou: a solicitação não pode mais ser cancelada pelo aplicativo.", codigo: "viagem" };
   if (!atualizar("solicitacoes", s.id, { status: "cancelada", canceladaEm: agoraISO(), canceladaPor: "passageiro" })) return ERRO_GRAVAR;
   notificar(c.motoristaId, `${nomeDe(passageiroId)} cancelou a participação na carona ${rotaDe(c)}.`);
   acomodarFila(c.id);

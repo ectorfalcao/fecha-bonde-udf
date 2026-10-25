@@ -10,7 +10,7 @@ export function telaAcesso() {
 
   const desenhar = () => {
     const u = usuarioAtual();
-    raiz.replaceChildren(el("h2", {}, "Acesso"), mensagem, u && etapa === "email" ? conectado(u) : etapa === "email" ? formEmail() : formCodigo());
+    raiz.replaceChildren(...[el("h2", {}, "Acesso"), mensagem, u && etapa === "email" ? conectado(u) : etapa === "email" ? formEmail() : formCodigo()].filter(Boolean)); // replaceChildren(null) escreveria "null" na tela
     mensagem = null;
   };
 

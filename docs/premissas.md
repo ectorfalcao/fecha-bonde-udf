@@ -41,3 +41,26 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Notificações (RF07 a RF09):** simuladas dentro do app (coleção `notificacoes`, contador na navegação). Não é push nem e-mail.
 - **Dados fictícios:** a versão dos dados continua 3; a coleção `notificacoes` nasce vazia e não entra na verificação de carga inicial.
 - **Chat (RF10/D6):** a liberação ainda não existe (Etapa seguinte); o gatilho previsto é a solicitação passar a "confirmada".
+
+## Decisões da Etapa 8 (aprovadas pela equipe)
+- **Ciclo de vida da carona:** `aberta` → `em andamento` → `concluída` (e `cancelada`). O **motorista** inicia (a partir de 15 min antes da saída, RN08) e conclui a viagem, como no diagrama de atividades. Haverá um **modo demonstração**, visível e rotulado, que libera o início fora da janela, para testar sem esperar o relógio.
+- **Pagamento (RF12):** simulado. PIX com código fictício e botão "simular pagamento"; cartão apenas como opção demonstrativa, **sem campos de número ou validade**; chave PIX do motorista fictícia, com aviso para não usar chave real.
+- **Avaliação (RF14/RN10):** tela ao concluir a viagem. Passageiro avalia o motorista (os demais passageiros, opcional); motorista avalia cada passageiro. É possível "avaliar depois" pelo Histórico; a média só conta avaliações feitas.
+- **Mapa (RF11/RN08):** mapa esquemático com posição do veículo **simulada** entre origem e destino, rotulado "SIMULADO". Sem GPS real: sem servidor, a posição do motorista não chegaria a outro aparelho.
+- **Navegação:** a barra inferior continua com 5 itens; chat, mapa, pagamento e avaliação são acessados pela tela Caronas.
+
+## Inconsistências documentais registradas (a resolver na documentação; a especificação não foi alterada)
+1. **Liberação do chat:** RF10, UC10 e D6 dizem "após aprovação do motorista"; o diagrama de atividades põe o pagamento antes. O código segue RF10/UC10/D6.
+2. **Avaliação:** RN10 diz "obrigatória"; RF14 e US10 falam em pop-up e comentário opcional. "Avaliando o motorista e o grupo" não define se "grupo" são os outros passageiros.
+3. **SMS de emergência:** UC04/RN11 dizem que o app "envia mensagem automática"; um site só consegue abrir o aplicativo de SMS com o texto pronto (`sms:`), e a pessoa precisa enviar.
+4. **Rastreamento:** RF11 diz "X minutos"; RN08 e US07 dizem 15.
+5. **Pagamento:** RF12 prevê PIX e cartão; a pesquisa mostra 100% de preferência por PIX.
+6. **Diagrama de objetos:** usa `EmAndamento`, `RastreamentoGPS` e `TransacaoFinanceira`, ausentes do diagrama de classes; os e-mails (`@df.oeub.edu.br`) diferem dos domínios da RN01.
+
+## Premissas adicionais da Etapa 8.1
+- **Estados da carona:** `aberta`, `em_andamento`, `concluida`, `cancelada`. Só o motorista muda o estado de uma viagem (iniciar e concluir), como no diagrama de atividades.
+- **Início:** liberado a partir de 15 minutos antes da saída (RN08/US07) e sem limite depois. Sem passageiros confirmados, o início é permitido, e a tela avisa antes de confirmar.
+- **Solicitações sem resposta ao iniciar:** pendentes e lista de espera são encerradas pelo sistema (`cancelada`, `canceladaPor: "sistema"`) e o passageiro é avisado. A documentação não prevê esse caso; **precisa de confirmação da equipe ou do professor**.
+- **Durante e depois da viagem:** ninguém solicita, aprova, recusa ou cancela solicitação pelo app, e o motorista não cancela a carona. A documentação não prevê cancelamento de viagem em andamento.
+- **Modo demonstração:** ferramenta de teste, desligada por padrão, que libera o início fora da janela. Quando ligada, o cabeçalho avisa em todas as telas. Quando é usada para iniciar, a carona guarda `iniciadaEmModoDemo: true`.
+- **Viagens concluídas:** aparecem na tela Caronas (10 mais recentes) até o histórico completo (RF13, parte 8.7).

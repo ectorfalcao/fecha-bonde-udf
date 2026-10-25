@@ -36,6 +36,59 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
 
+## Etapa 8.1: ciclo de vida da viagem (base de RF10 a RF15; RN08 parcial)
+
+Não é um requisito funcional do documento: é a base necessária para chat (RF10), mapa (RF11), pagamento (RF12), histórico (RF13), avaliação (RF14) e emergência (RF15), que dependem de "viagem ativa". Apoio: diagrama de atividades ("Executar viagem", "Finalizar corrida") e diagrama de objetos (`EmAndamento`).
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Estados `aberta → em_andamento → concluida` | Implementado | `viagem.js` (regras), `viagens.js` (operações) | `tests/viagem.test.mjs` |
+| Início pelo motorista a partir de 15 min antes (RN08) | Implementado | `viagem.js`, `minhas.js` | `tests/viagem.test.mjs`, `tests/telas.test.mjs` |
+| Conclusão pelo motorista, com aviso aos passageiros | Implementado | `viagens.js`, `minhas.js` | idem |
+| Pendentes e lista de espera encerrados ao iniciar | Implementado (premissa nova) | `viagem.js`, `viagens.js` | idem |
+| Sem cancelar, aprovar, recusar ou solicitar durante a viagem | Implementado | `solicitacoes.js`, `grupos.js` | `tests/viagem.test.mjs` |
+| Modo demonstração (ferramenta de teste, selo no cabeçalho) | Implementado | `demo.js`, `minhas.js`, `app.js` | `tests/viagem.test.mjs`, `tests/telas.test.mjs` (o selo do cabeçalho só no navegador) |
+| Viagens concluídas na tela Caronas (10 mais recentes) | Provisório até a 8.7 | `minhas.js` | `tests/telas.test.mjs` |
+
+### Verificação (Node 22; testes automatizados, sem navegador)
+| Item | Resultado |
+|---|---|
+| `node --check` em todos os módulos e testes | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 88/88 |
+| Sensibilidade: quebrei de propósito a janela de 15 min, o encerramento da lista de espera, o bloqueio de cancelar durante a viagem e o registro do modo demonstração | A suíte falhou nos quatro casos |
+| Teste manual no navegador | **Pendente (roteiro entregue)** |
+
+### Limites conhecidos
+- A viagem é iniciada e concluída por um toque do motorista: não há GPS nem confirmação de chegada.
+- Uma carona `aberta` cujo horário já passou e que nunca foi iniciada continua na tela do motorista (com aviso), sem expirar sozinha.
+- Sem servidor, o passageiro só vê o estado da viagem ao abrir ou recarregar a tela Caronas.
+
+## Etapa 8.0: rede de testes e correções (antes de RF10 a RF15)
+
+### Achados do diagnóstico
+- `caronas.test`, `grupos_test.mjs`, `regras_test.mjs` e `telas_test.mjs` estavam **vazios (0 bytes)**; `dom-falso.mjs` não existia. Os resultados anteriores (18/18, 21/21, 21/21, 3/3) **não puderam ser reverificados** e passam a ser tratados como não comprovados.
+- A carona só tinha os estados `aberta` e `cancelada` (sem "em andamento" nem "concluída"): tratado na 8.1.
+
+### Defeitos encontrados e corrigidos
+| # | Defeito | Como foi achado | Correção |
+|---|---|---|---|
+| 1 | Início listava caronas canceladas e vencidas | Teste de tela `Início` (falhou antes da correção) | `inicio.js`: só `aberta` e saída futura; mensagem se não houver nenhuma |
+| 2 | `replaceChildren(..., null)` escreve a palavra "null" na tela (Acesso, Perfil e Oferecer) | Teste de tela, com DOM falso que imita o navegador (falhou antes da correção) | `acesso.js`, `perfil.js`, `oferecer.js`: `.filter(Boolean)`. **Conferir no navegador** se a palavra "null" aparecia nessas telas |
+| 3 | Comentário de `termos.js` dizia que o diálogo de convivência não estava ligado | Leitura do código | Comentário corrigido |
+
+### Verificação (Node 22; testes automatizados, sem navegador)
+| Item | Como | Resultado |
+|---|---|---|
+| Sintaxe dos 21 módulos e dos arquivos de teste | `node --check` | OK |
+| Regras de acesso e perfil | `tests/regras.test.mjs` | 13/13 |
+| Oferta, recorrência, filtros e dados fictícios | `tests/caronas.test.mjs` | 20/20 |
+| Grupos, fila, aprovação, cancelamento, termos e avisos | `tests/grupos.test.mjs` | 21/21 |
+| Telas (solicitar, termos, aprovar, avisos, cancelar, sem texto indevido) | `tests/telas.test.mjs` | 12/12 |
+| Sensibilidade da suíte | Quebrei de propósito `statusInicial` e `aprovar`: a suíte falhou nos dois casos | OK |
+| Teclado, leitor de tela, contraste, responsividade, navegador real | **Não executado** | Pendente |
+
+Observação: um teste meu passou sem ter força (regex com `\b` em texto sem espaços) e foi corrigido antes da entrega.
+
 ## Etapa 7: grupos, solicitações, lista de espera e cancelamento (RF07, RF08, RF09; RN03, RN06)
 
 ### Entregue
@@ -102,4 +155,4 @@ Observação: `tests/dom-falso.mjs` é um DOM mínimo só para testes em Node; n
 | RF03 / RN03 | **Parcial**: termos de uso aceitos e registrados no acesso. Diálogo de convivência pronto (`termos.js`), **sem gatilho** até a Etapa 7. | Textos dos termos são provisórios. |
 | US01 | Acesso às funções só com e-mail confirmado e termos aceitos (guarda de rota). | Idem RF01. |
 
-**Atenção, testes da Etapa 5:** esta matriz registrava "18 de 18 passam", mas `tests/regras.test.mjs` e `tests/modelo.test.mjs` não existem com conteúdo (o primeiro está com 0 bytes). Esse resultado **não pôde ser reverificado** e deve ser tratado como não comprovado até os testes serem recriados.
+**Atualização (Etapa 8.0):** `regras.test.mjs` foi recriado e passa; `modelo.test.mjs` continua inexistente. Antes disso, esta matriz registrava "18 de 18 passam", mas `tests/regras.test.mjs` e `tests/modelo.test.mjs` não existem com conteúdo (o primeiro está com 0 bytes). Esse resultado **não pôde ser reverificado** e deve ser tratado como não comprovado até os testes serem recriados.

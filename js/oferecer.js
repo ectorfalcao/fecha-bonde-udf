@@ -8,7 +8,7 @@ import { usuarioAtual, veiculoDe, pendenciasDe } from "./sessao.js";
 export function telaOferecer() {
   const raiz = el("div");
   let publicadas = 0;
-  const desenhar = () => { raiz.replaceChildren(...conteudo()); };
+  const desenhar = () => { raiz.replaceChildren(...conteudo().filter(Boolean)); }; // filter: replaceChildren(null) escreveria "null" na tela
 
   function conteudo() {
     const u = usuarioAtual(), v = veiculoDe(u), pend = pendenciasDe(u), cab = el("h2", {}, "Oferecer carona");
