@@ -13,6 +13,12 @@
   --superficie: #ffffff;
   --borda: #d5ddd8;
 
+  /* Urbano (Etapa 4): asfalto e faixa de rua complementam o verde */
+  --asfalto-900: #14201b;
+  --asfalto-700: #26352e;
+  --faixa: #f5c542;       /* só decorativo (linha de rua); nunca como cor de texto */
+  --sucesso: #166534;
+
   /* Destaques funcionais */
   --alerta: #b45309;      /* avisos e ações importantes */
   --perigo: #b42318;      /* erros e emergência */
@@ -20,6 +26,17 @@
 
   /* Tipografia */
   --fonte: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* Escala tipográfica */
+  --texto-sm: 0.875rem;
+  --texto-md: 1rem;
+  --texto-lg: 1.25rem;
+  --texto-xl: 1.75rem;
+
+  /* Layout */
+  --largura-app: 40rem;
+  --altura-nav: 4rem;
+  --alvo-min: 2.75rem;    /* alvo de toque mínimo (~44 px) */
 
   /* Espaçamento, raios, sombra */
   --espaco-1: 0.5rem;

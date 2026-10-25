@@ -30,19 +30,32 @@ body {
 }
 
 .topo {
-  background: var(--verde-700);
+  position: relative;
+  background: var(--asfalto-900);
   color: #fff;
-  padding: var(--espaco-2);
+  padding: var(--espaco-2) var(--espaco-2) calc(var(--espaco-2) + 6px);
 }
-.marca { margin: 0; font-size: 1.5rem; }
+/* Linha tracejada de rua: o elemento de identidade urbana do produto */
+.topo::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--faixa) 0 1.5rem, transparent 1.5rem 2.5rem);
+}
+.topo-conteudo { max-width: var(--largura-app); margin: 0 auto; display: flex; align-items: center; gap: var(--espaco-2); flex-wrap: wrap; }
+.marca { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: var(--espaco-1); }
+.marca svg { flex: none; }
 .marca span { font-weight: 400; opacity: 0.9; }
-.selo-demo { margin: 0.25rem 0 0; font-size: 0.875rem; }
+.selo-demo { margin: 0; font-size: var(--texto-sm); color: #d6e6dd; }
 
 main {
-  max-width: 40rem;
+  max-width: var(--largura-app);
   margin: 0 auto;
-  padding: var(--espaco-2);
+  padding: var(--espaco-2) var(--espaco-2) calc(var(--altura-nav) + var(--espaco-4));
 }
+main:focus { outline: none; }
+main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(--verde-900); }
 
 .cartao {
   background: var(--superficie);

@@ -27,7 +27,14 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF06 | RAM até 150 MB | Todas | Pendente (indicativo) | DevTools | | |
 | RNF07 | Uptime de 99,9% | n/a | Pendente (infraestrutura) | n/a | | |
 | RNF08 | Auto-scaling | n/a | Pendente (infraestrutura) | n/a | | |
-| RNF09 | Até 3 cliques | Buscar | Pendente | a definir | | |
-| RNF10 | WCAG 2.1 AA | Todas | Parcial (base na Etapa 3) | a definir | | |
+| RNF09 | Até 3 cliques | Navegação | Parcial (Etapa 4: nav a 1 toque; fluxo ainda não existe) | a definir | | |
+| RNF10 | WCAG 2.1 AA | Todas | Parcial (base Etapas 3 e 4; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
-| RNF12 | Cache offline | Viagem | Pendente (base: store.js) | a definir | | |
+| RNF12 | Cache offline | Viagem | Parcial (store.js corrigido na Etapa 4; sem Service Worker) | a definir | | |
+## Etapa 4: o que foi verificado
+| Item | Como | Resultado |
+|---|---|---|
+| Sintaxe dos 8 módulos JS | `node --check` | OK |
+| `salvar()` não lança com storage bloqueado | `node --test tests/modelo.test.mjs` | OK |
+| Carga inicial idempotente; RN01, RN04, RN05 (dados); vagas derivadas | idem (6 testes) | 6/6 OK |
+| Navegação, foco, layout e contraste no navegador | **não executado** (sem navegador no ambiente) | Pendente: testar no Live Server |

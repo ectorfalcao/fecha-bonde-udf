@@ -2,8 +2,14 @@
 // Se um dia trocarmos por uma API/banco real, só este arquivo muda.
 const PREFIXO = "fechabonde:";
 
+// Devolve true/false: storage bloqueado ou cheio não pode derrubar a tela.
 export function salvar(chave, valor) {
-  localStorage.setItem(PREFIXO + chave, JSON.stringify(valor));
+  try {
+    localStorage.setItem(PREFIXO + chave, JSON.stringify(valor));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function carregar(chave, padrao = null) {
@@ -16,7 +22,7 @@ export function carregar(chave, padrao = null) {
 }
 
 export function remover(chave) {
-  localStorage.removeItem(PREFIXO + chave);
+  try { localStorage.removeItem(PREFIXO + chave); } catch { /* ignora */ }
 }
 
 export function localStorageDisponivel() {

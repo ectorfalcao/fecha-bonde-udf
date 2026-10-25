@@ -1,42 +1,30 @@
-import { salvar, carregar, localStorageDisponivel } from "./store.js";
+import { iniciarDados } from "./dados.js";
+import { registrar, iniciar } from "./router.js";
+import { telaInicio } from "./inicio.js";
+import { telaAmbiente } from "./ambiente.js";
+import { telaPendente } from "./pendente.js";
+import { el, aviso, linkBotao } from "./componentes.js";
 
-const lista = document.getElementById("lista-verificacao");
-const contador = document.getElementById("contador-visitas");
+const pend = (titulo, texto, etapa, reqs) => ({ titulo, render: telaPendente({ titulo, texto, etapa, reqs }) });
 
-function verificacoes() {
-  return [
-    { ok: true, texto: "JavaScript em módulos (ES6) carregado." },
-    { ok: localStorageDisponivel(), texto: "localStorage disponível (persistência de demonstração)." },
-    { ok: window.isSecureContext, texto: "Contexto seguro (localhost ou HTTPS): exigido por Geolocalização e Service Worker." },
-    { ok: "serviceWorker" in navigator, texto: "Service Worker suportado (cache offline, RNF12)." },
-    { ok: "geolocation" in navigator, texto: "Geolocalização suportada (botão de emergência, RF15)." },
-    { ok: "BroadcastChannel" in window, texto: "BroadcastChannel suportado (chat entre abas, RF10)." }
-  ];
-}
+// Itens da navegação inferior (RNF09: tarefas principais a 1 toque da tela inicial)
+const NAV = [
+  ["/", "Início", { titulo: "Início", render: telaInicio }],
+  ["/buscar", "Buscar", pend("Buscar carona", "Busca por raio, turno e horário, com filtro só para mulheres.", "Etapa 6", "RF06, RN05")],
+  ["/oferecer", "Oferecer", pend("Oferecer carona", "Publicação de carona e rotas recorrentes pelo motorista.", "Etapa 6", "RF04, RF05, RN04")],
+  ["/caronas", "Caronas", pend("Minhas caronas", "Solicitações, lista de espera e cancelamento.", "Etapa 7", "RF07, RF08, RF09, RN06")],
+  ["/perfil", "Perfil", pend("Perfil", "Acesso com e-mail institucional, perfil, veículo e aceite dos termos.", "Etapa 5", "RF01, RF02, RF03, RN01, RN02, RN03")]
+];
+NAV.forEach(([caminho, , rota]) => registrar(caminho, rota));
+registrar("/ambiente", { titulo: "Verificação do ambiente", render: telaAmbiente });
+registrar("*", { titulo: "Página não encontrada", render: () => el("div", {}, el("h2", {}, "Página não encontrada"), aviso("erro", "Este endereço não existe no aplicativo."), linkBotao("Voltar ao início", "#/")) });
 
-function exibir(itens) {
-  lista.replaceChildren();
-  for (const item of itens) {
-    const li = document.createElement("li");
-    li.className = item.ok ? "ok" : "falha";
+const nav = document.getElementById("nav-principal");
+const lista = el("ul", {}, NAV.map(([caminho, rotulo]) => el("li", {}, el("a", { href: `#${caminho}` }, rotulo))));
+nav.append(lista);
 
-    const estado = document.createElement("strong");
-    // Texto + símbolo: o estado não depende só da cor (acessibilidade)
-    estado.textContent = item.ok ? "✔ OK" : "✖ Falhou";
-
-    const descricao = document.createElement("span");
-    descricao.textContent = item.texto;
-
-    li.append(estado, descricao);
-    lista.append(li);
-  }
-}
-
-function contarVisita() {
-  const visitas = carregar("visitas", 0) + 1;
-  salvar("visitas", visitas);
-  contador.textContent = `Esta página foi aberta ${visitas} vez(es) neste navegador (prova de persistência).`;
-}
-
-exibir(verificacoes());
-contarVisita();
+iniciarDados();
+iniciar(document.getElementById("conteudo"), (caminho) => {
+  lista.querySelectorAll("a").forEach((a) =>
+    a.getAttribute("href") === `#${caminho}` ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+});
