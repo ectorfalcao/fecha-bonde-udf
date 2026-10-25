@@ -14,17 +14,23 @@ Usuários de exemplo (qualquer senha com 8+ caracteres; o código de verificaç�
 `carlos.eduardo@`, `julia.santos@` e `mariana.costa@` + `aluno.udf.edu.br`.
 
 ## Status
-Etapa 6 concluída: acesso e perfil (Etapa 5), **oferta de caronas** (RF04, RF05, RN04, RN05) e **busca com filtros** (RF06). Solicitações, lista de espera e cancelamento são da Etapa 7.
+Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 6) e **solicitações, aprovação, lista de espera e cancelamento** (RF07, RF08, RF09, RN03, RN06), com avisos simulados dentro do app. Chat, mapa, pagamento, histórico, avaliação e emergência ainda não existem.
 Veja `docs/matriz-rastreabilidade.md` e `docs/premissas.md`.
 
 ## Estrutura
 - `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`
-- `js/`: `app.js` (rotas e navegação), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js` e `caronas.js` (regras puras), `sessao.js`, `componentes.js`
-- Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `cartao.js` (cartão de carona), `termos.js`, `pendente.js`, `ambiente.js`
+- `js/`: `app.js` (rotas e navegação), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js` e `grupos.js` (regras puras), `solicitacoes.js` (operações), `notificacoes.js` (avisos simulados), `sessao.js`, `componentes.js`
+- Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
 - `#/ambiente`: verificação do ambiente (tela da Etapa 3)
 
 ## Testes
-`node --test tests/caronas.test.mjs`: regras de oferta, recorrência, filtros e dados fictícios (a interface é testada manualmente no navegador).
+```
+node --test tests/caronas.test.mjs tests/grupos.test.mjs tests/telas.test.mjs
+```
+- `caronas.test.mjs`: oferta, recorrência, filtros e dados fictícios (Etapa 6).
+- `grupos.test.mjs`: solicitações, fila, aprovação, cancelamento, termos e avisos (Etapa 7).
+- `telas.test.mjs`: renderiza as telas com um DOM falso (`dom-falso.mjs`, auxiliar) e simula os cliques. **Não substitui** o teste manual no navegador.
+
 Os testes da Etapa 5 (`regras`, `modelo`) precisam ser recriados: os arquivos estão vazios ou ausentes.
 
 ## Dados fictícios

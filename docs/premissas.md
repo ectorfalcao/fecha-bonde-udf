@@ -8,7 +8,7 @@ Adotadas na Etapa 4 por decisão do grupo ("siga as premissas"). Nenhum requisit
 | D3 | Domínio de e-mail | Aceita `@cs.udf.edu.br` (domínio real dos alunos, informado pela equipe) além de `@udf.edu.br` e `@aluno.udf.edu.br` (RN01). **A RN01, o RF01, o UC01 e a US01 precisam ser atualizados na documentação.** |
 | D4/D5 | Numeração de UC/US | Segue o diagrama de casos de uso; cadastro de veículo = US02. |
 | D6 | Liberação do chat | Após aprovação do motorista (RF10, UC10), não após o pagamento. |
-| D7 | Gênero | Campo `genero` no perfil, necessário a RF06/RN05. A regra para passageira que entra em grupo "só mulheres" ainda precisa de definição. |
+| D7 | Gênero | Campo `genero` no perfil, necessário a RF06/RN05. Etapa 7: só passageira de gênero feminino pode solicitar grupo "só mulheres"; a regra continua **sem confirmação da equipe ou do professor**. |
 | D8 | Contato de emergência | Campo `contatoEmergencia` no perfil (RF15/RN11). Lacuna a registrar na documentação. |
 | D9 | Termos | Dois aceites distintos: termos de uso (cadastro, US01) e termos de convivência (entrada em grupo, RF03). |
 | D10 | Papéis | `motorista` e `passageiro` são capacidades do usuário (não herança exclusiva). Vagas disponíveis são calculadas, não armazenadas. |
@@ -31,3 +31,13 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Turno "Integral"** casa com qualquer filtro de turno.
 - **Grupo só para mulheres (RN05):** só motoristas do gênero feminino podem criar; o grupo não aparece para quem não é do gênero feminino e some da lista se houver passageiro não feminino confirmado. A regra para passageira que entra no grupo segue em aberto (D7).
 - **Início:** lista todas as caronas, inclusive as "só para mulheres". Pendência a decidir.
+
+## Premissas adicionais da Etapa 7
+- **Cancelamento pelo motorista (RF09):** a documentação diz "antecedência mínima configurada" sem valor. Adotadas **2 horas**, e abaixo disso o cancelamento é **bloqueado** (não apenas avisado). Valor em `ANTECEDENCIA_CANCELAR_CARONA_H` (`js/grupos.js`).
+- **Vaga e solicitação pendente:** só solicitações **confirmadas** ocupam vaga. Quando a carona lota, os demais pedidos pendentes passam para a lista de espera (RN06), mantendo a ordem de chegada.
+- **Lista de espera (RF08):** ao abrir uma vaga, o primeiro da fila vira "pendente" e o **motorista ainda aprova**; não há confirmação automática. A documentação diz apenas "notificar o próximo".
+- **Recusa:** passageiro recusado não pode solicitar a mesma carona de novo. Quem cancelou a própria solicitação pode.
+- **Termos de convivência (RF03/RN03):** o diálogo aparece na primeira solicitação; o aceite fica gravado na solicitação. Textos continuam provisórios.
+- **Notificações (RF07 a RF09):** simuladas dentro do app (coleção `notificacoes`, contador na navegação). Não é push nem e-mail.
+- **Dados fictícios:** a versão dos dados continua 3; a coleção `notificacoes` nasce vazia e não entra na verificação de carga inicial.
+- **Chat (RF10/D6):** a liberação ainda não existe (Etapa seguinte); o gatilho previsto é a solicitação passar a "confirmada".
