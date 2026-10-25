@@ -1,0 +1,31 @@
+/* Tokens de design: único lugar onde cores, espaços e fontes são definidos.
+   Mudar a identidade visual = mudar só este arquivo. */
+:root {
+  /* Verdes (identidade: sustentabilidade) */
+  --verde-900: #14532d;
+  --verde-700: #1f7a4d;   /* cor principal */
+  --verde-100: #e8f5ee;
+
+  /* Neutros */
+  --texto: #1c2a24;
+  --texto-suave: #4b5b53;
+  --fundo: #f6f8f7;
+  --superficie: #ffffff;
+  --borda: #d5ddd8;
+
+  /* Destaques funcionais */
+  --alerta: #b45309;      /* avisos e ações importantes */
+  --perigo: #b42318;      /* erros e emergência */
+  --financeiro: #1d4ed8;  /* valores e pagamentos */
+
+  /* Tipografia */
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* Espaçamento, raios, sombra */
+  --espaco-1: 0.5rem;
+  --espaco-2: 1rem;
+  --espaco-3: 1.5rem;
+  --espaco-4: 2rem;
+  --raio: 0.75rem;
+  --sombra: 0 1px 3px rgb(0 0 0 / 0.12);
+}
