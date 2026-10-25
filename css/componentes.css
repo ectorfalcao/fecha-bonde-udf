@@ -67,3 +67,11 @@ button.botao { font: inherit; font-weight: 700; }
 .dialogo h2 { margin-top: 0; color: var(--verde-900); }
 .dialogo-corpo { max-height: 50vh; overflow-y: auto; margin-bottom: var(--espaco-2); }
 html { scrollbar-gutter: stable; }
+/* Etapa 7: gestão de grupos */
+.secao { margin: 0 0 var(--espaco-3); }
+.secao h3 { color: var(--verde-900); margin: 0 0 var(--espaco-1); }
+.carona h4 { margin: 0 0 0.25rem; font-size: var(--texto-lg); }
+.carona > .linha-acoes, .carona > button.botao { margin-top: var(--espaco-2); }
+.pessoas { list-style: none; margin: 0 0 var(--espaco-2); padding: 0; display: grid; gap: var(--espaco-1); }
+.pessoas li { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espaco-1); padding: var(--espaco-1); border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie); }
+.pessoas .linha-acoes { margin-top: 0; }
