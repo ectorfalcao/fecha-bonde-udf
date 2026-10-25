@@ -5,6 +5,8 @@ import { telaAmbiente } from "./ambiente.js";
 import { telaPendente } from "./pendente.js";
 import { telaAcesso } from "./acesso.js";
 import { telaPerfil } from "./perfil.js";
+import { telaBuscar } from "./buscar.js";
+import { telaOferecer } from "./oferecer.js";
 import { el, aviso, linkBotao } from "./componentes.js";
 
 const pend = (titulo, texto, etapa, reqs) => ({ titulo, exigeLogin: true, render: telaPendente({ titulo, texto, etapa, reqs }) });
@@ -12,8 +14,8 @@ const pend = (titulo, texto, etapa, reqs) => ({ titulo, exigeLogin: true, render
 // Itens da navegação inferior (RNF09: tarefas principais a 1 toque da tela inicial)
 const NAV = [
   ["/", "Início", { titulo: "Início", render: telaInicio }],
-  ["/buscar", "Buscar", pend("Buscar carona", "Busca por raio, turno e horário, com filtro só para mulheres.", "Etapa 6", "RF06, RN05")],
-  ["/oferecer", "Oferecer", pend("Oferecer carona", "Publicação de carona e rotas recorrentes pelo motorista.", "Etapa 6", "RF04, RF05, RN04")],
+  ["/buscar", "Buscar", { titulo: "Buscar carona", exigeLogin: true, render: telaBuscar }],
+  ["/oferecer", "Oferecer", { titulo: "Oferecer carona", exigeLogin: true, render: telaOferecer }],
   ["/caronas", "Caronas", pend("Minhas caronas", "Solicitações, lista de espera e cancelamento.", "Etapa 7", "RF07, RF08, RF09, RN06")],
   ["/perfil", "Perfil", { titulo: "Perfil", exigeLogin: true, render: telaPerfil }]
 ];

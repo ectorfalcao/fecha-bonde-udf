@@ -3,7 +3,7 @@
 import { salvar, carregar } from "./store.js";
 
 export { DOMINIOS_UDF, CAPACIDADE_MIN, CAPACIDADE_MAX } from "./regras.js";
-const VERSAO = 2; // v2: usuários ganham campos de acesso/perfil (Etapa 5); trocar a versão recarrega os dados fictícios
+const VERSAO = 3; // v2: campos de acesso/perfil (Etapa 5). v3: caronas ganham origemId, destinoId e turno (Etapa 6). Trocar a versão recarrega os dados fictícios
 const COLECOES = ["usuarios", "veiculos", "caronas", "solicitacoes"];
 
 export const listar = (colecao) => carregar(colecao, []);
@@ -47,8 +47,8 @@ export function iniciarDados() {
     { id: "v2", motoristaId: "u3", placa: "FAB4D56", modelo: "Fiat Argo", cor: "Branco", capacidade: 3 }
   ]);
   salvar("caronas", [
-    { id: "c1", motoristaId: "u1", veiculoId: "v1", origem: "Águas Claras", destino: "UDF Campus Sede (Asa Sul)", dataHoraSaida: emDias(1, 18, 30), toleranciaMin: 10, vagasTotal: 3, valor: 7.5, regras: "Bagagem pequena", recorrente: false, apenasMulheres: false, status: "aberta" },
-    { id: "c2", motoristaId: "u3", veiculoId: "v2", origem: "Guará", destino: "UDF Campus Sede (Asa Sul)", dataHoraSaida: emDias(2, 6, 45), toleranciaMin: 5, vagasTotal: 2, valor: 0, regras: "", recorrente: true, apenasMulheres: true, status: "aberta" }
+    { id: "c1", motoristaId: "u1", veiculoId: "v1", origemId: "aguas-claras", destinoId: "campus", origem: "Águas Claras", destino: "UDF Campus Sede (Asa Sul)", turno: "Noturno", dataHoraSaida: emDias(1, 18, 30), toleranciaMin: 10, vagasTotal: 3, valor: 7.5, regras: "Bagagem pequena", recorrente: false, apenasMulheres: false, status: "aberta" },
+    { id: "c2", motoristaId: "u3", veiculoId: "v2", origemId: "guara", destinoId: "campus", origem: "Guará", destino: "UDF Campus Sede (Asa Sul)", turno: "Matutino", dataHoraSaida: emDias(2, 6, 45), toleranciaMin: 5, vagasTotal: 2, valor: 0, regras: "", recorrente: true, apenasMulheres: true, status: "aberta" }
   ]);
   salvar("solicitacoes", [
     { id: "s1", caronaId: "c1", passageiroId: "u2", status: "confirmada", aceiteTermosEm: emDias(0, 9, 0) }

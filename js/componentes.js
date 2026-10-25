@@ -30,11 +30,11 @@ export const dataHora = (iso) =>
   new Intl.DateTimeFormat("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
 
 // Campo de formulário acessível: rótulo ligado, ajuda e erro anunciados (aria-describedby), erro com símbolo.
-export function campo({ id, rotulo, tipo = "text", ajuda, valor = "", opcoes, autocomplete, obrigatorio = true, accept }) {
+export function campo({ id, rotulo, tipo = "text", ajuda, valor = "", opcoes, autocomplete, obrigatorio = true, accept, extra = {}, vazio = "Selecione" }) {
   const erro = el("p", { class: "campo-erro", id: `${id}-erro`, hidden: true });
-  const base = { id, name: id, required: obrigatorio, autocomplete, accept, "aria-describedby": [ajuda && `${id}-ajuda`, `${id}-erro`].filter(Boolean).join(" ") };
+  const base = { id, name: id, required: obrigatorio, autocomplete, accept, "aria-describedby": [ajuda && `${id}-ajuda`, `${id}-erro`].filter(Boolean).join(" "), ...extra };
   const entrada = opcoes
-    ? el("select", base, el("option", { value: "" }, "Selecione"), opcoes.map(([v, t]) => el("option", { value: v, selected: v === valor }, t)))
+    ? el("select", base, el("option", { value: "" }, vazio), opcoes.map(([v, t]) => el("option", { value: v, selected: v === valor }, t)))
     : el("input", { ...base, type: tipo, value: tipo === "file" ? null : valor });
   return {
     no: el("div", { class: "campo" }, el("label", { for: id }, rotulo), ajuda && el("p", { class: "ajuda", id: `${id}-ajuda` }, ajuda), entrada, erro),
