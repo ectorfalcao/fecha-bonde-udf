@@ -28,3 +28,31 @@ export const estadoVazio = ({ titulo, texto, acao, reqs }) =>
 export const moeda = (v) => (v > 0 ? v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "Gratuita");
 export const dataHora = (iso) =>
   new Intl.DateTimeFormat("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
+
+// Campo de formulário acessível: rótulo ligado, ajuda e erro anunciados (aria-describedby), erro com símbolo.
+export function campo({ id, rotulo, tipo = "text", ajuda, valor = "", opcoes, autocomplete, obrigatorio = true, accept }) {
+  const erro = el("p", { class: "campo-erro", id: `${id}-erro`, hidden: true });
+  const base = { id, name: id, required: obrigatorio, autocomplete, accept, "aria-describedby": [ajuda && `${id}-ajuda`, `${id}-erro`].filter(Boolean).join(" ") };
+  const entrada = opcoes
+    ? el("select", base, el("option", { value: "" }, "Selecione"), opcoes.map(([v, t]) => el("option", { value: v, selected: v === valor }, t)))
+    : el("input", { ...base, type: tipo, value: tipo === "file" ? null : valor });
+  return {
+    no: el("div", { class: "campo" }, el("label", { for: id }, rotulo), ajuda && el("p", { class: "ajuda", id: `${id}-ajuda` }, ajuda), entrada, erro),
+    entrada,
+    erro(msg) { erro.hidden = !msg; erro.textContent = msg ? `✖ ${msg}` : ""; entrada.setAttribute("aria-invalid", msg ? "true" : "false"); }
+  };
+}
+
+// Diálogo modal nativo (<dialog>): foco preso, Esc fecha. Resolve true só se a pessoa aceitar.
+export function dialogoConfirmar({ titulo, corpo, aceitar = "Aceitar", recusar = "Cancelar" }) {
+  return new Promise((resolve) => {
+    const d = el("dialog", { "aria-labelledby": "dialogo-titulo", class: "dialogo" },
+      el("h2", { id: "dialogo-titulo" }, titulo), el("div", { class: "dialogo-corpo" }, corpo),
+      el("div", { class: "acoes" },
+        el("button", { type: "button", class: "botao secundario", onclick: () => d.close("nao") }, recusar),
+        el("button", { type: "button", class: "botao", onclick: () => d.close("sim") }, aceitar)));
+    d.addEventListener("close", () => { resolve(d.returnValue === "sim"); d.remove(); });
+    document.body.append(d);
+    d.showModal();
+  });
+}

@@ -2,13 +2,20 @@
 // Persistência 100% local e FICTÍCIA: não há servidor, e-mail ou pagamento reais.
 import { salvar, carregar } from "./store.js";
 
-export const DOMINIOS_UDF = ["@udf.edu.br", "@aluno.udf.edu.br"]; // RN01
-export const CAPACIDADE_MIN = 1, CAPACIDADE_MAX = 4;             // RN04
-const VERSAO = 1;
+export { DOMINIOS_UDF, CAPACIDADE_MIN, CAPACIDADE_MAX } from "./regras.js";
+const VERSAO = 2; // v2: usuários ganham campos de acesso/perfil (Etapa 5); trocar a versão recarrega os dados fictícios
 const COLECOES = ["usuarios", "veiculos", "caronas", "solicitacoes"];
 
 export const listar = (colecao) => carregar(colecao, []);
 export const obter = (colecao, id) => listar(colecao).find((x) => x.id === id) ?? null;
+
+export function atualizar(colecao, id, alteracoes) {
+  const lista = listar(colecao);
+  const i = lista.findIndex((x) => x.id === id);
+  if (i < 0) return null;
+  lista[i] = { ...lista[i], ...alteracoes };
+  return salvar(colecao, lista) ? lista[i] : null;
+}
 
 export function inserir(colecao, item) {
   const lista = listar(colecao);
@@ -31,9 +38,9 @@ const emDias = (dias, hora, min) => {
 export function iniciarDados() {
   if (carregar("versao-dados", 0) === VERSAO && COLECOES.every((c) => listar(c).length > 0)) return;
   salvar("usuarios", [
-    { id: "u1", nome: "Carlos Eduardo", email: "carlos.eduardo@aluno.udf.edu.br", curso: "Análise e Desenvolvimento de Sistemas", turno: "Noturno", genero: "masculino", telefone: "(61) 90000-0001", motorista: true, passageiro: true, contatoEmergencia: null },
-    { id: "u2", nome: "Júlia Santos", email: "julia.santos@aluno.udf.edu.br", curso: "Análise e Desenvolvimento de Sistemas", turno: "Noturno", genero: "feminino", telefone: "(61) 90000-0002", motorista: false, passageiro: true, contatoEmergencia: null },
-    { id: "u3", nome: "Mariana Costa", email: "mariana.costa@aluno.udf.edu.br", curso: "Direito", turno: "Matutino", genero: "feminino", telefone: "(61) 90000-0003", motorista: true, passageiro: true, contatoEmergencia: null }
+    { id: "u1", nome: "Carlos Eduardo", email: "carlos.eduardo@aluno.udf.edu.br", curso: "Análise e Desenvolvimento de Sistemas", turno: "Noturno", genero: "masculino", telefone: "(61) 90000-0001", motorista: true, passageiro: true, contatoNome: "", contatoTel: "", emailVerificado: true, termosUsoEm: emDias(-30, 9, 0), telefoneVerificado: true, fotoNome: "foto-ficticia.jpg", cnhNome: "cnh-ficticia.jpg" },
+    { id: "u2", nome: "Júlia Santos", email: "julia.santos@aluno.udf.edu.br", curso: "Análise e Desenvolvimento de Sistemas", turno: "Noturno", genero: "feminino", telefone: "(61) 90000-0002", motorista: false, passageiro: true, contatoNome: "", contatoTel: "", emailVerificado: true, termosUsoEm: emDias(-30, 9, 0), telefoneVerificado: true, fotoNome: "foto-ficticia.jpg", cnhNome: "" },
+    { id: "u3", nome: "Mariana Costa", email: "mariana.costa@aluno.udf.edu.br", curso: "Direito", turno: "Matutino", genero: "feminino", telefone: "(61) 90000-0003", motorista: true, passageiro: true, contatoNome: "", contatoTel: "", emailVerificado: true, termosUsoEm: emDias(-30, 9, 0), telefoneVerificado: true, fotoNome: "foto-ficticia.jpg", cnhNome: "cnh-ficticia.jpg" }
   ]);
   salvar("veiculos", [
     { id: "v1", motoristaId: "u1", placa: "FAB1C23", modelo: "Chevrolet Onix", cor: "Prata", capacidade: 4 },

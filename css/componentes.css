@@ -41,3 +41,29 @@
 .carona dt { color: var(--texto-suave); }
 .carona dd { margin: 0; }
 .carona .valor { color: var(--financeiro); font-weight: 700; }
+
+.campo { margin: 0 0 var(--espaco-2); }
+.campo label { display: block; font-weight: 700; margin-bottom: 0.25rem; }
+.campo .ajuda { margin: 0 0 0.25rem; font-size: var(--texto-sm); color: var(--texto-suave); }
+.campo input:not([type="checkbox"]), .campo select {
+  width: 100%; min-height: var(--alvo-min); padding: 0 var(--espaco-1);
+  font: inherit; color: var(--texto); background: var(--superficie);
+  border: 2px solid var(--texto-suave); border-radius: var(--raio);
+}
+.campo input[type="file"] { padding: 0.5rem var(--espaco-1); }
+.campo [aria-invalid="true"] { border-color: var(--perigo); }
+.campo-erro { margin: 0.25rem 0 0; color: var(--perigo); font-size: var(--texto-sm); font-weight: 700; }
+fieldset { border: 1px solid var(--borda); border-radius: var(--raio); padding: var(--espaco-2); margin: 0 0 var(--espaco-2); background: var(--superficie); }
+legend { font-weight: 700; color: var(--verde-900); padding: 0 var(--espaco-1); }
+.opcao { display: flex; align-items: center; gap: var(--espaco-1); min-height: var(--alvo-min); }
+.opcao input { width: 1.25rem; height: 1.25rem; }
+.codigo-simulado { display: flex; align-items: center; gap: var(--espaco-2); flex-wrap: wrap; padding: var(--espaco-2); margin: 0 0 var(--espaco-2); border: 2px dashed var(--alerta); border-radius: var(--raio); background: var(--superficie); }
+.codigo-simulado output { font-size: var(--texto-xl); font-weight: 700; letter-spacing: 0.2em; }
+.acoes { display: flex; gap: var(--espaco-1); justify-content: flex-end; flex-wrap: wrap; }
+.linha-acoes { display: flex; gap: var(--espaco-1); flex-wrap: wrap; margin-top: var(--espaco-2); }
+button.botao { font: inherit; font-weight: 700; }
+.dialogo { max-width: min(36rem, calc(100vw - 2rem)); border: 1px solid var(--borda); border-radius: var(--raio); padding: var(--espaco-3); color: var(--texto); }
+.dialogo::backdrop { background: rgb(20 32 27 / 0.6); }
+.dialogo h2 { margin-top: 0; color: var(--verde-900); }
+.dialogo-corpo { max-height: 50vh; overflow-y: auto; margin-bottom: var(--espaco-2); }
+html { scrollbar-gutter: stable; }

@@ -1,5 +1,6 @@
 import { el, aviso, linkBotao, dataHora, moeda } from "./componentes.js";
 import { listar, obter, vagasDisponiveis } from "./dados.js";
+import { usuarioAtual } from "./sessao.js";
 
 export function telaInicio() {
   const caronas = listar("caronas");
@@ -18,6 +19,6 @@ export function telaInicio() {
   return el("div", {},
     el("h2", {}, "Caronas para o UDF"),
     aviso("info", "Protótipo acadêmico: as caronas abaixo são fictícias e ainda não podem ser solicitadas."),
-    el("p", {}, linkBotao("Buscar carona", "#/buscar")),
+    el("p", {}, linkBotao("Buscar carona", "#/buscar"), " ", !usuarioAtual() && linkBotao("Entrar com e-mail institucional", "#/acesso", "secundario")),
     el("ul", { class: "lista-caronas", "aria-label": "Caronas de exemplo" }, itens));
 }
