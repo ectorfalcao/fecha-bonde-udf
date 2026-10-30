@@ -56,3 +56,13 @@ export function dialogoConfirmar({ titulo, corpo, aceitar = "Aceitar", recusar =
     d.showModal();
   });
 }
+// Diálogo modal com conteúdo livre (links, botões) e só um botão para fechar. Usado na emergência (Etapa 8.2).
+export function dialogoAcoes({ titulo, corpo, fechar = "Fechar" }) {
+  const d = el("dialog", { "aria-labelledby": "dialogo-titulo", class: "dialogo" },
+    el("h2", { id: "dialogo-titulo" }, titulo), el("div", { class: "dialogo-corpo" }, corpo),
+    el("div", { class: "acoes" }, el("button", { type: "button", class: "botao secundario", onclick: () => d.close() }, fechar)));
+  d.addEventListener("close", () => d.remove());
+  document.body.append(d);
+  d.showModal();
+  return d;
+}

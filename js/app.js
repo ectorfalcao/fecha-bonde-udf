@@ -1,5 +1,5 @@
 import { iniciarDados } from "./dados.js";
-import { registrar, iniciar } from "./router.js";
+import { registrar, iniciar, caminhoAtual } from "./router.js";
 import { telaInicio } from "./inicio.js";
 import { telaAmbiente } from "./ambiente.js";
 import { telaAcesso } from "./acesso.js";
@@ -7,7 +7,10 @@ import { telaPerfil } from "./perfil.js";
 import { telaBuscar } from "./buscar.js";
 import { telaOferecer } from "./oferecer.js";
 import { telaMinhasCaronas } from "./minhas.js";
-import { usuarioAtual } from "./sessao.js";
+import { telaViagemAtiva } from "./viagemAtiva.js";
+import { usuarioAtual, acessoLiberado } from "./sessao.js";
+import { listar } from "./dados.js";
+import { viagensAtivasDe } from "./viagem.js";
 import { naoLidas } from "./notificacoes.js";
 import { modoDemo } from "./demo.js";
 import { el, aviso, linkBotao } from "./componentes.js";
@@ -22,6 +25,7 @@ const NAV = [
 ];
 NAV.forEach(([caminho, , rota]) => registrar(caminho, rota));
 registrar("/acesso", { titulo: "Acesso", render: telaAcesso });
+registrar("/viagem", { titulo: "Viagem em andamento", exigeLogin: true, render: telaViagemAtiva });
 registrar("/ambiente", { titulo: "Verificação do ambiente", render: telaAmbiente });
 registrar("*", { titulo: "Página não encontrada", render: () => el("div", {}, el("h2", {}, "Página não encontrada"), aviso("erro", "Este endereço não existe no aplicativo."), linkBotao("Voltar ao início", "#/")) });
 
@@ -38,6 +42,20 @@ const atualizarAvisos = () => {
 };
 addEventListener("avisos-alterados", atualizarAvisos);
 
+// Faixa "viagem em andamento" (Etapa 8.2): em qualquer tela, leva à viagem, onde fica o botão de emergência (RN11).
+const faixa = el("div", { class: "faixa-viagem" });
+document.querySelector("main").before(faixa);
+const atualizarFaixa = () => {
+  const u = usuarioAtual();
+  const ativas = u && acessoLiberado(u) ? viagensAtivasDe(u.id, listar("caronas"), listar("solicitacoes")) : [];
+  const mostrar = ativas.length > 0 && caminhoAtual() !== "/viagem";
+  faixa.hidden = !mostrar;
+  faixa.replaceChildren(...(mostrar ? [el("div", { class: "aviso alerta" }, el("strong", {}, "🚗 Em andamento"),
+    el("span", {}, "Você tem uma viagem em andamento. ", el("a", { href: "#/viagem" }, "Abrir viagem e emergência")))] : []));
+};
+addEventListener("viagem-alterada", atualizarFaixa);
+addEventListener("sessao-alterada", () => { atualizarAvisos(); atualizarFaixa(); });
+
 // Modo demonstração (Etapa 8.1): quando ligado, o cabeçalho avisa em qualquer tela.
 const seloDemo = document.querySelector(".selo-demo");
 const textoSelo = seloDemo?.textContent ?? "";
@@ -48,6 +66,7 @@ atualizarSelo();
 iniciarDados();
 iniciar(document.getElementById("conteudo"), (caminho) => {
   atualizarAvisos();
+  atualizarFaixa();
   lista.querySelectorAll("a").forEach((a) =>
-    a.getAttribute("href") === `#${caminho === "/acesso" ? "/perfil" : caminho}` ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+    a.getAttribute("href") === `#${{ "/acesso": "/perfil", "/viagem": "/caronas" }[caminho] ?? caminho}` ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
 });

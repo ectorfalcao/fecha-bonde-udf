@@ -67,6 +67,7 @@ export function telaMinhasCaronas() {
       return el("li", { class: "carona" }, el("h4", {}, rota(c)),
         lista([["Situação", rotuloStatus(s, c)], pos > 0 && ["Posição na fila", `${pos}º`], ["Saída", dataHora(c.dataHoraSaida)],
           ["Motorista", obter("usuarios", c.motoristaId)?.nome ?? "—"], ["Contribuição", moeda(c.valor), "valor"]]),
+        s.status === "confirmada" && c.status === "em_andamento" && el("div", { class: "linha-acoes" }, linkBotao("Abrir viagem e emergência", "#/viagem")),
         ATIVAS.includes(s.status) && c.status === "aberta" && el("div", { class: "linha-acoes" },
           el("button", { type: "button", class: "botao secundario", "aria-label": `Cancelar solicitação de ${rota(c)}`, onclick: async () => {
             if (await confirmar("Cancelar solicitação?", s.status === "confirmada" ? "Sua vaga será liberada e o motorista será avisado." : "O motorista será avisado.", "Cancelar solicitação"))
@@ -92,7 +93,7 @@ export function telaMinhasCaronas() {
           lista([["Situação", "🚗 Viagem em andamento"], ["Iniciada às", hora(c.iniciadaEm)], ["Saída prevista", dataHora(c.dataHoraSaida)], ["Passageiros a bordo", String(conf.length)]]),
           pessoas("A bordo", conf),
           c.iniciadaEmModoDemo && el("p", { class: "nota" }, "Iniciada com o modo demonstração (fora da janela de 15 minutos)."),
-          el("div", { class: "linha-acoes" },
+          el("div", { class: "linha-acoes" }, linkBotao("Abrir viagem e emergência", "#/viagem"),
             el("button", { type: "button", class: "botao", "aria-label": `Concluir viagem ${rota(c)}`, onclick: async () => {
               if (await confirmar("Concluir a viagem?", conf.length ? `Confirme que a viagem terminou. ${conf.length} passageiro(s) serão avisados.` : "Confirme que a viagem terminou.", "Concluir viagem"))
                 concluir(concluirViagem(c.id, u.id), "Viagem concluída.");

@@ -75,3 +75,6 @@ html { scrollbar-gutter: stable; }
 .pessoas { list-style: none; margin: 0 0 var(--espaco-2); padding: 0; display: grid; gap: var(--espaco-1); }
 .pessoas li { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espaco-1); padding: var(--espaco-1); border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie); }
 .pessoas .linha-acoes { margin-top: 0; }
+.botao.perigo { background: var(--perigo); border-color: var(--perigo); }
+.faixa-viagem { max-width: var(--largura-app); margin: 0 auto; padding: var(--espaco-2) var(--espaco-2) 0; }
+.faixa-viagem .aviso { margin: 0; }

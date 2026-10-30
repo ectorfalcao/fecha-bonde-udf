@@ -7,6 +7,7 @@ import { podeIniciarViagem, podeConcluirViagem, planoAoIniciar } from "./viagem.
 const ERRO_GRAVAR = { ok: false, motivo: "Não foi possível gravar no armazenamento do navegador.", codigo: "gravacao" };
 const NAO_ENCONTRADA = { ok: false, motivo: "Carona não encontrada.", codigo: "permissao" };
 const rotaDe = (c) => `${c.origem} → ${c.destino}`;
+const avisarViagem = () => globalThis.dispatchEvent?.(new Event("viagem-alterada"));
 const doMotorista = (caronaId, motoristaId) => { const c = obter("caronas", caronaId); return c && c.motoristaId === motoristaId ? c : null; };
 
 export function iniciarViagem(caronaId, motoristaId, { agora = new Date(), demo = modoDemo() } = {}) {
@@ -20,6 +21,7 @@ export function iniciarViagem(caronaId, motoristaId, { agora = new Date(), demo 
     if (atualizar("solicitacoes", s.id, { status: "cancelada", canceladaEm: agora.toISOString(), canceladaPor: "sistema" }))
       notificar(s.passageiroId, `Sua solicitação na carona ${rotaDe(c)} não foi atendida: a viagem já começou.`);
   for (const s of plano.embarcam) notificar(s.passageiroId, `A viagem ${rotaDe(c)} começou.`);
+  avisarViagem();
   return { ok: true, embarcaram: plano.embarcam.length, encerradas: plano.paraEncerrar.length, usouDemo: v.usouDemo };
 }
 
@@ -31,5 +33,6 @@ export function concluirViagem(caronaId, motoristaId, { agora = new Date() } = {
   if (!atualizar("caronas", c.id, { status: "concluida", concluidaEm: agora.toISOString() })) return ERRO_GRAVAR;
   const passageiros = listar("solicitacoes").filter((s) => s.caronaId === c.id && s.status === "confirmada");
   for (const s of passageiros) notificar(s.passageiroId, `A viagem ${rotaDe(c)} foi concluída.`);
+  avisarViagem();
   return { ok: true, passageiros: passageiros.length };
 }

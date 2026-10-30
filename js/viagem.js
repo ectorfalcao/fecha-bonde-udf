@@ -28,3 +28,8 @@ export const planoAoIniciar = (carona, sols) => ({
   paraEncerrar: sols.filter((s) => s.caronaId === carona.id && (s.status === "pendente" || s.status === "espera")),
   embarcam: confirmadas(carona, sols)
 });
+
+// Viagens em andamento em que a pessoa participa: como motorista ou como passageira confirmada.
+export const viagensAtivasDe = (usuarioId, caronas, sols) =>
+  caronas.filter((c) => c.status === "em_andamento" && (c.motoristaId === usuarioId || sols.some((s) => s.caronaId === c.id && s.passageiroId === usuarioId && s.status === "confirmada")))
+    .sort((a, b) => String(a.iniciadaEm).localeCompare(String(b.iniciadaEm)));

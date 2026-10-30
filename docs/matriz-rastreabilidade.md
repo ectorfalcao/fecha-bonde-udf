@@ -18,7 +18,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF12 | Pagamento | Pagamento | Pendente (simulado) | a definir | | |
 | RF13 | Histórico e extrato | Histórico | Pendente | a definir | | |
 | RF14 | Avaliação mútua | Avaliação | Pendente | a definir | | |
-| RF15 | Botão de emergência | Viagem | Pendente | a definir | | |
+| RF15 | Botão de emergência | Viagem | **Parcial/Simulado** (abre discagem 190 e SMS pré-preenchido no aparelho; não aciona serviços) | `tests/emergencia.test.mjs` + manual | Botão visível na viagem em andamento; 190 e SMS com localização | Automatizado OK; manual pendente |
 | RN03 | Aceite prévio dos termos de convivência | Buscar | **Implementado** | `tests/grupos.test.mjs` | Solicitação recusada sem aceite | OK (automatizado) |
 | RN04 | Vagas <= capacidade do veículo (1 a 4) | Oferecer | **Implementado** (validação) | `tests/caronas.test.mjs` | Vagas acima do limite recusadas | OK (automatizado) |
 | RN05 | Filtro "só para mulheres" | Oferecer/Buscar | **Parcial** (regra para passageira em grupo exclusivo em aberto, ver D7) | `tests/caronas.test.mjs` | Grupo só aparece para usuárias femininas, e some se houver passageiro não feminino confirmado | OK (automatizado) |
@@ -35,6 +35,39 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+
+## Etapa 8.2: botão de emergência (RF15, RN11, US08, UC04)
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Tela **Viagem em andamento** (`#/viagem`) com o botão 🚨 Emergência no topo do cartão | Implementado | `viagemAtiva.js`, `app.js` | `tests/emergencia.test.mjs` |
+| Botão só para quem participa da viagem (motorista e passageira **confirmada**) | Implementado | `viagem.js` (`viagensAtivasDe`) | idem |
+| Faixa "Você tem uma viagem em andamento" em todas as telas, com atalho para a viagem | Implementado | `app.js`, `viagens.js`, `sessao.js` | só no navegador |
+| Ligar para a polícia: link `tel:190` | Implementado (abre a discagem do aparelho) | `emergencia.js`, `viagemAtiva.js` | idem |
+| SMS ao contato de emergência do perfil, com texto pronto e link de mapa com a localização | Implementado (abre o app de SMS do aparelho; a pessoa envia) | `emergencia.js`, `alertasEmergencia.js` | idem |
+| Localização pedida ao navegador só se houver contato; se negada, o SMS segue sem ela | Implementado | `alertasEmergencia.js` | idem |
+| Registro da tentativa (tipo, carona, horário, se havia localização; **sem coordenadas**) | Implementado | `alertasEmergencia.js` | idem |
+| Despacho automático, SMS enviado sozinho, confirmação de atendimento, localização contínua em tempo real | **Não existe** (exigem backend e serviços externos) | n/a | n/a |
+
+### Defeito achado e corrigido durante a parte
+| # | Defeito | Como foi achado | Correção |
+|---|---|---|---|
+| 1 | No diálogo sem contato cadastrado aparecia `[object HTMLElement]` (lista aninhada em `el()`) | Teste de tela (detector de lixo de texto) | `viagemAtiva.js`: spread da lista |
+
+### Verificação (Node 22; testes automatizados, sem navegador)
+| Item | Resultado |
+|---|---|
+| `node --check` em todos os módulos e testes | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 103/103 |
+| Sensibilidade: troquei o número 190, desliguei o pedido de localização, gravei coordenadas, deixei pendente ver o botão | A suíte falhou nos quatro casos |
+| Navegador real, celular (discagem e SMS reais), permissão de localização, leitor de tela | **Não executado (roteiro entregue)** |
+
+### Limites conhecidos
+- O app **não sabe** se a ligação ou o SMS aconteceu: só abre a discagem e o aplicativo de mensagens. A interface diz isso.
+- A localização é uma **foto** do momento do toque, não acompanhamento em tempo real.
+- `geolocation` só funciona em `localhost` ou HTTPS. Abrindo o Live Server por IP na rede (http://192.168...), a localização falha e o SMS segue sem ela.
+- `tel:` e `sms:` dependem do aparelho: em computador sem aplicativo de telefonia, nada abre.
+- Só há um contato de emergência por perfil (D8); o RF15 fala em "contatos".
 
 ## Etapa 8.1: ciclo de vida da viagem (base de RF10 a RF15; RN08 parcial)
 

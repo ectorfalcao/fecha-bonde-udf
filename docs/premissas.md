@@ -64,3 +64,12 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Durante e depois da viagem:** ninguém solicita, aprova, recusa ou cancela solicitação pelo app, e o motorista não cancela a carona. A documentação não prevê cancelamento de viagem em andamento.
 - **Modo demonstração:** ferramenta de teste, desligada por padrão, que libera o início fora da janela. Quando ligada, o cabeçalho avisa em todas as telas. Quando é usada para iniciar, a carona guarda `iniciadaEmModoDemo: true`.
 - **Viagens concluídas:** aparecem na tela Caronas (10 mais recentes) até o histórico completo (RF13, parte 8.7).
+
+## Premissas adicionais da Etapa 8.2
+- **Onde fica o botão (RN11):** na tela "Viagem em andamento" (`#/viagem`), que só tem conteúdo enquanto há viagem em andamento. Uma faixa em todas as telas leva até ela. A barra inferior continua com 5 itens.
+- **Quem vê:** o motorista e as passageiras com solicitação **confirmada**.
+- **Serviços de segurança:** só a polícia (190), como no US08. SAMU (192) e bombeiros (193) não foram incluídos por não constarem na documentação.
+- **SMS:** a documentação (UC04, RN11) diz que o app "envia mensagem automática". Um site não consegue; o app abre o aplicativo de SMS com o texto pronto e a pessoa envia. Registrado como inconsistência 3.
+- **Localização:** uma leitura única do navegador, no momento do toque, e só se houver contato de emergência. Vai no texto do SMS como link de mapa. **Não é guardada** no armazenamento do app.
+- **Registro:** a coleção `alertas` guarda a tentativa de acionamento (tipo, carona, horário, se havia localização), sem coordenadas, e a observação de que o app não confirma envio nem atendimento. Corresponde, de forma reduzida, à classe `AlertaEmergencia` do diagrama (que prevê `localizacaoAtual`; essa parte foi omitida de propósito, por privacidade).
+- **Sem confirmação falsa:** a tela nunca diz que a polícia ou o contato foram acionados.

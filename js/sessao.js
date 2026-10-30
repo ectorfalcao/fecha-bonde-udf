@@ -9,7 +9,8 @@ export const usuarioAtual = () => { const id = carregar("sessao", null); return 
 export const acessoLiberado = (u = usuarioAtual()) => Boolean(u?.emailVerificado && u?.termosUsoEm); // US01: só após e-mail + termos
 export const veiculoDe = (u) => listar("veiculos").find((v) => v.motoristaId === u.id) ?? null;
 export const pendenciasDe = (u) => perfilPendencias(u, veiculoDe(u));
-export const sair = () => remover("sessao");
+const avisarSessao = () => globalThis.dispatchEvent?.(new Event("sessao-alterada"));
+export const sair = () => { remover("sessao"); avisarSessao(); };
 
 export function iniciarDesafio(email) {
   const codigo = gerarCodigo();
@@ -34,6 +35,7 @@ export function confirmarDesafio(email, codigoDigitado) {
   u = atualizar("usuarios", u.id, { emailVerificado: true });
   if (!u) return { ok: false, motivo: "Não foi possível gravar no armazenamento do navegador." };
   salvar("sessao", u.id);
+  avisarSessao();
   return { ok: true, usuario: u };
 }
 
