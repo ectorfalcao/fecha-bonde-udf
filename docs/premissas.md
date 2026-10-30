@@ -73,3 +73,11 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Localização:** uma leitura única do navegador, no momento do toque, e só se houver contato de emergência. Vai no texto do SMS como link de mapa. **Não é guardada** no armazenamento do app.
 - **Registro:** a coleção `alertas` guarda a tentativa de acionamento (tipo, carona, horário, se havia localização), sem coordenadas, e a observação de que o app não confirma envio nem atendimento. Corresponde, de forma reduzida, à classe `AlertaEmergencia` do diagrama (que prevê `localizacaoAtual`; essa parte foi omitida de propósito, por privacidade).
 - **Sem confirmação falsa:** a tela nunca diz que a polícia ou o contato foram acionados.
+
+## Premissas adicionais da Etapa 8.3
+- **Liberação da sala (RF10, RN07):** A sala é exclusiva para os membros confirmados da carona (motorista e passageiras/os com status `confirmada`). Solicitações pendentes, recusadas, canceladas ou na lista de espera recebem aviso explicativo e não leem nem enviam mensagens.
+- **Janela de arquivamento (RN07):** 2 horas após a conclusão da viagem (`concluidaEm + 2 * 3600000`), a sala é desativada para novas mensagens. O histórico continua acessível para consulta (modo somente-leitura), com banner informativo.
+- **Roteamento contextual:** Rota `#/chat?carona=<id>`, recebendo o ID da carona por query string, mantendo a barra de navegação com os 5 itens originais (destacando o item "Caronas" como fluxo-pai).
+- **Reatividade e tempo real (RNF05):** Atualização via `CustomEvent` local e `BroadcastChannel` para sincronização imediata entre múltiplas abas abertas no mesmo navegador.
+- **Modelo de dados:** Coleção `mensagens` com atributos `id`, `caronaId`, `remetenteId`, `texto`, `criadaEm`, espelhando o Diagrama de Classes (`chatGrupo` e `Mensagem`).
+- **Segurança e acessibilidade (RNF10):** Limite de 500 caracteres, sanitização de nós sem uso de `innerHTML`, anúncios com `role="log"` e `aria-live="polite"`.

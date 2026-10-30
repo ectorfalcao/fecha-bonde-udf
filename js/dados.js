@@ -36,7 +36,15 @@ const emDias = (dias, hora, min) => {
 };
 
 export function iniciarDados() {
-  if (carregar("versao-dados", 0) === VERSAO && COLECOES.every((c) => listar(c).length > 0)) return;
+  if (carregar("versao-dados", 0) === VERSAO && COLECOES.every((c) => listar(c).length > 0)) {
+    if (listar("mensagens").length === 0) {
+      salvar("mensagens", [
+        { id: "m1", caronaId: "c1", remetenteId: "u1", texto: "Olá Júlia! Vamos nos encontrar no ponto de ônibus da estação?", criadaEm: emDias(0, 9, 30) },
+        { id: "m2", caronaId: "c1", remetenteId: "u2", texto: "Combinado, Carlos! Estarei lá às 18h25.", criadaEm: emDias(0, 9, 35) }
+      ]);
+    }
+    return;
+  }
   salvar("usuarios", [
     { id: "u1", nome: "Carlos Eduardo", email: "carlos.eduardo@aluno.udf.edu.br", curso: "Análise e Desenvolvimento de Sistemas", turno: "Noturno", genero: "masculino", telefone: "(61) 90000-0001", motorista: true, passageiro: true, contatoNome: "", contatoTel: "", emailVerificado: true, termosUsoEm: emDias(-30, 9, 0), telefoneVerificado: true, fotoNome: "foto-ficticia.jpg", cnhNome: "cnh-ficticia.jpg" },
     { id: "u2", nome: "Júlia Santos", email: "julia.santos@aluno.udf.edu.br", curso: "Análise e Desenvolvimento de Sistemas", turno: "Noturno", genero: "feminino", telefone: "(61) 90000-0002", motorista: false, passageiro: true, contatoNome: "", contatoTel: "", emailVerificado: true, termosUsoEm: emDias(-30, 9, 0), telefoneVerificado: true, fotoNome: "foto-ficticia.jpg", cnhNome: "" },
@@ -52,6 +60,10 @@ export function iniciarDados() {
   ]);
   salvar("solicitacoes", [
     { id: "s1", caronaId: "c1", passageiroId: "u2", status: "confirmada", aceiteTermosEm: emDias(0, 9, 0) }
+  ]);
+  salvar("mensagens", [
+    { id: "m1", caronaId: "c1", remetenteId: "u1", texto: "Olá Júlia! Vamos nos encontrar no ponto de ônibus da estação?", criadaEm: emDias(0, 9, 30) },
+    { id: "m2", caronaId: "c1", remetenteId: "u2", texto: "Combinado, Carlos! Estarei lá às 18h25.", criadaEm: emDias(0, 9, 35) }
   ]);
   salvar("versao-dados", VERSAO);
 }

@@ -13,7 +13,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF07 | Solicitações de entrada | Buscar / Caronas | **Implementado** (avisos simulados dentro do app) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Solicita, motorista aprova ou recusa, vagas atualizam | OK (automatizado e manual) |
 | RF08 | Lista de espera | Buscar / Caronas | **Implementado** (o 1º da fila vira "pendente"; o motorista ainda aprova) | `tests/grupos.test.mjs` + manual | Lotou: fila; vagou: próximo é chamado | OK (automatizado e manual) |
 | RF09 | Cancelamento | Caronas | **Implementado** (motorista só com 2 h de antecedência: premissa) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Passageiro libera vaga; motorista avisa todos | OK (automatizado e manual) |
-| RF10 | Chat condicionado | Chat | Pendente (a liberação depende do estado "confirmada", já existente) | a definir | | |
+| RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado) |
 | RF11 | Mapa e rastreamento | Viagem | Pendente (simulado) | a definir | | |
 | RF12 | Pagamento | Pagamento | Pendente (simulado) | a definir | | |
 | RF13 | Histórico e extrato | Histórico | Pendente | a definir | | |
@@ -35,6 +35,25 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+
+## Etapa 8.3: chat de grupo condicionado (RF10, RN07, US06, UC14)
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Tela **Chat do grupo** (`#/chat?carona=...`) com histórico cronológico de mensagens | Implementado | `chatTela.js`, `router.js`, `app.js` | `tests/chat.test.mjs` |
+| Acesso restrito a membros confirmados (motorista e passageiras/os confirmados) | Implementado | `chat.js` (`podeAcessarChat`), `mensagens.js` | `tests/chat.test.mjs` |
+| Bloqueio explícito para solicitações pendentes, espera e terceiros com aviso explicativo | Implementado | `chat.js`, `chatTela.js` | `tests/chat.test.mjs` |
+| Arquivamento e desativação de novas mensagens 2 horas após o encerramento da viagem (RN07) | Implementado | `chat.js` (`estadoDoChat`), `chatTela.js` | `tests/chat.test.mjs` |
+| Envio de mensagens com validação de texto (até 500 caracteres, sem nós vazios) e autor identificado | Implementado | `chat.js`, `mensagens.js`, `chatTela.js` | `tests/chat.test.mjs` |
+| Sincronização e reatividade (CustomEvent e BroadcastChannel entre abas) | Implementado | `mensagens.js`, `chatTela.js` | `tests/chat.test.mjs` |
+| Botão "💬 Chat do grupo" na tela Caronas e na tela Viagem em andamento | Implementado | `minhas.js`, `viagemAtiva.js` | `tests/chat.test.mjs`, `tests/telas.test.mjs` |
+| Acessibilidade: anúncio via `role="log"` e `aria-live="polite"`, rótulos WCAG 2.1 AA | Implementado | `chatTela.js`, `componentes.css` | `tests/chat.test.mjs` |
+
+### Verificação (Node; testes automatizados)
+| Item | Resultado |
+|---|---|
+| Sintaxe e testes automatizados | 115/115 testes passando (`tests/chat.test.mjs`: 16/16) |
+| Regressão das etapas 5 a 8.2 | 0 regressões detectadas |
 
 ## Etapa 8.2: botão de emergência (RF15, RN11, US08, UC04)
 

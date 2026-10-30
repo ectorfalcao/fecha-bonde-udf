@@ -78,3 +78,39 @@ html { scrollbar-gutter: stable; }
 .botao.perigo { background: var(--perigo); border-color: var(--perigo); }
 .faixa-viagem { max-width: var(--largura-app); margin: 0 auto; padding: var(--espaco-2) var(--espaco-2) 0; }
 .faixa-viagem .aviso { margin: 0; }
+
+/* Etapa 8.3: chat de grupo condicionado (RF10, RN07, US06) */
+.chat-container { display: flex; flex-direction: column; gap: var(--espaco-2); }
+.chat-cabecalho { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--espaco-2); flex-wrap: wrap; margin-bottom: var(--espaco-1); }
+.chat-cabecalho h2 { margin: 0 0 0.25rem; font-size: var(--texto-lg); color: var(--verde-900); }
+.chat-cabecalho .nota { margin: 0; }
+.chat-area-mensagens {
+  min-height: 18rem; max-height: 52vh; overflow-y: auto; padding: var(--espaco-2);
+  background: var(--fundo); border: 1px solid var(--borda); border-radius: var(--raio);
+}
+.lista-mensagens { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--espaco-2); }
+.mensagem-vazia { text-align: center; padding: var(--espaco-3) var(--espaco-1); }
+.mensagem-item {
+  max-width: 82%; padding: var(--espaco-1) var(--espaco-2);
+  border-radius: var(--raio); word-break: break-word;
+}
+.mensagem-minha {
+  align-self: flex-end; background: var(--verde-100);
+  border: 1px solid var(--verde-700); border-bottom-right-radius: 0.2rem;
+}
+.mensagem-outro {
+  align-self: flex-start; background: var(--superficie);
+  border: 1px solid var(--borda); border-bottom-left-radius: 0.2rem;
+}
+.mensagem-meta { display: flex; justify-content: space-between; gap: var(--espaco-2); font-size: var(--texto-sm); margin-bottom: 0.25rem; }
+.mensagem-autor { font-weight: 700; color: var(--verde-900); }
+.mensagem-hora { color: var(--texto-suave); font-size: var(--texto-sm); }
+.mensagem-texto { margin: 0; white-space: pre-wrap; font-size: var(--texto-md); color: var(--texto); }
+.form-chat { display: flex; flex-direction: column; gap: var(--espaco-1); }
+.chat-campo-linha { display: flex; gap: var(--espaco-1); }
+.chat-input {
+  flex: 1; min-height: var(--alvo-min); padding: 0 var(--espaco-2);
+  font: inherit; color: var(--texto); background: var(--superficie);
+  border: 2px solid var(--texto-suave); border-radius: var(--raio);
+}
+.chat-input:focus { outline: 2px solid var(--verde-700); outline-offset: 1px; }

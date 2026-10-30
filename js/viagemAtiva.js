@@ -30,7 +30,9 @@ function cartaoViagem(u, c) {
     lista([["Seu papel", c.motoristaId === u.id ? "Motorista" : "Passageiro(a)"], ["Motorista", motorista?.nome ?? "—"],
       veiculo && ["Veículo", `${veiculo.modelo} ${veiculo.cor}, placa ${veiculo.placa}`], ["Saída prevista", dataHora(c.dataHoraSaida)],
       c.iniciadaEm && ["Iniciada às", hora(c.iniciadaEm)], ["Passageiros a bordo", String(aBordo)]]),
-    el("div", { class: "linha-acoes" }, linkBotao("Gerenciar em Caronas", "#/caronas", "secundario")));
+    el("div", { class: "linha-acoes" },
+      linkBotao("💬 Chat do grupo", `#/chat?carona=${c.id}`, "secundario"),
+      linkBotao("Gerenciar em Caronas", "#/caronas", "secundario")));
 }
 
 // UC04: opções de discagem rápida e SMS. A localização só é pedida se houver contato para receber o SMS.
