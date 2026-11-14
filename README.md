@@ -17,7 +17,7 @@ Usuários de exemplo (qualquer senha com 8+ caracteres; o código de verificaç�
 ## Status
 Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 6) e **solicitações, aprovação, lista de espera e cancelamento** (RF07, RF08, RF09, RN03, RN06), com avisos simulados dentro do app.
 
-**Etapa 8 em andamento.**
+**Etapa 8 concluída (fluxos funcionais).** Próximo passo: refinamento visual.
 - 8.0 concluída: suíte de testes recriada e defeitos corrigidos.
 - 8.1 aprovada: **ciclo de vida da viagem** (`aberta → em andamento → concluída`), início pelo motorista (janela de 15 min, RN08), conclusão, **modo demonstração**.
 - 8.2 concluída e aprovada: **botão de emergência** (RF15, RN11, US08) na tela *Viagem em andamento*: abre a discagem para o 190 e um SMS pré-preenchido para o contato do perfil. **Não aciona nenhum serviço sozinho.**
