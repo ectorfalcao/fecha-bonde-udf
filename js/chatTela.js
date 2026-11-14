@@ -1,7 +1,7 @@
 import { el, aviso, linkBotao, estadoVazio, dataHora } from "./componentes.js";
 import { obter, listar } from "./dados.js";
 import { usuarioAtual } from "./sessao.js";
-import { podeAcessarChat, estadoDoChat, TAMANHO_MAX_MENSAGEM } from "./chat.js";
+import { podeAcessarChat, estadoDoChat, membrosDoChat, TAMANHO_MAX_MENSAGEM } from "./chat.js";
 import { listarMensagens, enviarMensagem } from "./mensagens.js";
 import { parametrosRota } from "./router.js";
 
@@ -56,17 +56,16 @@ export function telaChat(params) {
   const motorista = obter("usuarios", carona.motoristaId);
   const estado = estadoDoChat(carona);
 
-  // Cabeçalho da carona
+  // Cabeçalho da carona (Etapa 9.3): faixa de contexto com a mini-linha do percurso, para saber de qual carona é o chat
+  const pessoas = membrosDoChat(carona, listar("solicitacoes")).length;
   const cabecalho = el("div", { class: "chat-cabecalho" },
-    el("div", { class: "chat-info-carona" },
-      el("h2", {}, `Chat: ${rotaDe(carona)}`),
-      el("p", { class: "nota" },
-        `Motorista: ${motorista?.nome ?? "—"} · Saída: ${dataHora(carona.dataHoraSaida)}`
-      )
-    ),
-    el("div", { class: "chat-acoes-topo" },
-      linkBotao("← Voltar para Caronas", "#/caronas", "secundario")
-    )
+    el("h2", { class: "sr-only" }, `Chat: ${rotaDe(carona)}`),
+    el("div", { class: "chat-faixa" },
+      el("span", { class: "mini-linha", "aria-hidden": "true" }),
+      el("p", {}, el("strong", {}, rotaDe(carona)),
+        el("span", { class: "nota" }, `${dataHora(carona.dataHoraSaida)} · motorista ${motorista?.nome ?? "—"} · ${pessoas} pessoa(s) no grupo`))),
+    el("p", { class: "chat-sistema" }, "Só o motorista e quem está confirmado nesta carona leem e escrevem aqui."),
+    linkBotao("← Voltar para Caronas", "#/caronas", "secundario")
   );
 
   // Avisos contextuais de estado (RN07)
@@ -91,7 +90,8 @@ export function telaChat(params) {
     if (!msgs.length) {
       listaEl.replaceChildren(
         el("li", { class: "mensagem-vazia" },
-          el("p", { class: "nota" }, "Nenhuma mensagem ainda. Combine o ponto de encontro e tire dúvidas aqui.")
+          el("p", { class: "dica-encontro" }, el("strong", {}, "◎ Ponto de encontro"),
+            "Nenhuma mensagem ainda. Combine aqui o local exato e o horário: o app não guarda endereço.")
         )
       );
       return;

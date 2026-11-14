@@ -273,3 +273,16 @@ test("abrir o chat várias vezes mantém um único ouvinte de mensagens, e só a
     globalThis.addEventListener = add; globalThis.removeEventListener = rem;
   }
 });
+
+// Etapa 9.3: faixa de contexto da carona e dica de ponto de encontro enquanto o grupo não conversou.
+test("telaChat: faixa diz de qual carona é o chat; sem mensagens, mostra a dica de ponto de encontro", () => {
+  salvar("sessao", "u1");
+  salvar("mensagens", []);
+  const tela = telaChat(new URLSearchParams({ carona: "c1" }));
+  const faixa = achar(tela, (e) => e.className === "chat-faixa");
+  assert.match(textoDe(faixa), /^Águas Claras → UDF Campus Sede \(Asa Sul\).*motorista Carlos Eduardo · 2 pessoa\(s\) no grupo$/);
+  assert.match(textoDe(tela), /◎ Ponto de encontro.*o app não guarda endereço/);
+  semLixo(tela, "chat vazio");
+  enviarMensagem({ caronaId: "c1", remetenteId: "u1", texto: "Na estação, às 18h25" });
+  assert.doesNotMatch(textoDe(telaChat(new URLSearchParams({ carona: "c1" }))), /◎ Ponto de encontro/);
+});

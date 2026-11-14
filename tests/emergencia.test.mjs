@@ -177,3 +177,17 @@ test("RF11: o botão de emergência continua antes do mapa (RN11)", () => {
   const ordem = cartao.filhos.map((f) => f.tagName);
   assert.ok(ordem.indexOf("BUTTON") < ordem.indexOf("FIGURE"));
 });
+
+// Etapa 9.3: o mapa acompanha a rota (sem faixa vazia) e mostra a chegada em destaque; emergência em largura total.
+test("mapa: rota quase horizontal fica baixa, com ruas de fundo e chegada em destaque", () => {
+  iniciar();
+  salvar("sessao", "u2");
+  const t = telaViagemAtiva();
+  const svg = achar(t, (e) => e.tagName === "SVG");
+  const [, , w, h] = svg.getAttribute("viewBox").split(" ").map(Number);
+  assert.equal(w, 320);
+  assert.ok(h >= 150 && h < 200, `altura ${h}`);                   // antes: sempre 200
+  assert.ok(achar(svg, (e) => e.getAttribute("class") === "mapa-ruas"), "ruas de fundo");
+  assert.match(textoDe(achar(t, (e) => e.className === "mapa-chegada")), /^Chegada prevista\d{2}:\d{2}$/);
+  assert.match(botao(t, "Emergência").className, /\blargo\b/);
+});

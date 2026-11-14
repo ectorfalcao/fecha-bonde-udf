@@ -26,11 +26,12 @@ function cartaoViagem(u, c) {
   const motorista = obter("usuarios", c.motoristaId), veiculo = obter("veiculos", c.veiculoId);
   const aBordo = listar("solicitacoes").filter((s) => s.caronaId === c.id && s.status === "confirmada").length;
   return el("li", { class: "carona" }, el("h3", {}, rota(c)),
-    el("button", { type: "button", class: "botao perigo", "aria-label": `Emergência: abrir opções de ajuda, viagem ${rota(c)}`, onclick: () => abrirEmergencia(c, motorista, veiculo) }, "🚨 Emergência"),
+    el("button", { type: "button", class: "botao perigo largo", "aria-label": `Emergência: abrir opções de ajuda, viagem ${rota(c)}`, onclick: () => abrirEmergencia(c, motorista, veiculo) }, "🚨 Emergência"),
     el("p", { class: "nota" }, "Abre a discagem para a polícia (190) ou um SMS para o seu contato de emergência. O aplicativo não aciona nenhum serviço por conta própria."),
     mapaViagem(c),
-    lista([["Seu papel", c.motoristaId === u.id ? "Motorista" : "Passageiro(a)"], ["Motorista", motorista?.nome ?? "—"],
-      veiculo && ["Veículo", `${veiculo.modelo} ${veiculo.cor}, placa ${veiculo.placa}`], ["Saída prevista", dataHora(c.dataHoraSaida)],
+    // Etapa 9.3: placa e carro primeiro, para conferir na hora de embarcar.
+    lista([veiculo && ["Veículo", `${veiculo.modelo} ${veiculo.cor}, placa ${veiculo.placa}`], ["Motorista", motorista?.nome ?? "—"],
+      ["Seu papel", c.motoristaId === u.id ? "Motorista" : "Passageiro(a)"], ["Saída prevista", dataHora(c.dataHoraSaida)],
       c.iniciadaEm && ["Iniciada às", hora(c.iniciadaEm)], ["Passageiros a bordo", String(aBordo)]]),
     el("div", { class: "linha-acoes" },
       linkBotao("💬 Chat do grupo", `#/chat?carona=${c.id}`, "secundario"),

@@ -22,7 +22,8 @@ Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 
 **Etapa 9 em andamento: refinamento visual** (linguagem de mapa de transporte).
 - 9.1 concluída: nova paleta (asfalto, verde-petróleo, âmbar), fonte Inter guardada no projeto e contraste AA medido.
 - 9.2 concluída: **cartão de carona com percurso** (partida, destino, horários de saída e chegada em destaque) em Início, Buscar, Caronas e Histórico.
-- Próximas: 9.3 viagem, mapa e chat, 9.4 pagamento, estados e navegação.
+- 9.3 concluída: **viagem, mapa e chat**: emergência em largura total, chegada em destaque, mapa com altura pela rota e ruas de fundo; chat com faixa de contexto da carona e dica de ponto de encontro.
+- Próxima: 9.4 pagamento, estados e navegação.
 - 8.0 concluída: suíte de testes recriada e defeitos corrigidos.
 - 8.1 aprovada: **ciclo de vida da viagem** (`aberta → em andamento → concluída`), início pelo motorista (janela de 15 min, RN08), conclusão, **modo demonstração**.
 - 8.2 concluída e aprovada: **botão de emergência** (RF15, RN11, US08) na tela *Viagem em andamento*: abre a discagem para o 190 e um SMS pré-preenchido para o contato do perfil. **Não aciona nenhum serviço sozinho.**
