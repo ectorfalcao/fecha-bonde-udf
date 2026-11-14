@@ -75,6 +75,8 @@ test("tela Pagamento: só PIX ativo, cartão indisponível, avisos de simulaçã
   semLixo(t);
   assert.match(textoDe(t), /SIMULADO: nenhum dinheiro é movimentado/);
   assert.match(textoDe(t), /SIMULADO-FECHABONDE-C1-U2-7\.50/);
+  assert.equal(textoDe(achar(t, (e) => e.className === "valor-grande")), moeda(7.5));   // Etapa 9.4: quanto, em destaque
+  assert.equal(textoDe(achar(t, (e) => e.className === "carimbo")), "SIMULADO");
   assert.ok(achar(t, (e) => e.id === "metodo-cartao").hasAttribute("disabled"));
   assert.ok(!achar(t, (e) => e.id === "metodo-pix").hasAttribute("disabled"));
   botao(t, `Simular pagamento de ${moeda(7.5)}`).click();

@@ -160,3 +160,14 @@ html { scrollbar-gutter: stable; }
 .chat-sistema { margin: 0; text-align: center; font-size: var(--texto-sm); color: var(--texto-suave); }
 .chat-cabecalho .botao { align-self: flex-start; }
 .dica-encontro { display: grid; gap: 0.25rem; margin: 0; text-align: left; padding: var(--espaco-2); background: var(--ambar-100); border: 1px solid var(--ambar-500); border-radius: var(--raio); color: var(--texto); }
+
+/* Etapa 9.4: pagamento, contador da navegação e carregamento */
+.pagamento-resumo { display: grid; gap: 0.25rem; margin: 0 0 var(--espaco-2); }
+.pagamento-resumo p { margin: 0; }
+.pagamento-topo { display: flex; justify-content: space-between; align-items: center; gap: var(--espaco-1); }
+.valor-grande { font-size: 2rem; font-weight: 800; line-height: 1.1; }
+.carimbo { display: inline-block; transform: rotate(-4deg); border: 2px solid var(--perigo); color: var(--perigo); border-radius: 0.25rem; padding: 0 0.375rem; font-size: var(--texto-sm); font-weight: 800; letter-spacing: 0.12em; }
+.codigo { display: block; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: var(--texto-sm); padding: var(--espaco-1); border: 1px dashed var(--asfalto-700); border-radius: 0.5rem; background: var(--fundo); overflow-wrap: anywhere; }
+.nav-inferior a .contador { display: inline-grid; place-items: center; min-width: 1.25rem; height: 1.25rem; margin-left: 0.25rem; padding: 0 0.25rem; border-radius: 999px; background: var(--alerta); color: var(--superficie); font-size: 0.75rem; font-weight: 700; }
+.carregando::before { content: ""; display: inline-block; width: 0.875rem; height: 0.875rem; margin-right: 0.375rem; vertical-align: -0.125rem; border: 2px solid var(--petroleo-700); border-right-color: transparent; border-radius: 50%; animation: girar 0.8s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }

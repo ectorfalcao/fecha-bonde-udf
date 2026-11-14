@@ -191,3 +191,16 @@ test("mapa: rota quase horizontal fica baixa, com ruas de fundo e chegada em des
   assert.match(textoDe(achar(t, (e) => e.className === "mapa-chegada")), /^Chegada prevista\d{2}:\d{2}$/);
   assert.match(botao(t, "Emergência").className, /\blargo\b/);
 });
+
+// Etapa 9.4: enquanto a localização é pedida, o aviso tem forma de carregamento; depois volta ao normal.
+test("emergência: 'Obtendo sua localização…' aparece como carregando e para ao terminar", async () => {
+  iniciar(); comContato(); salvar("sessao", "u2");
+  usarGeo(geoOk());
+  botao(telaViagemAtiva(), "Emergência").click();
+  const estado = () => achar(dialogoAberto(), (e) => e.getAttribute("aria-live") === "polite");
+  assert.equal(estado().className, "nota carregando");
+  assert.match(textoDe(estado()), /Obtendo sua localização/);
+  await esperar();
+  assert.equal(estado().className, "nota");
+  assert.match(textoDe(estado()), /Localização obtida/);
+});

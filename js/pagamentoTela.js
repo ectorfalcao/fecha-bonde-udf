@@ -16,9 +16,13 @@ export function telaPagamento(params) {
   if (!carona) { raiz.append(aviso("erro", "Carona não encontrada."), voltar()); return raiz; }
 
   const motorista = obter("usuarios", carona.motoristaId);
-  const resumo = el("section", { class: "carona" }, el("h3", {}, `${carona.origem} → ${carona.destino}`),
-    lista([["Motorista", motorista?.nome ?? "—"], ["Viagem concluída em", carona.concluidaEm && dataHora(carona.concluidaEm)],
-      ["Contribuição", moeda(carona.valor), "valor"]].filter(([, v]) => v)));
+  // Etapa 9.4: quanto (grande, com o carimbo SIMULADO), depois para quem e por qual viagem.
+  const resumo = el("section", { class: "carona pagamento-resumo" },
+    el("h3", { class: "sr-only" }, `${carona.origem} → ${carona.destino}`),
+    el("p", { class: "pagamento-topo" }, el("span", { class: "nota" }, "Contribuição da viagem"), el("span", { class: "carimbo" }, "SIMULADO")),
+    el("p", { class: "valor-grande" }, moeda(carona.valor)),
+    el("p", { class: "nota" }, `${carona.origem} → ${carona.destino} · motorista ${motorista?.nome ?? "—"}`,
+      carona.concluidaEm && ` · viagem concluída em ${dataHora(carona.concluidaEm)}`));
   const corpo = el("div", { tabindex: "-1" });
   raiz.append(aviso("alerta", AVISO_SIMULADO), resumo, corpo);
 
@@ -34,8 +38,8 @@ export function telaPagamento(params) {
       el("fieldset", {}, el("legend", {}, "Forma de pagamento"),
         el("label", { class: "opcao", for: "metodo-pix" }, el("input", { type: "radio", id: "metodo-pix", name: "metodo", value: "pix", checked: true }), "PIX (simulado)"),
         el("label", { class: "opcao", for: "metodo-cartao" }, el("input", { type: "radio", id: "metodo-cartao", name: "metodo", value: "cartao", disabled: true }), "Cartão (indisponível no protótipo)")),
-      el("section", { class: "secao", "aria-labelledby": "h-pix" }, el("h3", { id: "h-pix" }, "PIX"),
-        lista([["Chave do motorista", CHAVE_PIX_FICTICIA], ["Código (fictício)", el("code", {}, codigoPixFicticio(carona, u.id))]]),
+      el("section", { class: "secao carona", "aria-labelledby": "h-pix" }, el("h3", { id: "h-pix" }, "PIX"),
+        lista([["Chave do motorista", CHAVE_PIX_FICTICIA], ["Código (fictício)", el("code", { class: "codigo" }, codigoPixFicticio(carona, u.id))]]),
         el("p", { class: "nota" }, "O código e a chave acima são fictícios e não funcionam em nenhum banco.")),
       erro,
       el("div", { class: "linha-acoes" },

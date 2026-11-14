@@ -24,6 +24,9 @@ body {
 }
 .skip-link:focus { top: var(--espaco-1); }
 
+/* Links de texto na cor da marca (antes: azul padrão do navegador). 7,6:1 ou mais nos fundos usados. */
+a { color: var(--petroleo-900); }
+
 /* Foco sempre visível */
 :focus-visible {
   outline: 3px solid var(--alerta);

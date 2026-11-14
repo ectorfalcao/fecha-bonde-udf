@@ -69,7 +69,9 @@ function abrirEmergencia(c, motorista, veiculo) {
 
   if (contato) {
     dizer("Obtendo sua localização…");
+    estado.className = "nota carregando"; // Etapa 9.4: estado de carregamento com forma própria, além do texto
     obterLocalizacao().then((r) => {
+      estado.className = "nota";
       localizacao = r.ok ? r : null;
       sms.setAttribute("href", texto());
       dizer(r.ok ? `Localização obtida (precisão de cerca de ${Math.round(r.precisao ?? 0)} m). Ela será incluída no SMS.`

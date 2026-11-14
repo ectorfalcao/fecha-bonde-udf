@@ -45,7 +45,8 @@ nav.append(lista);
 const linkCaronas = lista.querySelector('a[href="#/caronas"]');
 const atualizarAvisos = () => {
   const u = usuarioAtual(), n = u ? naoLidas(u.id) : 0;
-  linkCaronas.textContent = n ? `Caronas (${n})` : "Caronas";
+  // Etapa 9.4: contador em círculo (antes "Caronas (2)" quebrava em duas linhas no celular); o aria-label diz o número.
+  linkCaronas.replaceChildren("Caronas", ...(n ? [el("span", { class: "contador", "aria-hidden": "true" }, String(n))] : []));
   n ? linkCaronas.setAttribute("aria-label", `Caronas, ${n} aviso(s) novo(s)`) : linkCaronas.removeAttribute("aria-label");
 };
 addEventListener("avisos-alterados", atualizarAvisos);
