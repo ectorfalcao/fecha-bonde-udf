@@ -4,6 +4,7 @@ import { usuarioAtual } from "./sessao.js";
 import { viagensAtivasDe } from "./viagem.js";
 import { NUMERO_POLICIA, contatoDe, linkTel, linkSms, montarMensagem } from "./emergencia.js";
 import { obterLocalizacao, registrarAcionamento } from "./alertasEmergencia.js";
+import { mapaViagem } from "./mapa.js";
 
 const lista = (linhas) => el("dl", {}, linhas.filter(Boolean).flatMap(([t, v]) => [el("dt", {}, t), el("dd", {}, v)]));
 const hora = (iso) => new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
@@ -27,6 +28,7 @@ function cartaoViagem(u, c) {
   return el("li", { class: "carona" }, el("h3", {}, rota(c)),
     el("button", { type: "button", class: "botao perigo", "aria-label": `Emergência: abrir opções de ajuda, viagem ${rota(c)}`, onclick: () => abrirEmergencia(c, motorista, veiculo) }, "🚨 Emergência"),
     el("p", { class: "nota" }, "Abre a discagem para a polícia (190) ou um SMS para o seu contato de emergência. O aplicativo não aciona nenhum serviço por conta própria."),
+    mapaViagem(c),
     lista([["Seu papel", c.motoristaId === u.id ? "Motorista" : "Passageiro(a)"], ["Motorista", motorista?.nome ?? "—"],
       veiculo && ["Veículo", `${veiculo.modelo} ${veiculo.cor}, placa ${veiculo.placa}`], ["Saída prevista", dataHora(c.dataHoraSaida)],
       c.iniciadaEm && ["Iniciada às", hora(c.iniciadaEm)], ["Passageiros a bordo", String(aBordo)]]),

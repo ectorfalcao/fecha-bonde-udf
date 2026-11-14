@@ -22,14 +22,15 @@ Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 
 - 8.1 aprovada: **ciclo de vida da viagem** (`aberta → em andamento → concluída`), início pelo motorista (janela de 15 min, RN08), conclusão, **modo demonstração**.
 - 8.2 concluída e aprovada: **botão de emergência** (RF15, RN11, US08) na tela *Viagem em andamento*: abre a discagem para o 190 e um SMS pré-preenchido para o contato do perfil. **Não aciona nenhum serviço sozinho.**
 - 8.3 concluída: **chat de grupo condicionado** (RF10, RN07, US06, UC14): sala restrita e em tempo real para membros confirmados, com histórico cronológico e arquivamento automático após 2 horas da conclusão da viagem.
-- Próximas: 8.3 chat, 8.4 mapa (simulado), 8.5 pagamento (simulado), 8.6 avaliação, 8.7 histórico.
+- 8.4 concluída: **mapa da viagem SIMULADO** (RF11) na tela *Viagem em andamento*: rota esquemática e posição estimada pelo tempo, sem GPS.
+- Próximas: 8.5 pagamento (simulado), 8.6 avaliação, 8.7 histórico.
 
 Veja `docs/matriz-rastreabilidade.md` e `docs/premissas.md`.
 
 ## Estrutura
 - `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`
 - `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js` e `chat.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js` e `mensagens.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`
-- Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `viagemAtiva.js` (viagem e emergência), `chatTela.js` (chat do grupo), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
+- Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `viagemAtiva.js` (viagem e emergência), `chatTela.js` (chat do grupo), `mapa.js` (mapa simulado da viagem), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
 - `#/ambiente`: verificação do ambiente (tela da Etapa 3)
 
 ## Modo demonstração
@@ -43,8 +44,8 @@ Precisa do Node 20 ou superior. Nenhum pacote para instalar.
 - `regras.test.mjs`: acesso (RN01), perfil (RN02), placa, telefone, capacidade (RN04).
 - `caronas.test.mjs`: oferta, recorrência, filtros e dados fictícios (Etapa 6).
 - `grupos.test.mjs`: solicitações, fila, aprovação, cancelamento, termos e avisos (Etapa 7).
-- `viagem.test.mjs`: ciclo da viagem, janela de 15 min, modo demonstração (Etapa 8.1).
-- `emergencia.test.mjs`: contato, links `tel:` e `sms:`, mensagem, localização simulada, tela da emergência (Etapa 8.2).
+- `viagem.test.mjs`: ciclo da viagem, janela de 15 min, modo demonstração (Etapa 8.1) e posição simulada do mapa (Etapa 8.4).
+- `emergencia.test.mjs`: contato, links `tel:` e `sms:`, mensagem, localização simulada, tela da emergência (Etapa 8.2) e mapa na tela da viagem (Etapa 8.4).
 - `chat.test.mjs`: regras de acesso ao chat, permissões, arquivamento após 2h (RN07), envio e tela (Etapa 8.3).
 - `telas.test.mjs`: renderiza as telas com um DOM falso (`dom-falso.mjs`, auxiliar) e simula os cliques. Também falha se aparecer "null", "undefined" ou "[object" no texto da tela. **Não substitui** o teste manual no navegador.
 

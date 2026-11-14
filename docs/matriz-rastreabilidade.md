@@ -14,7 +14,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF08 | Lista de espera | Buscar / Caronas | **Implementado** (o 1º da fila vira "pendente"; o motorista ainda aprova) | `tests/grupos.test.mjs` + manual | Lotou: fila; vagou: próximo é chamado | OK (automatizado e manual) |
 | RF09 | Cancelamento | Caronas | **Implementado** (motorista só com 2 h de antecedência: premissa) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Passageiro libera vaga; motorista avisa todos | OK (automatizado e manual) |
 | RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado) |
-| RF11 | Mapa e rastreamento | Viagem | Pendente (simulado) | a definir | | |
+| RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; conferido no navegador (desktop) |
 | RF12 | Pagamento | Pagamento | Pendente (simulado) | a definir | | |
 | RF13 | Histórico e extrato | Histórico | Pendente | a definir | | |
 | RF14 | Avaliação mútua | Avaliação | Pendente | a definir | | |
@@ -35,6 +35,31 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+
+## Etapa 8.4: mapa da viagem (RF11, SIMULADO)
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Mapa esquemático (SVG, sem biblioteca) com partida, destino, rota e veículo na tela *Viagem em andamento* | Implementado | `mapa.js`, `viagemAtiva.js`, `componentes.css` | `tests/emergencia.test.mjs` |
+| Posição do veículo estimada pelo tempo desde o início (`posicaoSimulada`), presa entre origem e destino | Implementado | `viagem.js` | `tests/viagem.test.mjs` |
+| Rótulo "SIMULADO" no desenho e na legenda; legenda em texto com % do trajeto e chegada prevista (o desenho é decorativo para leitor de tela) | Implementado | `mapa.js` | `tests/emergencia.test.mjs` |
+| Atualização automática a cada 15 s enquanto a tela está aberta | Implementado | `mapa.js` | só no navegador |
+| Botão de emergência continua antes do mapa (RN11) | Implementado | `viagemAtiva.js` | `tests/emergencia.test.mjs` |
+| GPS real, rota pelas ruas, posição compartilhada entre aparelhos | **Não existe** (exige backend e serviço de mapas) | n/a | n/a |
+
+### Verificação
+| Item | Resultado |
+|---|---|
+| `node --check` em todos os módulos | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 120/120 |
+| Sensibilidade: tirei o limite de 0 a 100% da posição e removi o mapa da tela | A suíte falhou nos dois casos |
+| Navegador (servidor local, desktop): viagem iniciada em modo demonstração, mapa desenhado, sem erros no console | OK |
+| Celular real, leitor de tela, contraste do desenho | **Não executado** |
+
+### Limites conhecidos
+- A posição é uma **estimativa pelo relógio**, em linha reta: não mostra onde o carro realmente está.
+- Só funciona para os 10 locais da lista do protótipo.
+- O passageiro e o motorista veem a mesma estimativa porque ela é calculada em cada aparelho, não porque a posição é compartilhada.
 
 ## Etapa 8.3: chat de grupo condicionado (RF10, RN07, US06, UC14)
 

@@ -84,7 +84,7 @@ export const esperar = () => new Promise((r) => setTimeout(r, 0));
 export function instalarAmbiente() {
   const mem = new Map();
   globalThis.localStorage = { getItem: (k) => (mem.has(k) ? mem.get(k) : null), setItem: (k, v) => { mem.set(k, String(v)); }, removeItem: (k) => { mem.delete(k); } };
-  const doc = { body: new Elemento("body"), activeElement: null, title: "", createElement: (t) => new Elemento(t), getElementById: (id) => achar(doc.body, (e) => e.id === id) };
+  const doc = { body: new Elemento("body"), activeElement: null, title: "", createElement: (t) => new Elemento(t), createElementNS: (_, t) => new Elemento(t), getElementById: (id) => achar(doc.body, (e) => e.id === id) };
   globalThis.document = doc;
   globalThis.location = { hash: "" };
   return mem;

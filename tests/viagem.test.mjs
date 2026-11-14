@@ -6,7 +6,7 @@ import * as S from "../js/solicitacoes.js";
 import * as N from "../js/notificacoes.js";
 import { rotuloStatus } from "../js/grupos.js";
 import { modoDemo, definirModoDemo } from "../js/demo.js";
-import { filtrarCaronas } from "../js/caronas.js";
+import { filtrarCaronas, tempoViagemMin } from "../js/caronas.js";
 import { iniciarDados, listar, obter, inserir, vagasDisponiveis } from "../js/dados.js";
 import { instalarAmbiente } from "./dom-falso.mjs";
 
@@ -151,4 +151,31 @@ test("viagem em andamento ou concluída some da busca", () => {
   assert.ok(!visivel().includes("c1"));
   O.concluirViagem("c1", "u1");
   assert.ok(!visivel().includes("c1"));
+});
+
+// ---------- Etapa 8.4: mapa simulado (RF11) ----------
+test("posicaoSimulada: antes de iniciar fica na origem, sem chegada prevista", () => {
+  const c = { origemId: "guara", destinoId: "campus", status: "aberta" };
+  const p = V.posicaoSimulada(c);
+  assert.equal(p.progresso, 0);
+  assert.equal(p.chegadaPrevista, null);
+  assert.deepEqual([p.lat, p.lng], [-15.819, -47.978]);
+});
+test("posicaoSimulada: avança na proporção do tempo previsto e para no destino", () => {
+  const inicio = new Date(2030, 0, 1, 18, 0);
+  const c = { origemId: "guara", destinoId: "campus", status: "em_andamento", iniciadaEm: inicio.toISOString() };
+  const durMs = tempoViagemMin("guara", "campus") * 60000;
+  const meio = V.posicaoSimulada(c, new Date(inicio.getTime() + durMs / 2));
+  assert.equal(meio.progresso, 0.5);
+  assert.ok(Math.abs(meio.lat - (-15.819 + -15.830) / 2) < 1e-9);
+  assert.ok(Math.abs(meio.lng - (-47.978 + -47.910) / 2) < 1e-9);
+  assert.equal(meio.chegadaPrevista.getTime(), inicio.getTime() + durMs);
+  const depois = V.posicaoSimulada(c, new Date(inicio.getTime() + 3 * durMs));
+  assert.equal(depois.progresso, 1);                          // não passa do destino
+  assert.deepEqual([depois.lat, depois.lng], [-15.830, -47.910]);
+  assert.equal(V.posicaoSimulada(c, new Date(inicio.getTime() - 60000)).progresso, 0); // relógio antes do início
+});
+test("posicaoSimulada: concluída fica no destino; local fora da lista não tem mapa", () => {
+  assert.equal(V.posicaoSimulada({ origemId: "guara", destinoId: "campus", status: "concluida" }).progresso, 1);
+  assert.equal(V.posicaoSimulada({ origemId: "x", destinoId: "campus", status: "aberta" }), null);
 });

@@ -1,6 +1,8 @@
 // Ciclo de vida da viagem (Etapa 8.1) como funções PURAS: sem DOM, sem storage.
 // Estados da carona: aberta -> em_andamento -> concluida ; aberta -> cancelada.
 // Premissa (diagrama de atividades): o MOTORISTA inicia e conclui a viagem.
+import { localPorId, tempoViagemMin } from "./caronas.js";
+
 export const JANELA_INICIO_MIN = 15; // RN08 / US07: a viagem pode ser iniciada (e a posição compartilhada) 15 min antes da saída
 
 const nao = (motivo, codigo) => ({ ok: false, motivo, codigo });
@@ -28,6 +30,23 @@ export const planoAoIniciar = (carona, sols) => ({
   paraEncerrar: sols.filter((s) => s.caronaId === carona.id && (s.status === "pendente" || s.status === "espera")),
   embarcam: confirmadas(carona, sols)
 });
+
+// RF11 (SIMULADO, Etapa 8.4): sem GPS nem servidor, o veículo avança em linha reta da origem ao destino
+// na proporção do tempo previsto (tempoViagemMin) desde o início. Antes de iniciar fica na origem; concluída, no destino.
+export function posicaoSimulada(carona, agora = new Date()) {
+  const a = localPorId(carona.origemId), b = localPorId(carona.destinoId);
+  if (!a || !b) return null;
+  const duracaoMs = tempoViagemMin(carona.origemId, carona.destinoId) * 60000;
+  const inicio = carona.iniciadaEm ? new Date(carona.iniciadaEm).getTime() : NaN;
+  const progresso = carona.status === "concluida" ? 1
+    : Number.isFinite(inicio) ? Math.min(1, Math.max(0, (agora.getTime() - inicio) / duracaoMs)) : 0;
+  return {
+    lat: a.lat + (b.lat - a.lat) * progresso,
+    lng: a.lng + (b.lng - a.lng) * progresso,
+    progresso,
+    chegadaPrevista: Number.isFinite(inicio) ? new Date(inicio + duracaoMs) : null
+  };
+}
 
 // Viagens em andamento em que a pessoa participa: como motorista ou como passageira confirmada.
 export const viagensAtivasDe = (usuarioId, caronas, sols) =>

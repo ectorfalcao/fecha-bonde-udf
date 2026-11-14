@@ -154,3 +154,26 @@ test("o diálogo fecha pelo botão Fechar", () => {
   botao(dialogoAberto(), "Fechar").click();
   assert.equal(dialogoAberto(), null);
 });
+
+// ---------- Etapa 8.4: mapa simulado (RF11) ----------
+test("RF11: a viagem em andamento mostra o mapa SIMULADO com a posição em texto", () => {
+  iniciar();
+  for (const id of ["u1", "u2"]) {
+    salvar("sessao", id);
+    const t = telaViagemAtiva();
+    const mapa = achar(t, (e) => e.tagName === "FIGURE");
+    assert.ok(mapa, id);
+    assert.ok(achar(mapa, (e) => e.tagName === "SVG" && e.getAttribute("aria-hidden") === "true"), "desenho decorativo");
+    assert.match(textoDe(mapa), /SIMULADO/);
+    assert.match(textoDe(mapa), /posição estimada do veículo, \d+% do trajeto Águas Claras → UDF Campus Sede/);
+    assert.match(textoDe(mapa), /Chegada prevista às \d{2}:\d{2}/);
+    semLixo(t);
+  }
+});
+test("RF11: o botão de emergência continua antes do mapa (RN11)", () => {
+  iniciar();
+  salvar("sessao", "u2");
+  const cartao = achar(telaViagemAtiva(), (e) => e.tagName === "LI");
+  const ordem = cartao.filhos.map((f) => f.tagName);
+  assert.ok(ordem.indexOf("BUTTON") < ordem.indexOf("FIGURE"));
+});

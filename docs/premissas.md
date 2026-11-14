@@ -81,3 +81,8 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Reatividade e tempo real (RNF05):** Atualização via `CustomEvent` local e `BroadcastChannel` para sincronização imediata entre múltiplas abas abertas no mesmo navegador.
 - **Modelo de dados:** Coleção `mensagens` com atributos `id`, `caronaId`, `remetenteId`, `texto`, `criadaEm`, espelhando o Diagrama de Classes (`chatGrupo` e `Mensagem`).
 - **Segurança e acessibilidade (RNF10):** Limite de 500 caracteres, sanitização de nós sem uso de `innerHTML`, anúncios com `role="log"` e `aria-live="polite"`.
+## Premissas adicionais da Etapa 8.4
+- **Mapa (RF11):** esquemático, desenhado em SVG com as coordenadas aproximadas da lista de locais. Sem biblioteca nem imagens de mapa: funciona offline e não envia dados a terceiros.
+- **Posição do veículo:** estimada pelo tempo desde o início da viagem, em linha reta da partida ao destino, usando o mesmo tempo previsto da chegada estimada (30 km/h, trajeto 30% maior). Passado o tempo previsto, o veículo fica no destino até o motorista concluir.
+- **Onde aparece:** só na tela *Viagem em andamento*, abaixo do botão de emergência, para o motorista e as passageiras confirmadas. Mapas na busca e na oferta ficam para o refinamento visual.
+- **Rastreamento antes do início (RN08/US07: 15 min antes):** não há posição a compartilhar sem GPS; a viagem só aparece no mapa depois de iniciada. Inconsistência 4 (RF11 "X minutos") continua registrada.
