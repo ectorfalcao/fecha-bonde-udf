@@ -13,12 +13,12 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF07 | Solicitações de entrada | Buscar / Caronas | **Implementado** (avisos simulados dentro do app) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Solicita, motorista aprova ou recusa, vagas atualizam | OK (automatizado e manual) |
 | RF08 | Lista de espera | Buscar / Caronas | **Implementado** (o 1º da fila vira "pendente"; o motorista ainda aprova) | `tests/grupos.test.mjs` + manual | Lotou: fila; vagou: próximo é chamado | OK (automatizado e manual) |
 | RF09 | Cancelamento | Caronas | **Implementado** (motorista só com 2 h de antecedência: premissa) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Passageiro libera vaga; motorista avisa todos | OK (automatizado e manual) |
-| RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado) |
-| RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; conferido no navegador (desktop) |
-| RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; manual pendente |
-| RF13 | Histórico e extrato | Histórico | **Implementado** (extrato com valores simulados) | `tests/historico.test.mjs` | Todas as viagens concluídas da pessoa e totais pagos, a pagar, recebidos e a receber | Automatizado OK; tela conferida no navegador (sem viagens) |
-| RF14 | Avaliação mútua | Avaliação | **Implementado** (1 a 5 estrelas + comentário opcional; não bloqueia o uso, ver inconsistência 2) | `tests/avaliacao.test.mjs` | Após a conclusão, motorista e passageiros se avaliam uma vez; média aparece no cartão | Automatizado OK; manual pendente |
-| RF15 | Botão de emergência | Viagem | **Parcial/Simulado** (abre discagem 190 e SMS pré-preenchido no aparelho; não aciona serviços) | `tests/emergencia.test.mjs` + manual | Botão visível na viagem em andamento; 190 e SMS com localização | Automatizado OK; manual pendente |
+| RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado; navegador com duas abas no teste de ponta a ponta) |
+| RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; navegador OK, desktop e celular (teste de ponta a ponta) |
+| RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; navegador OK (teste de ponta a ponta) |
+| RF13 | Histórico e extrato | Histórico | **Implementado** (extrato com valores simulados) | `tests/historico.test.mjs` | Todas as viagens concluídas da pessoa e totais pagos, a pagar, recebidos e a receber | Automatizado OK; navegador OK (teste de ponta a ponta) |
+| RF14 | Avaliação mútua | Avaliação | **Implementado** (1 a 5 estrelas + comentário opcional; não bloqueia o uso, ver inconsistência 2) | `tests/avaliacao.test.mjs` | Após a conclusão, motorista e passageiros se avaliam uma vez; média aparece no cartão | Automatizado OK; navegador OK (teste de ponta a ponta) |
+| RF15 | Botão de emergência | Viagem | **Parcial/Simulado** (abre discagem 190 e SMS pré-preenchido no aparelho; não aciona serviços) | `tests/emergencia.test.mjs` + manual | Botão visível na viagem em andamento; 190 e SMS com localização | Automatizado OK; navegador OK (teste de ponta a ponta) |
 | RN03 | Aceite prévio dos termos de convivência | Buscar | **Implementado** | `tests/grupos.test.mjs` | Solicitação recusada sem aceite | OK (automatizado) |
 | RN04 | Vagas <= capacidade do veículo (1 a 4) | Oferecer | **Implementado** (validação) | `tests/caronas.test.mjs` | Vagas acima do limite recusadas | OK (automatizado) |
 | RN05 | Filtro "só para mulheres" | Oferecer/Buscar | **Parcial** (regra para passageira em grupo exclusivo em aberto, ver D7) | `tests/caronas.test.mjs` | Grupo só aparece para usuárias femininas, e some se houver passageiro não feminino confirmado | OK (automatizado) |
@@ -35,6 +35,24 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+
+## Teste de ponta a ponta no navegador (fim da Etapa 8)
+
+Executado com o **playwright-cli** (Edge real, controlado por script), partindo de dados fictícios limpos: 34 verificações, **34 OK**, console sem erros.
+
+| Fluxo | O que foi conferido |
+|---|---|
+| Viagem (8.1) | Carlos liga o modo demonstração e inicia a c1; a faixa "viagem em andamento" aparece nas outras telas |
+| Mapa (8.4) | Mapa SVG visível, rotulado SIMULADO, com chegada prevista; botão de emergência antes do mapa |
+| Chat (8.3 + correção) | Entra e sai do chat 3 vezes; a mensagem enviada aparece na aba e **chega sozinha numa segunda aba** |
+| Avaliação (8.6) | Ao concluir, o motorista vai direto para a avaliação; sem nota dá erro; Carlos avalia Júlia (5); Júlia avalia Carlos (4, com comentário); aviso sem revelar a nota; média ★ 5,0 aparece |
+| Pagamento (8.5) | Júlia recebe o aviso de conclusão, vê "Pendente", cartão indisponível, código fictício, simula e recebe o recibo; Carlos é avisado e vê "✔ Pago" |
+| Histórico (8.7) | Extrato da Júlia: pagou R$ 7,50, deve R$ 0,00; do Carlos: recebeu R$ 7,50 |
+| Celular (375 px) | Caronas, Histórico, Buscar, Avaliação e Viagem sem rolagem lateral; botões com pelo menos 44 px de altura; mapa visível |
+
+**Observações visuais para o refinamento (não são defeitos de fluxo):** no celular o mapa sobra espaço vazio quando a rota é quase horizontal; a chave e o código PIX aparecem sem o estilo de cartão; "Caronas (2)" quebra em duas linhas na barra inferior.
+
+**Não coberto:** discagem 190 e SMS reais (exigem celular), permissão de localização, leitor de tela e medição de contraste.
 
 ## Etapa 8.7: histórico e extrato (RF13)
 
