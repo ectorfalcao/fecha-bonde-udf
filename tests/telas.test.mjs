@@ -118,3 +118,20 @@ for (const [nome, usuario, tela] of [["Acesso (sem sessão)", null, telaAcesso],
     if (usuario) entrar(usuario);
     semLixo(tela(), nome);
   });
+
+// Etapa 9.2: o cartão desenha a carona como linha de percurso, com horários de saída e chegada em destaque.
+test("cartão de carona: percurso com partida, destino e horários; mesmo cartão no Início e na busca", () => {
+  entrar("u2");
+  const c1 = obter("caronas", "c1");
+  const hhmm = (d) => new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(new Date(d));
+  for (const tela of [telaBuscar(), telaInicio()]) {
+    const p = achar(tela, (e) => e.className === "percurso");
+    assert.ok(p, "percurso no cartão");
+    const t = textoDe(p);
+    assert.match(t, /^Águas Claras.*saída.*UDF Campus Sede \(Asa Sul\).*chegada/);
+    assert.ok(t.includes(hhmm(c1.dataHoraSaida)), "horário de saída");
+    assert.match(t, /≈ \d+ min · tolerância de 10 min/);
+    assert.ok(achar(tela, (e) => e.tagName === "H3" && e.className === "sr-only" && e.textContent === "Águas Claras → UDF Campus Sede (Asa Sul)"), "título da rota para leitor de tela");
+    semLixo(tela, "cartão");
+  }
+});

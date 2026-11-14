@@ -1,22 +1,12 @@
-import { el, aviso, linkBotao, dataHora, moeda } from "./componentes.js";
-import { listar, obter, vagasDisponiveis } from "./dados.js";
+import { el, aviso, linkBotao } from "./componentes.js";
+import { listar } from "./dados.js";
+import { cartaoCarona } from "./cartao.js";
 import { usuarioAtual } from "./sessao.js";
 
 export function telaInicio() {
   const agora = new Date();
   const caronas = listar("caronas").filter((c) => c.status === "aberta" && new Date(c.dataHoraSaida) > agora); // sem canceladas nem vencidas
-  const itens = caronas.map((c) => {
-    const motorista = obter("usuarios", c.motoristaId);
-    const vagas = vagasDisponiveis(c);
-    return el("li", { class: "carona" },
-      el("h3", {}, `${c.origem} → ${c.destino}`),
-      el("dl", {},
-        el("dt", {}, "Saída"), el("dd", {}, dataHora(c.dataHoraSaida)),
-        el("dt", {}, "Motorista"), el("dd", {}, motorista?.nome ?? "—"),
-        el("dt", {}, "Vagas"), el("dd", {}, vagas > 0 ? `${vagas} de ${c.vagasTotal}` : "Lotada (lista de espera)"),
-        el("dt", {}, "Contribuição"), el("dd", { class: "valor" }, moeda(c.valor)),
-        c.apenasMulheres && [el("dt", {}, "Grupo"), el("dd", {}, "Só para mulheres")]));
-  });
+  const itens = caronas.map((c) => cartaoCarona(c)); // mesmo cartão da busca (Etapa 9.2)
   return el("div", {},
     el("h2", {}, "Caronas para o UDF"),
     aviso("info", "Protótipo acadêmico: as caronas abaixo são fictícias. Para solicitar uma vaga, use a busca."),

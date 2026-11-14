@@ -9,6 +9,7 @@ import { podeIniciarViagem } from "./viagem.js";
 import { modoDemo, definirModoDemo } from "./demo.js";
 import { historicoDe } from "./historico.js";
 import { cartaoViagemConcluida } from "./historicoTela.js";
+import { topoCarona } from "./cartao.js";
 
 const RECENTES = 3; // viagens concluídas mostradas em Caronas
 
@@ -64,8 +65,8 @@ export function telaMinhasCaronas() {
       const c = obter("caronas", s.caronaId);
       if (!c) return null;
       const pos = s.status === "espera" ? posicaoNaFila(s, c, todas) : 0;
-      return el("li", { class: "carona" }, el("h4", {}, rota(c)),
-        lista([["Situação", rotuloStatus(s, c)], pos > 0 && ["Posição na fila", `${pos}º`], ["Saída", dataHora(c.dataHoraSaida)],
+      return el("li", { class: "carona" }, topoCarona(c, "h4"),
+        lista([["Situação", rotuloStatus(s, c)], pos > 0 && ["Posição na fila", `${pos}º`],
           ["Motorista", obter("usuarios", c.motoristaId)?.nome ?? "—"], ["Contribuição", moeda(c.valor), "valor"]]),
         s.status === "confirmada" && el("div", { class: "linha-acoes" },
           linkBotao("💬 Chat do grupo", `#/chat?carona=${c.id}`, "secundario"),
@@ -91,8 +92,8 @@ export function telaMinhasCaronas() {
             el("button", { type: "button", class: "botao secundario", "aria-label": `Recusar ${nomeDe(s)?.nome}`, onclick: () => concluir(recusar(s.id, u.id), `${nomeDe(s)?.nome} foi recusado(a).`) }, "Recusar")))))];
 
       if (c.status === "em_andamento")
-        return el("li", { class: "carona" }, el("h4", {}, rota(c)),
-          lista([["Situação", "🚗 Viagem em andamento"], ["Iniciada às", hora(c.iniciadaEm)], ["Saída prevista", dataHora(c.dataHoraSaida)], ["Passageiros a bordo", String(conf.length)]]),
+        return el("li", { class: "carona" }, topoCarona(c, "h4"),
+          lista([["Situação", "🚗 Viagem em andamento"], ["Iniciada às", hora(c.iniciadaEm)], ["Passageiros a bordo", String(conf.length)]]),
           pessoas("A bordo", conf),
           c.iniciadaEmModoDemo && el("p", { class: "nota" }, "Iniciada com o modo demonstração (fora da janela de 15 minutos)."),
           el("div", { class: "linha-acoes" },
@@ -108,8 +109,8 @@ export function telaMinhasCaronas() {
             } }, "Concluir viagem")));
 
       const bloqueio = podeCancelarCarona(c), inicio = podeIniciarViagem(c, { demo: modoDemo() });
-      return el("li", { class: "carona" }, el("h4", {}, rota(c)),
-        lista([["Saída", dataHora(c.dataHoraSaida)], ["Vagas", `${vagasDisponiveis(c)} livre(s) de ${c.vagasTotal}`], ["Contribuição", moeda(c.valor), "valor"]]),
+      return el("li", { class: "carona" }, topoCarona(c, "h4"),
+        lista([["Vagas", `${vagasDisponiveis(c)} livre(s) de ${c.vagasTotal}`], ["Contribuição", moeda(c.valor), "valor"]]),
         new Date(c.dataHoraSaida) <= new Date() && el("p", { class: "nota" }, "O horário de saída já passou."),
         pessoas("Aguardando sua aprovação", pend, "decidir"), pessoas("Confirmados", conf), pessoas("Lista de espera", fila, "fila"),
         !sols.some((s) => ATIVAS.includes(s.status)) && el("p", { class: "nota" }, "Nenhuma solicitação ainda."),

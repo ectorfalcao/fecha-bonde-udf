@@ -5,6 +5,7 @@ import { usuarioAtual } from "./sessao.js";
 import { historicoDe, extratoDe } from "./historico.js";
 import { pagamentoDe, situacaoPagamentos } from "./pagamento.js";
 import { quemAvaliar } from "./avaliacao.js";
+import { topoCarona } from "./cartao.js";
 
 const lista = (linhas) => el("dl", {}, linhas.filter(Boolean).flatMap(([t, v, cls]) => [el("dt", {}, t), el("dd", { class: cls }, v)]));
 const reais = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); // moeda() diria "Gratuita" para 0
@@ -14,8 +15,8 @@ export function cartaoViagemConcluida(u, c, { solicitacoes, pagamentos, avaliaco
   const souMotorista = c.motoristaId === u.id, pago = pagamentoDe(c.id, u.id, pagamentos);
   const situacao = situacaoPagamentos(c, solicitacoes, pagamentos);
   const aAvaliar = quemAvaliar(c, u.id, solicitacoes, avaliacoes), pendentes = aAvaliar.filter((a) => a.obrigatorio && !a.feita).length;
-  return el("li", { class: "carona" }, el("h4", {}, `${c.origem} → ${c.destino}`),
-    lista([["Seu papel", souMotorista ? "Motorista" : "Passageiro(a)"], ["Saída", dataHora(c.dataHoraSaida)], ["Concluída em", dataHora(c.concluidaEm)],
+  return el("li", { class: "carona" }, topoCarona(c, "h4"),
+    lista([["Seu papel", souMotorista ? "Motorista" : "Passageiro(a)"], ["Concluída em", dataHora(c.concluidaEm)],
       ["Passageiros", String(situacao.length)], ["Contribuição", moeda(c.valor), "valor"],
       c.valor > 0 && !souMotorista && ["Pagamento", pago ? `✔ Pago (simulado) em ${dataHora(pago.pagoEm)}` : "⚠ Pendente"],
       aAvaliar.length > 0 && ["Avaliação", pendentes ? `⚠ ${pendentes} pendente(s)` : "✔ Feita"]]),

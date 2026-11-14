@@ -81,6 +81,9 @@ main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(
 
 .nota { color: var(--texto-suave); font-size: 0.875rem; }
 
+/* Só para leitor de tela e navegação por títulos (o percurso desenhado mostra o mesmo para quem enxerga) */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
 .rodape { text-align: center; padding: var(--espaco-3) var(--espaco-2); color: var(--texto-suave); }
 
 @media (prefers-reduced-motion: reduce) {
