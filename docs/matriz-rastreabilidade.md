@@ -16,7 +16,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado) |
 | RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; conferido no navegador (desktop) |
 | RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; manual pendente |
-| RF13 | Histórico e extrato | Histórico | Pendente | a definir | | |
+| RF13 | Histórico e extrato | Histórico | **Implementado** (extrato com valores simulados) | `tests/historico.test.mjs` | Todas as viagens concluídas da pessoa e totais pagos, a pagar, recebidos e a receber | Automatizado OK; tela conferida no navegador (sem viagens) |
 | RF14 | Avaliação mútua | Avaliação | **Implementado** (1 a 5 estrelas + comentário opcional; não bloqueia o uso, ver inconsistência 2) | `tests/avaliacao.test.mjs` | Após a conclusão, motorista e passageiros se avaliam uma vez; média aparece no cartão | Automatizado OK; manual pendente |
 | RF15 | Botão de emergência | Viagem | **Parcial/Simulado** (abre discagem 190 e SMS pré-preenchido no aparelho; não aciona serviços) | `tests/emergencia.test.mjs` + manual | Botão visível na viagem em andamento; 190 e SMS com localização | Automatizado OK; manual pendente |
 | RN03 | Aceite prévio dos termos de convivência | Buscar | **Implementado** | `tests/grupos.test.mjs` | Solicitação recusada sem aceite | OK (automatizado) |
@@ -35,6 +35,28 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+
+## Etapa 8.7: histórico e extrato (RF13)
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Tela **Histórico e extrato** (`#/historico`): todas as viagens concluídas em que a pessoa foi motorista ou passageira confirmada, da mais recente para a mais antiga | Implementado | `historico.js` (`historicoDe`), `historicoTela.js`, `app.js` | `tests/historico.test.mjs` |
+| Extrato simulado: você pagou, ainda deve, recebeu e a receber; caronas gratuitas fora | Implementado | `historico.js` (`extratoDe`) | idem |
+| Cada viagem com pagamento, avaliação e ações pendentes (Pagar, Avaliar, Ver chat): é o "avaliar depois pelo Histórico" da premissa da Etapa 8 | Implementado | `historicoTela.js` (`cartaoViagemConcluida`) | idem, `tests/pagamento.test.mjs`, `tests/avaliacao.test.mjs` |
+| Caronas mostra só as 3 viagens concluídas mais recentes, com link para o histórico (antes: 10, provisório) | Implementado | `minhas.js` | `tests/historico.test.mjs` |
+
+### Verificação
+| Item | Resultado |
+|---|---|
+| `node --check` em todos os módulos | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 145/145 |
+| Sensibilidade: incluí viagens canceladas no histórico e contei valor recebido como pago | A suíte falhou nos dois casos |
+| Navegador: tela abre (usuário sem viagens concluídas) e todos os módulos carregam sem erros no console | OK |
+| Histórico com viagens e extrato com valores no navegador | **Pendente (roteiro entregue)** |
+
+### Limites conhecidos
+- Canceladas não aparecem: o histórico é de viagens feitas. Não há filtro por período nem exportação do extrato.
+- Valores são simulados e só deste navegador.
 
 ## Etapa 8.6: avaliação mútua (RF14, RN10, US10)
 

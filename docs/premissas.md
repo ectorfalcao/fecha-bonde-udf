@@ -63,7 +63,7 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Solicitações sem resposta ao iniciar:** pendentes e lista de espera são encerradas pelo sistema (`cancelada`, `canceladaPor: "sistema"`) e o passageiro é avisado. A documentação não prevê esse caso; **precisa de confirmação da equipe ou do professor**.
 - **Durante e depois da viagem:** ninguém solicita, aprova, recusa ou cancela solicitação pelo app, e o motorista não cancela a carona. A documentação não prevê cancelamento de viagem em andamento.
 - **Modo demonstração:** ferramenta de teste, desligada por padrão, que libera o início fora da janela. Quando ligada, o cabeçalho avisa em todas as telas. Quando é usada para iniciar, a carona guarda `iniciadaEmModoDemo: true`.
-- **Viagens concluídas:** aparecem na tela Caronas (10 mais recentes) até o histórico completo (RF13, parte 8.7).
+- **Viagens concluídas:** aparecem na tela Caronas (10 mais recentes) até o histórico completo (RF13, parte 8.7). *Atualizado na 8.7: Caronas mostra as 3 mais recentes e o link para o Histórico.*
 
 ## Premissas adicionais da Etapa 8.2
 - **Onde fica o botão (RN11):** na tela "Viagem em andamento" (`#/viagem`), que só tem conteúdo enquanto há viagem em andamento. Uma faixa em todas as telas leva até ela. A barra inferior continua com 5 itens.
@@ -100,3 +100,8 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **"Avaliando o motorista e o grupo":** interpretado como os demais passageiros confirmados, de forma **opcional**, como decidido na Etapa 8.
 - **Privacidade:** quem foi avaliado recebe um aviso sem a nota e sem o nome de quem avaliou; a média aparece para todos no cartão da carona.
 - **Onde avaliar depois:** em Caronas → Viagens concluídas, até o Histórico (8.7) existir.
+
+## Premissas adicionais da Etapa 8.7
+- **O que entra no histórico (RF13):** só viagens **concluídas** em que a pessoa foi motorista ou passageira confirmada. Caronas canceladas e solicitações recusadas não são viagens feitas.
+- **Extrato:** quatro totais simulados (pagou, ainda deve, recebeu, a receber), calculados a partir dos pagamentos registrados; nada é gravado à parte. Caronas gratuitas ficam fora.
+- **Onde fica:** tela própria, acessada por Caronas (a barra inferior continua com 5 itens). Pagar e avaliar depois também podem ser feitos por ela.

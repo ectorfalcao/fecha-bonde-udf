@@ -7,8 +7,10 @@ import { doUsuario, marcarLidas } from "./notificacoes.js";
 import { ATIVAS, rotuloStatus, posicaoNaFila, filaOrdenada, podeCancelarCarona } from "./grupos.js";
 import { podeIniciarViagem } from "./viagem.js";
 import { modoDemo, definirModoDemo } from "./demo.js";
-import { pagamentoDe, situacaoPagamentos } from "./pagamento.js";
-import { quemAvaliar } from "./avaliacao.js";
+import { historicoDe } from "./historico.js";
+import { cartaoViagemConcluida } from "./historicoTela.js";
+
+const RECENTES = 3; // viagens concluídas mostradas em Caronas
 
 // Lista de definição: flatMap (e não map) porque el() achata só um nível de lista.
 const lista = (linhas) => el("dl", {}, linhas.filter(Boolean).flatMap(([t, v, cls]) => [el("dt", {}, t), el("dd", { class: cls }, v)]));
@@ -44,11 +46,7 @@ export function telaMinhasCaronas() {
     return blocos;
   }
 
-  const concluidasDe = (u, todas) => {
-    const minhasConf = new Set(todas.filter((s) => s.passageiroId === u.id && s.status === "confirmada").map((s) => s.caronaId));
-    return listar("caronas").filter((c) => c.status === "concluida" && (c.motoristaId === u.id || minhasConf.has(c.id)))
-      .sort((a, b) => String(b.concluidaEm).localeCompare(String(a.concluidaEm))).slice(0, 10);
-  };
+  const concluidasDe = (u, todas) => historicoDe(u.id, listar("caronas"), todas);
 
   function blocoAvisos(u) {
     const todos = doUsuario(u.id), novos = todos.filter((n) => !n.lida).length;
@@ -138,27 +136,12 @@ export function telaMinhasCaronas() {
   }
 
   // Viagens concluídas (as 10 mais recentes). O histórico completo e o extrato vêm na parte 8.7 (RF13).
-  // RF12 (Etapa 8.5): pagamento simulado depois da viagem; carona gratuita não tem pagamento.
+  // RF13 (Etapa 8.7): só as viagens concluídas mais recentes; o resto, com o extrato, fica no Histórico.
   function blocoConcluidas(u, encerradas, todas) {
-    const pagamentos = listar("pagamentos"), avaliacoes = listar("avaliacoes");
-    return el("section", { class: "secao", "aria-labelledby": "h-conc" }, el("h3", { id: "h-conc" }, "Viagens concluídas"),
-      el("ul", { class: "lista-caronas" }, encerradas.map((c) => {
-        const souMotorista = c.motoristaId === u.id, pago = pagamentoDe(c.id, u.id, pagamentos);
-        const situacao = situacaoPagamentos(c, todas, pagamentos);
-        const aAvaliar = quemAvaliar(c, u.id, todas, avaliacoes), pendentes = aAvaliar.filter((a) => a.obrigatorio && !a.feita).length;
-        return el("li", { class: "carona" }, el("h4", {}, rota(c)),
-          lista([["Seu papel", souMotorista ? "Motorista" : "Passageiro(a)"], ["Saída", dataHora(c.dataHoraSaida)], ["Concluída em", dataHora(c.concluidaEm)],
-            ["Passageiros", String(situacao.length)], ["Contribuição", moeda(c.valor), "valor"],
-            c.valor > 0 && !souMotorista && ["Pagamento", pago ? `✔ Pago (simulado) em ${dataHora(pago.pagoEm)}` : "⚠ Pendente"],
-            aAvaliar.length > 0 && ["Avaliação", pendentes ? `⚠ ${pendentes} pendente(s)` : "✔ Feita"]]),
-          souMotorista && c.valor > 0 && situacao.length > 0 && [el("p", {}, el("strong", {}, "Pagamentos (simulados)")),
-            el("ul", { class: "pessoas" }, situacao.map((s) => el("li", {}, el("span", {},
-              `${obter("usuarios", s.passageiroId)?.nome ?? "—"} · ${s.pagamento ? "✔ Pago" : "⚠ Pendente"}`))))],
-          el("div", { class: "linha-acoes" },
-            c.valor > 0 && !souMotorista && !pago && linkBotao(`Pagar ${moeda(c.valor)}`, `#/pagamento?carona=${c.id}`),
-            aAvaliar.some((a) => !a.feita) && linkBotao(pendentes ? "⭐ Avaliar" : "⭐ Avaliar outros passageiros", `#/avaliacao?carona=${c.id}`, pendentes ? "" : "secundario"),
-            linkBotao("💬 Ver chat", `#/chat?carona=${c.id}`, "secundario")));
-      })));
+    const ctx = { solicitacoes: todas, pagamentos: listar("pagamentos"), avaliacoes: listar("avaliacoes") };
+    return el("section", { class: "secao", "aria-labelledby": "h-conc" }, el("h3", { id: "h-conc" }, "Viagens concluídas recentes"),
+      el("ul", { class: "lista-caronas" }, encerradas.slice(0, RECENTES).map((c) => cartaoViagemConcluida(u, c, ctx))),
+      el("div", { class: "linha-acoes" }, linkBotao(`Ver histórico e extrato (${encerradas.length} viagem(ns))`, "#/historico", "secundario")));
   }
 
   // Ferramenta de teste: o selo no cabeçalho avisa quando está ligada.

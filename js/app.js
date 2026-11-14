@@ -11,6 +11,7 @@ import { telaViagemAtiva } from "./viagemAtiva.js";
 import { telaChat } from "./chatTela.js";
 import { telaPagamento } from "./pagamentoTela.js";
 import { telaAvaliacao } from "./avaliacaoTela.js";
+import { telaHistorico } from "./historicoTela.js";
 import { usuarioAtual, acessoLiberado } from "./sessao.js";
 import { listar } from "./dados.js";
 import { viagensAtivasDe } from "./viagem.js";
@@ -32,6 +33,7 @@ registrar("/viagem", { titulo: "Viagem em andamento", exigeLogin: true, render: 
 registrar("/chat", { titulo: "Chat do grupo", exigeLogin: true, render: telaChat });
 registrar("/pagamento", { titulo: "Pagamento", exigeLogin: true, render: telaPagamento });
 registrar("/avaliacao", { titulo: "Avaliação da viagem", exigeLogin: true, render: telaAvaliacao });
+registrar("/historico", { titulo: "Histórico e extrato", exigeLogin: true, render: telaHistorico });
 registrar("/ambiente", { titulo: "Verificação do ambiente", render: telaAmbiente });
 registrar("*", { titulo: "Página não encontrada", render: () => el("div", {}, el("h2", {}, "Página não encontrada"), aviso("erro", "Este endereço não existe no aplicativo."), linkBotao("Voltar ao início", "#/")) });
 
@@ -74,5 +76,5 @@ iniciar(document.getElementById("conteudo"), (caminho) => {
   atualizarAvisos();
   atualizarFaixa();
   lista.querySelectorAll("a").forEach((a) =>
-    a.getAttribute("href") === `#${{ "/acesso": "/perfil", "/viagem": "/caronas", "/chat": "/caronas", "/pagamento": "/caronas", "/avaliacao": "/caronas" }[caminho] ?? caminho}` ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+    a.getAttribute("href") === `#${{ "/acesso": "/perfil", "/viagem": "/caronas", "/chat": "/caronas", "/pagamento": "/caronas", "/avaliacao": "/caronas", "/historico": "/caronas" }[caminho] ?? caminho}` ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
 });

@@ -25,14 +25,14 @@ Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 
 - 8.4 concluída: **mapa da viagem SIMULADO** (RF11) na tela *Viagem em andamento*: rota esquemática e posição estimada pelo tempo, sem GPS.
 - 8.5 concluída: **pagamento SIMULADO** (RF12) depois da viagem concluída: PIX fictício, cartão indisponível, motorista vê quem pagou.
 - 8.6 concluída: **avaliação mútua** (RF14): 1 a 5 estrelas e comentário opcional depois da viagem; média do motorista no cartão da busca.
-- Próxima: 8.7 histórico.
+- 8.7 concluída: **histórico e extrato** (RF13): todas as viagens concluídas, com pagar, avaliar e ver chat, e totais simulados. Acesso por Caronas.
 
 Veja `docs/matriz-rastreabilidade.md` e `docs/premissas.md`.
 
 ## Estrutura
 - `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`
-- `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js`, `chat.js`, `pagamento.js` e `avaliacao.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js`, `mensagens.js`, `pagamentos.js` e `avaliacoes.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`
-- Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `viagemAtiva.js` (viagem e emergência), `chatTela.js` (chat do grupo), `mapa.js` (mapa simulado da viagem), `pagamentoTela.js` (pagamento simulado), `avaliacaoTela.js` (avaliação), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
+- `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js`, `chat.js`, `pagamento.js`, `avaliacao.js` e `historico.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js`, `mensagens.js`, `pagamentos.js` e `avaliacoes.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`
+- Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `viagemAtiva.js` (viagem e emergência), `chatTela.js` (chat do grupo), `mapa.js` (mapa simulado da viagem), `pagamentoTela.js` (pagamento simulado), `avaliacaoTela.js` (avaliação), `historicoTela.js` (histórico e extrato), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
 - `#/ambiente`: verificação do ambiente (tela da Etapa 3)
 
 ## Modo demonstração
@@ -50,6 +50,7 @@ Precisa do Node 20 ou superior. Nenhum pacote para instalar.
 - `emergencia.test.mjs`: contato, links `tel:` e `sms:`, mensagem, localização simulada, tela da emergência (Etapa 8.2) e mapa na tela da viagem (Etapa 8.4).
 - `chat.test.mjs`: regras de acesso ao chat, permissões, arquivamento após 2h (RN07), envio e tela (Etapa 8.3).
 - `avaliacao.test.mjs`: quem avalia quem, regras, média, aviso e telas da avaliação (Etapa 8.6).
+- `historico.test.mjs`: viagens do histórico, extrato e telas (Etapa 8.7).
 - `pagamento.test.mjs`: regras, registro, aviso ao motorista e telas do pagamento simulado (Etapa 8.5).
 - `telas.test.mjs`: renderiza as telas com um DOM falso (`dom-falso.mjs`, auxiliar) e simula os cliques. Também falha se aparecer "null", "undefined" ou "[object" no texto da tela. **Não substitui** o teste manual no navegador.
 
