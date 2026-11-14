@@ -93,3 +93,10 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Dados fictícios:** a chave PIX (`pix-ficticio@fechabonde.exemplo`, domínio reservado) e o código ("SIMULADO-FECHABONDE-...") não seguem o padrão do Banco Central e não funcionam em banco nenhum.
 - **Pendências:** não são gravadas, são calculadas (passageiro confirmado + carona concluída + valor > 0 + sem pagamento), como as vagas (D10). Carona gratuita não gera pagamento.
 - **Sem confirmação do motorista:** o registro do passageiro basta, porque não há dinheiro real para conferir.
+
+## Premissas adicionais da Etapa 8.6
+- **Escala (RF14):** nota de 1 a 5 estrelas e comentário opcional de até 300 caracteres. A documentação não define a escala; **precisa de confirmação da equipe ou do professor**.
+- **Obrigatoriedade (RN10, inconsistência 2):** a avaliação fica "pendente" em Caronas e o motorista é levado à tela ao concluir, mas nada é bloqueado. Para bloquear (por exemplo, impedir nova solicitação com avaliação pendente), a equipe precisa decidir.
+- **"Avaliando o motorista e o grupo":** interpretado como os demais passageiros confirmados, de forma **opcional**, como decidido na Etapa 8.
+- **Privacidade:** quem foi avaliado recebe um aviso sem a nota e sem o nome de quem avaliou; a média aparece para todos no cartão da carona.
+- **Onde avaliar depois:** em Caronas → Viagens concluídas, até o Histórico (8.7) existir.

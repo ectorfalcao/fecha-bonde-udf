@@ -17,7 +17,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; conferido no navegador (desktop) |
 | RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; manual pendente |
 | RF13 | Histórico e extrato | Histórico | Pendente | a definir | | |
-| RF14 | Avaliação mútua | Avaliação | Pendente | a definir | | |
+| RF14 | Avaliação mútua | Avaliação | **Implementado** (1 a 5 estrelas + comentário opcional; não bloqueia o uso, ver inconsistência 2) | `tests/avaliacao.test.mjs` | Após a conclusão, motorista e passageiros se avaliam uma vez; média aparece no cartão | Automatizado OK; manual pendente |
 | RF15 | Botão de emergência | Viagem | **Parcial/Simulado** (abre discagem 190 e SMS pré-preenchido no aparelho; não aciona serviços) | `tests/emergencia.test.mjs` + manual | Botão visível na viagem em andamento; 190 e SMS com localização | Automatizado OK; manual pendente |
 | RN03 | Aceite prévio dos termos de convivência | Buscar | **Implementado** | `tests/grupos.test.mjs` | Solicitação recusada sem aceite | OK (automatizado) |
 | RN04 | Vagas <= capacidade do veículo (1 a 4) | Oferecer | **Implementado** (validação) | `tests/caronas.test.mjs` | Vagas acima do limite recusadas | OK (automatizado) |
@@ -35,6 +35,37 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+
+## Etapa 8.6: avaliação mútua (RF14, RN10, US10)
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Quem avalia quem: motorista avalia cada passageiro; passageiro avalia o motorista e, opcionalmente, os colegas | Implementado | `avaliacao.js` (`quemAvaliar`) | `tests/avaliacao.test.mjs` |
+| Só depois da conclusão, só entre quem viajou, ninguém se avalia, uma avaliação por pessoa e viagem | Implementado | `avaliacao.js` (`podeAvaliar`) | idem |
+| Nota de 1 a 5 e comentário opcional (até 300 caracteres) | Implementado | `avaliacao.js` (`validarAvaliacao`) | idem |
+| Tela **Avaliação** (`#/avaliacao?carona=...`); o motorista vai direto para ela ao concluir uma viagem com passageiros | Implementado | `avaliacaoTela.js`, `minhas.js`, `app.js` | idem |
+| Aviso a quem foi avaliado, sem revelar nota nem autor | Implementado | `avaliacoes.js` | idem |
+| Média só com avaliações feitas ("sem avaliações" quando não há nenhuma), exibida no cartão da busca e na tela de avaliação | Implementado | `avaliacao.js` (`mediaDe`), `cartao.js` | idem |
+| Situação "Avaliação: pendente/feita" e botão "⭐ Avaliar" em Caronas → Viagens concluídas | Implementado | `minhas.js` | idem |
+
+### Defeito achado e corrigido durante a parte
+| # | Defeito | Como foi achado | Correção |
+|---|---|---|---|
+| 1 | Plural errado na média ("2 avaliaçãoões") | Teste automatizado | `avaliacao.js`: `textoMedia` escolhe a palavra inteira |
+
+### Verificação
+| Item | Resultado |
+|---|---|
+| `node --check` em todos os módulos | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 140/140 |
+| Sensibilidade: deixei avaliar a si mesmo, avaliar antes da conclusão e misturar notas de outras pessoas na média | A suíte falhou nos três casos |
+| Navegador: app carrega com os módulos novos, sem erros no console | OK |
+| Fluxo completo no navegador (concluir, avaliar como motorista e como passageira, média no cartão) | **Pendente (roteiro entregue)** |
+
+### Limites conhecidos
+- A avaliação **não é obrigatória** na prática (RN10 diz "obrigatória"): fica pendente e não bloqueia nada. Ver inconsistência 2.
+- Não dá para editar nem apagar uma avaliação enviada.
+- Sem servidor, a média só considera avaliações feitas neste navegador.
 
 ## Etapa 8.5: pagamento simulado (RF12)
 

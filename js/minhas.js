@@ -8,6 +8,7 @@ import { ATIVAS, rotuloStatus, posicaoNaFila, filaOrdenada, podeCancelarCarona }
 import { podeIniciarViagem } from "./viagem.js";
 import { modoDemo, definirModoDemo } from "./demo.js";
 import { pagamentoDe, situacaoPagamentos } from "./pagamento.js";
+import { quemAvaliar } from "./avaliacao.js";
 
 // Lista de definição: flatMap (e não map) porque el() achata só um nível de lista.
 const lista = (linhas) => el("dl", {}, linhas.filter(Boolean).flatMap(([t, v, cls]) => [el("dt", {}, t), el("dd", { class: cls }, v)]));
@@ -101,7 +102,11 @@ export function telaMinhasCaronas() {
             linkBotao("Abrir viagem e emergência", "#/viagem"),
             el("button", { type: "button", class: "botao", "aria-label": `Concluir viagem ${rota(c)}`, onclick: async () => {
               if (await confirmar("Concluir a viagem?", conf.length ? `Confirme que a viagem terminou. ${conf.length} passageiro(s) serão avisados.` : "Confirme que a viagem terminou.", "Concluir viagem"))
-                concluir(concluirViagem(c.id, u.id), "Viagem concluída.");
+              {
+                const r = concluirViagem(c.id, u.id);
+                if (r.ok && r.passageiros) location.hash = `#/avaliacao?carona=${c.id}`; // RF14: avaliação logo ao concluir
+                else concluir(r, "Viagem concluída.");
+              }
             } }, "Concluir viagem")));
 
       const bloqueio = podeCancelarCarona(c), inicio = podeIniciarViagem(c, { demo: modoDemo() });
@@ -135,20 +140,23 @@ export function telaMinhasCaronas() {
   // Viagens concluídas (as 10 mais recentes). O histórico completo e o extrato vêm na parte 8.7 (RF13).
   // RF12 (Etapa 8.5): pagamento simulado depois da viagem; carona gratuita não tem pagamento.
   function blocoConcluidas(u, encerradas, todas) {
-    const pagamentos = listar("pagamentos");
+    const pagamentos = listar("pagamentos"), avaliacoes = listar("avaliacoes");
     return el("section", { class: "secao", "aria-labelledby": "h-conc" }, el("h3", { id: "h-conc" }, "Viagens concluídas"),
       el("ul", { class: "lista-caronas" }, encerradas.map((c) => {
         const souMotorista = c.motoristaId === u.id, pago = pagamentoDe(c.id, u.id, pagamentos);
         const situacao = situacaoPagamentos(c, todas, pagamentos);
+        const aAvaliar = quemAvaliar(c, u.id, todas, avaliacoes), pendentes = aAvaliar.filter((a) => a.obrigatorio && !a.feita).length;
         return el("li", { class: "carona" }, el("h4", {}, rota(c)),
           lista([["Seu papel", souMotorista ? "Motorista" : "Passageiro(a)"], ["Saída", dataHora(c.dataHoraSaida)], ["Concluída em", dataHora(c.concluidaEm)],
             ["Passageiros", String(situacao.length)], ["Contribuição", moeda(c.valor), "valor"],
-            c.valor > 0 && !souMotorista && ["Pagamento", pago ? `✔ Pago (simulado) em ${dataHora(pago.pagoEm)}` : "⚠ Pendente"]]),
+            c.valor > 0 && !souMotorista && ["Pagamento", pago ? `✔ Pago (simulado) em ${dataHora(pago.pagoEm)}` : "⚠ Pendente"],
+            aAvaliar.length > 0 && ["Avaliação", pendentes ? `⚠ ${pendentes} pendente(s)` : "✔ Feita"]]),
           souMotorista && c.valor > 0 && situacao.length > 0 && [el("p", {}, el("strong", {}, "Pagamentos (simulados)")),
             el("ul", { class: "pessoas" }, situacao.map((s) => el("li", {}, el("span", {},
               `${obter("usuarios", s.passageiroId)?.nome ?? "—"} · ${s.pagamento ? "✔ Pago" : "⚠ Pendente"}`))))],
           el("div", { class: "linha-acoes" },
             c.valor > 0 && !souMotorista && !pago && linkBotao(`Pagar ${moeda(c.valor)}`, `#/pagamento?carona=${c.id}`),
+            aAvaliar.some((a) => !a.feita) && linkBotao(pendentes ? "⭐ Avaliar" : "⭐ Avaliar outros passageiros", `#/avaliacao?carona=${c.id}`, pendentes ? "" : "secundario"),
             linkBotao("💬 Ver chat", `#/chat?carona=${c.id}`, "secundario")));
       })));
   }

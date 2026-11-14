@@ -1,6 +1,8 @@
 import { el, moeda, dataHora } from "./componentes.js";
 import { obter, vagasDisponiveis } from "./dados.js";
 import { chegadaEstimada } from "./caronas.js";
+import { mediaDe, textoMedia } from "./avaliacao.js";
+import { listar } from "./dados.js";
 
 const hora = (d) => new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(d);
 
@@ -9,7 +11,7 @@ export function cartaoCarona(c, { distanciaKm = null, acao = null } = {}) {
   const linhas = [
     ["Saída", `${dataHora(c.dataHoraSaida)} (tolerância de ${c.toleranciaMin ?? 0} min)`],
     ["Chegada estimada", hora(chegadaEstimada(c))],
-    ["Motorista", motorista?.nome ?? "—"],
+    ["Motorista", `${motorista?.nome ?? "—"} · ${textoMedia(mediaDe(c.motoristaId, listar("avaliacoes")))}`], // RF14: reputação ajuda a escolher
     ["Vagas", vagas > 0 ? `${vagas} de ${c.vagasTotal}` : "Lotada (você pode entrar na lista de espera)"],
     ["Contribuição", moeda(c.valor), "valor"],
     distanciaKm != null && ["Distância da partida", `${distanciaKm.toFixed(1).replace(".", ",")} km em linha reta`],
