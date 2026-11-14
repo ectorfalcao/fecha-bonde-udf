@@ -32,7 +32,8 @@ export function concluirViagem(caronaId, motoristaId, { agora = new Date() } = {
   if (!v.ok) return v;
   if (!atualizar("caronas", c.id, { status: "concluida", concluidaEm: agora.toISOString() })) return ERRO_GRAVAR;
   const passageiros = listar("solicitacoes").filter((s) => s.caronaId === c.id && s.status === "confirmada");
-  for (const s of passageiros) notificar(s.passageiroId, `A viagem ${rotaDe(c)} foi concluída.`);
+  const pagar = c.valor > 0 ? " Pague a contribuição (simulada) em Caronas." : "";
+  for (const s of passageiros) notificar(s.passageiroId, `A viagem ${rotaDe(c)} foi concluída.${pagar}`);
   avisarViagem();
   return { ok: true, passageiros: passageiros.length };
 }

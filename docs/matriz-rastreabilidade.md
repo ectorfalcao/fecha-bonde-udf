@@ -15,7 +15,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF09 | Cancelamento | Caronas | **Implementado** (motorista só com 2 h de antecedência: premissa) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Passageiro libera vaga; motorista avisa todos | OK (automatizado e manual) |
 | RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado) |
 | RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; conferido no navegador (desktop) |
-| RF12 | Pagamento | Pagamento | Pendente (simulado) | a definir | | |
+| RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; manual pendente |
 | RF13 | Histórico e extrato | Histórico | Pendente | a definir | | |
 | RF14 | Avaliação mútua | Avaliação | Pendente | a definir | | |
 | RF15 | Botão de emergência | Viagem | **Parcial/Simulado** (abre discagem 190 e SMS pré-preenchido no aparelho; não aciona serviços) | `tests/emergencia.test.mjs` + manual | Botão visível na viagem em andamento; 190 e SMS com localização | Automatizado OK; manual pendente |
@@ -35,6 +35,31 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+
+## Etapa 8.5: pagamento simulado (RF12)
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Pagamento liberado só depois da viagem concluída, só para passageiro confirmado, só em carona com valor | Implementado | `pagamento.js` (`podePagar`) | `tests/pagamento.test.mjs` |
+| Tela **Pagamento** (`#/pagamento?carona=...`): PIX fictício (chave e código claramente falsos), cartão visível mas indisponível, aviso de simulação | Implementado | `pagamentoTela.js`, `app.js` | idem |
+| Registro do pagamento (coleção `pagamentos`) e aviso ao motorista; não paga duas vezes | Implementado | `pagamentos.js` | idem |
+| Pendências derivadas (não gravadas): motorista vê quem pagou; passageiro vê "Pendente" e o botão Pagar em Caronas | Implementado | `pagamento.js` (`situacaoPagamentos`), `minhas.js` | idem |
+| Aviso de conclusão lembra o pagamento (só se a carona não for gratuita) | Implementado | `viagens.js` | idem |
+| Cobrança real, PIX válido, cartão, estorno | **Não existe** (fora do protótipo; decisão do grupo) | n/a | n/a |
+
+### Verificação
+| Item | Resultado |
+|---|---|
+| `node --check` em todos os módulos | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 130/130 |
+| Sensibilidade: liberei o pagamento antes da conclusão e habilitei o cartão | A suíte falhou nos dois casos |
+| Navegador: app carrega com os módulos novos, sem erros no console | OK |
+| Fluxo completo no navegador (concluir, pagar como passageira, ver como motorista) | **Pendente (roteiro entregue)** |
+
+### Limites conhecidos
+- Nada é cobrado: o botão só registra que o pagamento foi "feito".
+- O motorista não confirma o recebimento; o registro do passageiro basta (não há como conferir um PIX fictício).
+- Pagamento pendente não bloqueia nada: o passageiro pode continuar usando o app.
 
 ## Etapa 8.4: mapa da viagem (RF11, SIMULADO)
 

@@ -86,3 +86,10 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Posição do veículo:** estimada pelo tempo desde o início da viagem, em linha reta da partida ao destino, usando o mesmo tempo previsto da chegada estimada (30 km/h, trajeto 30% maior). Passado o tempo previsto, o veículo fica no destino até o motorista concluir.
 - **Onde aparece:** só na tela *Viagem em andamento*, abaixo do botão de emergência, para o motorista e as passageiras confirmadas. Mapas na busca e na oferta ficam para o refinamento visual.
 - **Rastreamento antes do início (RN08/US07: 15 min antes):** não há posição a compartilhar sem GPS; a viagem só aparece no mapa depois de iniciada. Inconsistência 4 (RF11 "X minutos") continua registrada.
+
+## Premissas adicionais da Etapa 8.5 (decididas pelo grupo)
+- **Quando se paga (RF12):** depois que o motorista conclui a viagem. Resolve a inconsistência 1 a favor de RF10/UC10/D6 (chat antes do pagamento) e dispensa regra de estorno: quem cancela antes da viagem nunca pagou.
+- **Forma de pagamento:** só o PIX simulado funciona. O cartão aparece como opção indisponível, sem nenhum campo (inconsistência 5: a pesquisa mostra 100% de preferência por PIX).
+- **Dados fictícios:** a chave PIX (`pix-ficticio@fechabonde.exemplo`, domínio reservado) e o código ("SIMULADO-FECHABONDE-...") não seguem o padrão do Banco Central e não funcionam em banco nenhum.
+- **Pendências:** não são gravadas, são calculadas (passageiro confirmado + carona concluída + valor > 0 + sem pagamento), como as vagas (D10). Carona gratuita não gera pagamento.
+- **Sem confirmação do motorista:** o registro do passageiro basta, porque não há dinheiro real para conferir.

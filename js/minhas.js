@@ -7,6 +7,7 @@ import { doUsuario, marcarLidas } from "./notificacoes.js";
 import { ATIVAS, rotuloStatus, posicaoNaFila, filaOrdenada, podeCancelarCarona } from "./grupos.js";
 import { podeIniciarViagem } from "./viagem.js";
 import { modoDemo, definirModoDemo } from "./demo.js";
+import { pagamentoDe, situacaoPagamentos } from "./pagamento.js";
 
 // Lista de definição: flatMap (e não map) porque el() achata só um nível de lista.
 const lista = (linhas) => el("dl", {}, linhas.filter(Boolean).flatMap(([t, v, cls]) => [el("dt", {}, t), el("dd", { class: cls }, v)]));
@@ -132,12 +133,24 @@ export function telaMinhasCaronas() {
   }
 
   // Viagens concluídas (as 10 mais recentes). O histórico completo e o extrato vêm na parte 8.7 (RF13).
+  // RF12 (Etapa 8.5): pagamento simulado depois da viagem; carona gratuita não tem pagamento.
   function blocoConcluidas(u, encerradas, todas) {
+    const pagamentos = listar("pagamentos");
     return el("section", { class: "secao", "aria-labelledby": "h-conc" }, el("h3", { id: "h-conc" }, "Viagens concluídas"),
-      el("ul", { class: "lista-caronas" }, encerradas.map((c) => el("li", { class: "carona" }, el("h4", {}, rota(c)),
-        lista([["Seu papel", c.motoristaId === u.id ? "Motorista" : "Passageiro(a)"], ["Saída", dataHora(c.dataHoraSaida)], ["Concluída em", dataHora(c.concluidaEm)],
-          ["Passageiros", String(todas.filter((s) => s.caronaId === c.id && s.status === "confirmada").length)]]),
-        el("div", { class: "linha-acoes" }, linkBotao("💬 Ver chat", `#/chat?carona=${c.id}`, "secundario"))))));
+      el("ul", { class: "lista-caronas" }, encerradas.map((c) => {
+        const souMotorista = c.motoristaId === u.id, pago = pagamentoDe(c.id, u.id, pagamentos);
+        const situacao = situacaoPagamentos(c, todas, pagamentos);
+        return el("li", { class: "carona" }, el("h4", {}, rota(c)),
+          lista([["Seu papel", souMotorista ? "Motorista" : "Passageiro(a)"], ["Saída", dataHora(c.dataHoraSaida)], ["Concluída em", dataHora(c.concluidaEm)],
+            ["Passageiros", String(situacao.length)], ["Contribuição", moeda(c.valor), "valor"],
+            c.valor > 0 && !souMotorista && ["Pagamento", pago ? `✔ Pago (simulado) em ${dataHora(pago.pagoEm)}` : "⚠ Pendente"]]),
+          souMotorista && c.valor > 0 && situacao.length > 0 && [el("p", {}, el("strong", {}, "Pagamentos (simulados)")),
+            el("ul", { class: "pessoas" }, situacao.map((s) => el("li", {}, el("span", {},
+              `${obter("usuarios", s.passageiroId)?.nome ?? "—"} · ${s.pagamento ? "✔ Pago" : "⚠ Pendente"}`))))],
+          el("div", { class: "linha-acoes" },
+            c.valor > 0 && !souMotorista && !pago && linkBotao(`Pagar ${moeda(c.valor)}`, `#/pagamento?carona=${c.id}`),
+            linkBotao("💬 Ver chat", `#/chat?carona=${c.id}`, "secundario")));
+      })));
   }
 
   // Ferramenta de teste: o selo no cabeçalho avisa quando está ligada.
