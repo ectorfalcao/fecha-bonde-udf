@@ -17,7 +17,11 @@ Usuários de exemplo (qualquer senha com 8+ caracteres; o código de verificaç�
 ## Status
 Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 6) e **solicitações, aprovação, lista de espera e cancelamento** (RF07, RF08, RF09, RN03, RN06), com avisos simulados dentro do app.
 
-**Etapa 8 concluída (fluxos funcionais).** Próximo passo: refinamento visual.
+**Etapa 8 concluída (fluxos funcionais).**
+
+**Etapa 9 em andamento: refinamento visual** (linguagem de mapa de transporte).
+- 9.1 concluída: nova paleta (asfalto, verde-petróleo, âmbar), fonte Inter guardada no projeto e contraste AA medido.
+- Próximas: 9.2 cartão de carona com percurso, 9.3 viagem, mapa e chat, 9.4 pagamento, estados e navegação.
 - 8.0 concluída: suíte de testes recriada e defeitos corrigidos.
 - 8.1 aprovada: **ciclo de vida da viagem** (`aberta → em andamento → concluída`), início pelo motorista (janela de 15 min, RN08), conclusão, **modo demonstração**.
 - 8.2 concluída e aprovada: **botão de emergência** (RF15, RN11, US08) na tela *Viagem em andamento*: abre a discagem para o 190 e um SMS pré-preenchido para o contato do perfil. **Não aciona nenhum serviço sozinho.**
@@ -30,7 +34,7 @@ Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 
 Veja `docs/matriz-rastreabilidade.md` e `docs/premissas.md`.
 
 ## Estrutura
-- `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`
+- `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`, `fontes/` (Inter e sua licença OFL)
 - `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js`, `chat.js`, `pagamento.js`, `avaliacao.js` e `historico.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js`, `mensagens.js`, `pagamentos.js` e `avaliacoes.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`
 - Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `viagemAtiva.js` (viagem e emergência), `chatTela.js` (chat do grupo), `mapa.js` (mapa simulado da viagem), `pagamentoTela.js` (pagamento simulado), `avaliacaoTela.js` (avaliação), `historicoTela.js` (histórico e extrato), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
 - `#/ambiente`: verificação do ambiente (tela da Etapa 3)

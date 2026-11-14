@@ -32,7 +32,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF07 | Uptime de 99,9% | n/a | Pendente (infraestrutura) | n/a | | |
 | RNF08 | Auto-scaling | n/a | Pendente (infraestrutura) | n/a | | |
 | RNF09 | Até 3 cliques | Navegação | **Parcial** (por desenho: Buscar, Solicitar vaga e Aceitar termos = 3 toques na 1ª solicitação, 2 depois) | manual | ≤ 3 toques | Conferido no teste geral da equipe; sem medição formal |
-| RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; sem auditoria) | Contraste, teclado e leitor de tela: a executar | | |
+| RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; **contraste medido na Etapa 9**) | Contraste: 16 pares medidos, todos ≥ 4,5:1 (menor 5,2:1). Teclado e leitor de tela: a executar | Texto com contraste AA | Contraste OK |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
 

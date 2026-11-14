@@ -8,6 +8,7 @@ body {
   color: var(--texto);
   background: var(--fundo);
   line-height: 1.5;
+  font-variant-numeric: tabular-nums; /* horários e valores alinhados em listas */
 }
 
 /* Link para teclado/leitor de tela pular direto ao conteúdo */
@@ -15,7 +16,7 @@ body {
   position: absolute;
   left: var(--espaco-1);
   top: -4rem;
-  background: var(--verde-900);
+  background: var(--petroleo-900);
   color: #fff;
   padding: var(--espaco-1) var(--espaco-2);
   border-radius: var(--raio);
@@ -41,13 +42,13 @@ body {
   position: absolute;
   inset: auto 0 0 0;
   height: 4px;
-  background: repeating-linear-gradient(90deg, var(--faixa) 0 1.5rem, transparent 1.5rem 2.5rem);
+  background: repeating-linear-gradient(90deg, var(--ambar-500) 0 1.5rem, transparent 1.5rem 2.5rem);
 }
 .topo-conteudo { max-width: var(--largura-app); margin: 0 auto; display: flex; align-items: center; gap: var(--espaco-2); flex-wrap: wrap; }
 .marca { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: var(--espaco-1); }
 .marca svg { flex: none; }
 .marca span { font-weight: 400; opacity: 0.9; }
-.selo-demo { margin: 0; font-size: var(--texto-sm); color: #d6e6dd; }
+.selo-demo { margin: 0; font-size: var(--texto-sm); color: var(--asfalto-100); }
 
 main {
   max-width: var(--largura-app);
@@ -55,7 +56,7 @@ main {
   padding: var(--espaco-2) var(--espaco-2) calc(var(--altura-nav) + var(--espaco-4));
 }
 main:focus { outline: none; }
-main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(--verde-900); }
+main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(--petroleo-900); }
 
 .cartao {
   background: var(--superficie);
@@ -64,7 +65,7 @@ main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(
   box-shadow: var(--sombra);
   padding: var(--espaco-3);
 }
-.cartao h2 { margin-top: 0; color: var(--verde-900); }
+.cartao h2 { margin-top: 0; color: var(--petroleo-900); }
 
 .verificacao { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espaco-1); }
 .verificacao li {
@@ -74,8 +75,8 @@ main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(
   border-radius: var(--raio);
   border: 1px solid var(--borda);
 }
-.verificacao li.ok { background: var(--verde-100); }
-.verificacao li.falha { background: #fdecea; border-color: var(--perigo); }
+.verificacao li.ok { background: var(--petroleo-100); }
+.verificacao li.falha { background: var(--perigo-100); border-color: var(--perigo); }
 .verificacao strong { min-width: 4.5rem; }
 
 .nota { color: var(--texto-suave); font-size: 0.875rem; }

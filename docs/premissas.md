@@ -105,3 +105,9 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **O que entra no histórico (RF13):** só viagens **concluídas** em que a pessoa foi motorista ou passageira confirmada. Caronas canceladas e solicitações recusadas não são viagens feitas.
 - **Extrato:** quatro totais simulados (pagou, ainda deve, recebeu, a receber), calculados a partir dos pagamentos registrados; nada é gravado à parte. Caronas gratuitas ficam fora.
 - **Onde fica:** tela própria, acessada por Caronas (a barra inferior continua com 5 itens). Pagar e avaliar depois também podem ser feitos por ela.
+
+## Etapa 9: refinamento visual (decisões do grupo)
+- **Direção:** linguagem de mapa de transporte. Cada carona é uma "linha": partida (círculo vazado), ponto de encontro (âmbar) e destino (círculo verde-petróleo). Proposta completa com maquetes das telas compartilhada com o grupo.
+- **Cor principal:** o verde "sustentabilidade" da Etapa 4 foi trocado pelo **verde-petróleo** (#0D6B6B), por decisão do grupo. O azul "financeiro" saiu: valores usam negrito. Vermelho só para emergência e erro; âmbar para atenção (o âmbar claro nunca é cor de texto).
+- **Fonte:** Inter, guardada no projeto (`css/fontes/`, licença OFL, 48 KB, alfabeto latino com acentos). Funciona offline (RNF12) e não consulta serviço externo. Sem o arquivo, cai para a fonte do sistema.
+- **Contraste (RNF10):** os 16 pares de texto e fundo usados nas telas foram medidos; o menor é 5,2:1 (selo âmbar). Todos passam no WCAG 2.1 AA.

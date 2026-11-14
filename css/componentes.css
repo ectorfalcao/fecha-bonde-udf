@@ -11,36 +11,36 @@
   color: var(--texto-suave); font-size: var(--texto-sm); text-decoration: none;
   border-top: 4px solid transparent;
 }
-.nav-inferior a[aria-current="page"] { color: var(--verde-900); font-weight: 700; border-top-color: var(--verde-700); background: var(--verde-100); }
+.nav-inferior a[aria-current="page"] { color: var(--petroleo-900); font-weight: 700; border-top-color: var(--petroleo-700); background: var(--petroleo-100); }
 
 .botao {
   display: inline-flex; align-items: center; justify-content: center;
   min-height: var(--alvo-min); padding: 0 var(--espaco-3);
-  border-radius: var(--raio); border: 2px solid var(--verde-700);
-  background: var(--verde-700); color: #fff; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer;
+  border-radius: var(--raio); border: 2px solid var(--petroleo-700);
+  background: var(--petroleo-700); color: #fff; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer;
 }
-.botao.secundario { background: transparent; color: var(--verde-900); }
+.botao.secundario { background: transparent; color: var(--petroleo-900); }
 
 .aviso { display: flex; gap: var(--espaco-1); padding: var(--espaco-2); border-radius: var(--raio); border: 1px solid var(--borda); margin: 0 0 var(--espaco-2); }
 .aviso strong { white-space: nowrap; }
-.aviso.info { background: var(--verde-100); border-color: var(--verde-700); }
-.aviso.alerta { background: #fdf3e3; border-color: var(--alerta); }
-.aviso.erro { background: #fdecea; border-color: var(--perigo); }
+.aviso.info { background: var(--petroleo-100); border-color: var(--petroleo-700); }
+.aviso.alerta { background: var(--ambar-100); border-color: var(--alerta); }
+.aviso.erro { background: var(--perigo-100); border-color: var(--perigo); }
 
 .selo { display: inline-block; padding: 0.125rem var(--espaco-1); border-radius: 999px; border: 1px solid var(--alerta); color: var(--alerta); font-size: var(--texto-sm); font-weight: 700; background: var(--superficie); }
 
 .vazio { text-align: center; padding: var(--espaco-4) var(--espaco-2); border: 2px dashed var(--borda); border-radius: var(--raio); background: var(--superficie); }
-.vazio h3 { margin: 0 0 var(--espaco-1); color: var(--verde-900); }
+.vazio h3 { margin: 0 0 var(--espaco-1); color: var(--petroleo-900); }
 .vazio p { margin: 0 0 var(--espaco-2); color: var(--texto-suave); }
 .vazio .reqs { font-size: var(--texto-sm); }
 
 .lista-caronas { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espaco-2); }
-.carona { background: var(--superficie); border: 1px solid var(--borda); border-left: 6px solid var(--verde-700); border-radius: var(--raio); padding: var(--espaco-2); }
+.carona { background: var(--superficie); border: 1px solid var(--borda); border-left: 6px solid var(--petroleo-700); border-radius: var(--raio); padding: var(--espaco-2); }
 .carona h3 { margin: 0 0 0.25rem; font-size: var(--texto-lg); }
 .carona dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.125rem var(--espaco-2); font-size: var(--texto-sm); }
 .carona dt { color: var(--texto-suave); }
 .carona dd { margin: 0; }
-.carona .valor { color: var(--financeiro); font-weight: 700; }
+.carona .valor { font-weight: 700; } /* valor por peso, não por uma cor a mais */
 
 .campo { margin: 0 0 var(--espaco-2); }
 .campo label { display: block; font-weight: 700; margin-bottom: 0.25rem; }
@@ -54,7 +54,7 @@
 .campo [aria-invalid="true"] { border-color: var(--perigo); }
 .campo-erro { margin: 0.25rem 0 0; color: var(--perigo); font-size: var(--texto-sm); font-weight: 700; }
 fieldset { border: 1px solid var(--borda); border-radius: var(--raio); padding: var(--espaco-2); margin: 0 0 var(--espaco-2); background: var(--superficie); }
-legend { font-weight: 700; color: var(--verde-900); padding: 0 var(--espaco-1); }
+legend { font-weight: 700; color: var(--petroleo-900); padding: 0 var(--espaco-1); }
 .opcao { display: flex; align-items: center; gap: var(--espaco-1); min-height: var(--alvo-min); }
 .opcao input { width: 1.25rem; height: 1.25rem; }
 .codigo-simulado { display: flex; align-items: center; gap: var(--espaco-2); flex-wrap: wrap; padding: var(--espaco-2); margin: 0 0 var(--espaco-2); border: 2px dashed var(--alerta); border-radius: var(--raio); background: var(--superficie); }
@@ -64,12 +64,12 @@ legend { font-weight: 700; color: var(--verde-900); padding: 0 var(--espaco-1); 
 button.botao { font: inherit; font-weight: 700; }
 .dialogo { max-width: min(36rem, calc(100vw - 2rem)); border: 1px solid var(--borda); border-radius: var(--raio); padding: var(--espaco-3); color: var(--texto); }
 .dialogo::backdrop { background: rgb(20 32 27 / 0.6); }
-.dialogo h2 { margin-top: 0; color: var(--verde-900); }
+.dialogo h2 { margin-top: 0; color: var(--petroleo-900); }
 .dialogo-corpo { max-height: 50vh; overflow-y: auto; margin-bottom: var(--espaco-2); }
 html { scrollbar-gutter: stable; }
 /* Etapa 7: gestão de grupos */
 .secao { margin: 0 0 var(--espaco-3); }
-.secao h3 { color: var(--verde-900); margin: 0 0 var(--espaco-1); }
+.secao h3 { color: var(--petroleo-900); margin: 0 0 var(--espaco-1); }
 .carona h4 { margin: 0 0 0.25rem; font-size: var(--texto-lg); }
 .carona > .linha-acoes, .carona > button.botao { margin-top: var(--espaco-2); }
 .pessoas { list-style: none; margin: 0 0 var(--espaco-2); padding: 0; display: grid; gap: var(--espaco-1); }
@@ -82,7 +82,7 @@ html { scrollbar-gutter: stable; }
 /* Etapa 8.3: chat de grupo condicionado (RF10, RN07, US06) */
 .chat-container { display: flex; flex-direction: column; gap: var(--espaco-2); }
 .chat-cabecalho { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--espaco-2); flex-wrap: wrap; margin-bottom: var(--espaco-1); }
-.chat-cabecalho h2 { margin: 0 0 0.25rem; font-size: var(--texto-lg); color: var(--verde-900); }
+.chat-cabecalho h2 { margin: 0 0 0.25rem; font-size: var(--texto-lg); color: var(--petroleo-900); }
 .chat-cabecalho .nota { margin: 0; }
 .chat-area-mensagens {
   min-height: 18rem; max-height: 52vh; overflow-y: auto; padding: var(--espaco-2);
@@ -95,15 +95,15 @@ html { scrollbar-gutter: stable; }
   border-radius: var(--raio); word-break: break-word;
 }
 .mensagem-minha {
-  align-self: flex-end; background: var(--verde-100);
-  border: 1px solid var(--verde-700); border-bottom-right-radius: 0.2rem;
+  align-self: flex-end; background: var(--petroleo-100);
+  border: 1px solid var(--petroleo-700); border-bottom-right-radius: 0.2rem;
 }
 .mensagem-outro {
   align-self: flex-start; background: var(--superficie);
   border: 1px solid var(--borda); border-bottom-left-radius: 0.2rem;
 }
 .mensagem-meta { display: flex; justify-content: space-between; gap: var(--espaco-2); font-size: var(--texto-sm); margin-bottom: 0.25rem; }
-.mensagem-autor { font-weight: 700; color: var(--verde-900); }
+.mensagem-autor { font-weight: 700; color: var(--petroleo-900); }
 .mensagem-hora { color: var(--texto-suave); font-size: var(--texto-sm); }
 .mensagem-texto { margin: 0; white-space: pre-wrap; font-size: var(--texto-md); color: var(--texto); }
 .form-chat { display: flex; flex-direction: column; gap: var(--espaco-1); }
@@ -113,17 +113,17 @@ html { scrollbar-gutter: stable; }
   font: inherit; color: var(--texto); background: var(--superficie);
   border: 2px solid var(--texto-suave); border-radius: var(--raio);
 }
-.chat-input:focus { outline: 2px solid var(--verde-700); outline-offset: 1px; }
+.chat-input:focus { outline: 2px solid var(--petroleo-700); outline-offset: 1px; }
 
 /* Mapa esquemático da viagem (RF11, Etapa 8.4): SIMULADO */
 .mapa { margin: var(--espaco-2) 0; }
 .mapa svg { display: block; width: 100%; height: auto; border: 1px solid var(--borda); border-radius: var(--raio); }
-.mapa-fundo { fill: var(--verde-100); }
+.mapa-fundo { fill: var(--petroleo-100); }
 .mapa-rota { stroke: var(--asfalto-700); stroke-width: 4; stroke-dasharray: 6 6; stroke-linecap: round; }
-.mapa-percorrido { stroke: var(--verde-700); stroke-width: 5; stroke-linecap: round; }
+.mapa-percorrido { stroke: var(--petroleo-700); stroke-width: 5; stroke-linecap: round; }
 .mapa-origem { fill: var(--superficie); stroke: var(--asfalto-900); stroke-width: 3; }
-.mapa-destino { fill: var(--verde-700); stroke: var(--asfalto-900); stroke-width: 3; }
-.mapa-veiculo { fill: var(--alerta); stroke: var(--superficie); stroke-width: 3; transition: cx 1s linear, cy 1s linear; }
+.mapa-destino { fill: var(--petroleo-700); stroke: var(--asfalto-900); stroke-width: 3; }
+.mapa-veiculo { fill: var(--ambar-500); stroke: var(--superficie); stroke-width: 3; transition: cx 1s linear, cy 1s linear; }
 .mapa text { font: 600 11px var(--fonte); fill: var(--texto); }
 .mapa .mapa-selo { fill: var(--perigo); font-weight: 800; letter-spacing: 0.05em; }
 .mapa figcaption { margin-top: 0.25rem; }

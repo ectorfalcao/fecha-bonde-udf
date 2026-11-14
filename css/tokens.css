@@ -1,31 +1,45 @@
 /* Tokens de design: único lugar onde cores, espaços e fontes são definidos.
-   Mudar a identidade visual = mudar só este arquivo. */
+   Mudar a identidade visual = mudar só este arquivo.
+   Etapa 9 (refinamento visual): linguagem de mapa de transporte. Contrastes medidos para WCAG 2.1 AA (RNF10). */
+
+/* Inter guardada no projeto (licença OFL em fontes/OFL-Inter.txt): funciona offline (RNF12) e não consulta serviço externo. */
+@font-face {
+  font-family: "Inter";
+  src: url("fontes/inter-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  /* Verdes (identidade: sustentabilidade) */
-  --verde-900: #14532d;
-  --verde-700: #1f7a4d;   /* cor principal */
-  --verde-100: #e8f5ee;
+  /* Verde-petróleo: ações principais, destino, item ativo. Branco sobre o 700: 6,3:1 */
+  --petroleo-900: #0a5656;
+  --petroleo-700: #0d6b6b;   /* cor principal */
+  --petroleo-100: #e2f1f0;
 
-  /* Neutros */
-  --texto: #1c2a24;
-  --texto-suave: #4b5b53;
-  --fundo: #f6f8f7;
+  /* Neutros (levemente azulados, como asfalto) */
+  --texto: #17212b;          /* sobre o fundo: 14,9:1 */
+  --texto-suave: #4b5966;    /* sobre o fundo: 6,6:1 */
+  --fundo: #f3f5f7;
   --superficie: #ffffff;
-  --borda: #d5ddd8;
+  --borda: #d5dce3;
 
-  /* Urbano (Etapa 4): asfalto e faixa de rua complementam o verde */
-  --asfalto-900: #14201b;
-  --asfalto-700: #26352e;
-  --faixa: #f5c542;       /* só decorativo (linha de rua); nunca como cor de texto */
-  --sucesso: #166534;
+  /* Asfalto: topo, linhas de percurso e contornos dos marcadores */
+  --asfalto-900: #15202b;    /* texto branco sobre ele: 16,5:1 */
+  --asfalto-700: #2a3947;
+  --asfalto-100: #d6e0e8;    /* texto claro sobre o asfalto */
 
-  /* Destaques funcionais */
-  --alerta: #b45309;      /* avisos e ações importantes */
-  --perigo: #b42318;      /* erros e emergência */
-  --financeiro: #1d4ed8;  /* valores e pagamentos */
+  /* Âmbar: ponto de atenção */
+  --ambar-500: #e8a317;      /* só marcadores, bordas e faixa de rua: 2,2:1 no branco, NUNCA cor de texto */
+  --alerta: #a35a06;         /* texto e borda de atenção: 5,2:1 no branco */
+  --ambar-100: #fdf2dc;
+
+  /* Perigo: só emergência e erro */
+  --perigo: #b42318;         /* texto branco: 6,6:1 */
+  --perigo-100: #fdecea;
 
   /* Tipografia */
-  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --fonte: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
   /* Escala tipográfica */
   --texto-sm: 0.875rem;
