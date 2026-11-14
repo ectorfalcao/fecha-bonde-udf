@@ -253,3 +253,23 @@ test("telaChat: exibe aviso de chat arquivado após 2h da conclusão e remove en
   assert.match(textoDe(tela), /arquivado automaticamente 2 horas após/);
   assert.equal(botao(tela, "Enviar"), null, "não deve exibir botão de enviar quando arquivado");
 });
+
+// Correção pós-8.3: cada visita ao chat acumulava um ouvinte global que nunca era removido.
+test("abrir o chat várias vezes mantém um único ouvinte de mensagens, e só a tela aberta redesenha", () => {
+  const ativos = new Set();
+  const add = globalThis.addEventListener, rem = globalThis.removeEventListener;
+  globalThis.addEventListener = (t, fn) => { if (t === "chat-mensagem") ativos.add(fn); add(t, fn); };
+  globalThis.removeEventListener = (t, fn) => { if (t === "chat-mensagem") ativos.delete(fn); rem(t, fn); };
+  try {
+    salvar("sessao", "u1");
+    const params = new URLSearchParams({ carona: "c1" });
+    const telas = [telaChat(params), telaChat(params), telaChat(params)];
+    assert.equal(ativos.size, 1);
+    assert.ok(enviarMensagem({ caronaId: "c1", remetenteId: "u2", texto: "Chego em 5 minutos" }).ok);
+    assert.match(textoDe(telas[2]), /Chego em 5 minutos/);          // a tela aberta atualiza sozinha
+    assert.doesNotMatch(textoDe(telas[0]), /Chego em 5 minutos/);   // as antigas não são mais redesenhadas
+  } finally {
+    for (const fn of ativos) rem("chat-mensagem", fn);
+    globalThis.addEventListener = add; globalThis.removeEventListener = rem;
+  }
+});

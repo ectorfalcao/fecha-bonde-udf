@@ -9,6 +9,7 @@ const horaFormatada = (iso) =>
   new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
 
 const rotaDe = (c) => `${c.origem} → ${c.destino}`;
+let ouvinteAtivo = null; // ouvinte "chat-mensagem" da tela de chat aberta
 
 // Tela do Chat de Grupo Condicionado (RF10, RN07, US06, UC14)
 export function telaChat(params) {
@@ -126,12 +127,16 @@ export function telaChat(params) {
     }, 0);
   }
 
-  // Ouvinte reativo de mensagens
+  // Ouvinte reativo de mensagens. Só existe uma tela de chat por vez: o ouvinte da visita anterior
+  // é trocado (antes, cada visita acumulava um ouvinte que redesenhava uma lista fora da tela).
   const aoReceberMensagem = (ev) => {
+    if (listaEl.isConnected === false) return globalThis.removeEventListener?.("chat-mensagem", aoReceberMensagem); // saiu da tela
     if (ev?.detail?.caronaId === carona.id) {
       desenharMensagens();
     }
   };
+  globalThis.removeEventListener?.("chat-mensagem", ouvinteAtivo);
+  ouvinteAtivo = aoReceberMensagem;
   globalThis.addEventListener?.("chat-mensagem", aoReceberMensagem);
 
   // Formulário de envio (se chat ativo)

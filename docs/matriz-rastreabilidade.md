@@ -105,6 +105,11 @@ Status: Pendente | Parcial | Implementado | Simulado
 | Sintaxe e testes automatizados | 115/115 testes passando (`tests/chat.test.mjs`: 16/16) |
 | Regressão das etapas 5 a 8.2 | 0 regressões detectadas |
 
+### Defeito achado e corrigido depois da parte (revisão na Etapa 8.4)
+| # | Defeito | Como foi achado | Correção |
+|---|---|---|---|
+| 1 | Cada visita ao chat registrava um ouvinte global `chat-mensagem` que nunca era removido: as telas antigas continuavam sendo redesenhadas fora da página (memória e processamento desperdiçados) | Leitura do código no diagnóstico | `chatTela.js`: troca o ouvinte da visita anterior e o remove quando a tela sai; teste novo em `tests/chat.test.mjs` (falha com o código antigo) |
+
 ## Etapa 8.2: botão de emergência (RF15, RN11, US08, UC04)
 
 | Item | Situação | Arquivos | Teste |
