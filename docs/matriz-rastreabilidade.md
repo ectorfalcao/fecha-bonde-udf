@@ -10,21 +10,21 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF04 | Criar carona | Oferecer | **Parcial** (mapa simulado por lista de locais) | `tests/caronas.test.mjs` + manual | Carona publicada aparece na busca | Confirmado manualmente |
 | RF05 | Rotas recorrentes | Oferecer | **Parcial** (semanal, até 182 dias; sem calendário acadêmico) | `tests/caronas.test.mjs` | Uma carona por data nos dias escolhidos | Teste automatizado OK; tela não conferida em detalhe |
 | RF06 | Busca e filtros | Buscar | **Parcial** (raio em linha reta; locais fixos) | `tests/caronas.test.mjs` + manual | Filtros de raio, turno, horário e "só mulheres" | Busca testada manualmente; cartões OK após correção |
-| RF07 | Solicitações de entrada | Buscar / Caronas | **Implementado** (avisos simulados dentro do app) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Solicita, motorista aprova ou recusa, vagas atualizam | OK (automatizado e manual) |
+| RF07 | Solicitações de entrada | Buscar / Caronas | **Implementado** (avisos simulados dentro do app; desde a 10.3, todos no sino do topo) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Solicita, motorista aprova ou recusa, vagas atualizam | OK (automatizado e manual) |
 | RF08 | Lista de espera | Buscar / Caronas | **Implementado** (o 1º da fila vira "pendente"; o motorista ainda aprova) | `tests/grupos.test.mjs` + manual | Lotou: fila; vagou: próximo é chamado | OK (automatizado e manual) |
 | RF09 | Cancelamento | Caronas | **Implementado** (motorista só com 2 h de antecedência: premissa) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Passageiro libera vaga; motorista avisa todos | OK (automatizado e manual) |
-| RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado; navegador com duas abas no teste de ponta a ponta) |
+| RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h; defeito de nova solicitação corrigido na 10.0) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado; navegador com duas abas no teste de ponta a ponta) |
 | RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; navegador OK, desktop e celular (teste de ponta a ponta) |
-| RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; navegador OK (teste de ponta a ponta) |
+| RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível; chave PIX fictícia cadastrada pelo motorista desde a 10.2) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; navegador OK (teste de ponta a ponta) |
 | RF13 | Histórico e extrato | Histórico | **Implementado** (extrato com valores simulados) | `tests/historico.test.mjs` | Todas as viagens concluídas da pessoa e totais pagos, a pagar, recebidos e a receber | Automatizado OK; navegador OK (teste de ponta a ponta) |
-| RF14 | Avaliação mútua | Avaliação | **Implementado** (1 a 5 estrelas + comentário opcional; não bloqueia o uso, ver inconsistência 2) | `tests/avaliacao.test.mjs` | Após a conclusão, motorista e passageiros se avaliam uma vez; média aparece no cartão | Automatizado OK; navegador OK (teste de ponta a ponta) |
+| RF14 | Avaliação mútua | Avaliação | **Implementado** (1 a 5 estrelas + comentário opcional; não bloqueia o uso, ver inconsistência 2; média no Perfil e na aprovação desde a 10.2) | `tests/avaliacao.test.mjs` | Após a conclusão, motorista e passageiros se avaliam uma vez; média aparece no cartão | Automatizado OK; navegador OK (teste de ponta a ponta) |
 | RF15 | Botão de emergência | Viagem | **Parcial/Simulado** (abre discagem 190 e SMS pré-preenchido no aparelho; não aciona serviços) | `tests/emergencia.test.mjs` + manual | Botão visível na viagem em andamento; 190 e SMS com localização | Automatizado OK; navegador OK (teste de ponta a ponta) |
 | RN03 | Aceite prévio dos termos de convivência | Buscar | **Implementado** | `tests/grupos.test.mjs` | Solicitação recusada sem aceite | OK (automatizado) |
 | RN04 | Vagas <= capacidade do veículo (1 a 4) | Oferecer | **Implementado** (validação) | `tests/caronas.test.mjs` | Vagas acima do limite recusadas | OK (automatizado) |
-| RN05 | Filtro "só para mulheres" | Oferecer/Buscar | **Parcial** (regra para passageira em grupo exclusivo em aberto, ver D7) | `tests/caronas.test.mjs` | Grupo só aparece para usuárias femininas, e some se houver passageiro não feminino confirmado | OK (automatizado) |
+| RN05 | Filtro "só para mulheres" | Oferecer/Buscar/Início | **Parcial** (regra para passageira em grupo exclusivo em aberto, ver D7; Início corrigido na 10.1) | `tests/caronas.test.mjs` | Grupo só aparece para usuárias femininas, e some se houver passageiro não feminino confirmado | OK (automatizado) |
 | RN06 | Vagas automáticas e lista de espera | Caronas | **Implementado** | `tests/grupos.test.mjs` | Lotou: pendentes vão para a fila; vagou: o primeiro é chamado e avisado | OK (automatizado e manual) |
 | RNF01 | HTTPS/AES-256 | n/a | Pendente (depende de backend) | n/a | | |
-| RNF02 | LGPD | Privacidade | Parcial | a definir | | |
+| RNF02 | LGPD | Perfil → Privacidade | **Parcial** (10.2: consentimentos com data, revogar aceite de convivência, baixar os dados, excluir a conta com anonimização; sem servidor, tudo só neste navegador) | `tests/privacidade.test.mjs` | Pessoa vê, baixa e apaga seus dados | Automatizado OK; navegador OK (10.2) |
 | RNF03 | Restrição ao domínio UDF | Acesso | Parcial | a definir | | |
 | RNF04 | Tela em até 1,5 s | Todas | Pendente (indicativo) | Lighthouse | | |
 | RNF05 | Latência de 200 ms | Chat/Viagem | Pendente (só local) | a definir | | |
@@ -32,9 +32,64 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF07 | Uptime de 99,9% | n/a | Pendente (infraestrutura) | n/a | | |
 | RNF08 | Auto-scaling | n/a | Pendente (infraestrutura) | n/a | | |
 | RNF09 | Até 3 cliques | Navegação | **Parcial** (por desenho: Buscar, Solicitar vaga e Aceitar termos = 3 toques na 1ª solicitação, 2 depois) | manual | ≤ 3 toques | Conferido no teste geral da equipe; sem medição formal |
-| RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível; **contraste medido na Etapa 9**) | Contraste: 16 pares medidos, todos ≥ 4,5:1 (menor 5,2:1). Teclado e leitor de tela: a executar | Texto com contraste AA | Contraste OK |
+| RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível, foco visível, menos movimento e alto contraste do sistema; **contraste medido nas Etapas 9 e 10**) | Etapa 9: 16 pares. Etapa 10: 28 pares novos, todos AA (texto ≥ 4,5:1, contornos ≥ 3:1). Teclado: ordem e foco conferidos no navegador. Leitor de tela: a executar | Texto com contraste AA | Contraste OK; teclado OK (amostra) |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
-| RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker) | a definir | | |
+| RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker; telefone do motorista na viagem desde a 10.2; sem ponto de encontro, ver inconsistência 9) | `tests/privacidade.test.mjs` (telefone) | Dados da carona ativa à mão | Telefone OK; offline não testado |
+
+## Etapa 10: modernização da interface (branch `etapa-10-redesign`)
+
+### Auditoria de requisitos (início da Etapa 10)
+Comparação do código com os documentos "Documentação-fecha-bonde" e "RFs-RNFs-USs", antes do redesign.
+Estados: Atendido (implementação e comportamento verificados), Parcial, Não atendido, Não verificável.
+
+| Grupo | Atendido | Parcial | Não atendido | Não verificável |
+|---|---|---|---|---|
+| RF | RF03, RF07, RF08, RF09, RF13, RF14, RF15 | RF01, RF02, RF04, RF05, RF06, RF10 (defeito, corrigido na 10.0), RF11 (simulado), RF12 (simulado) | nenhum | nenhum |
+| RNF | RNF09 (pessoa conectada) | RNF02, RNF03, RNF10, RNF11, RNF12 | RNF01 (sem backend) | RNF04, RNF05, RNF06, RNF07, RNF08 (dependem de rede, aparelho ou infraestrutura) |
+| RN | RN01, RN02, RN03, RN04, RN06, RN07, RN11 | RN05 (Início, corrigido na 10.1), RN08, RN10 | RN09 (decisão do grupo), RN12 | nenhum |
+| US | US01, US02, US05, US08 | US03, US04, US06, US07, US09, US10 | nenhum | nenhum |
+
+Medições locais (não substituem 4G nem produção): carregamento de 416 ms em `localhost`, cerca de 220 KB transferidos, 1,6 MB de memória JS.
+
+### Entregue
+| Parte | Item | Arquivos | Teste |
+|---|---|---|---|
+| 10.0 | **Defeito corrigido:** quem cancelava e pedia vaga de novo, e era confirmado, ficava sem chat (RF10) e sem pagamento (RF12): as regras olhavam só a primeira solicitação (a cancelada). `solicitacaoVigente()` escolhe a confirmada, depois a ativa, depois a mais recente | `grupos.js`, `chat.js`, `pagamento.js` | `grupos`, `chat`, `pagamento` (3 testes; falham com o código antigo) |
+| 10.1 | **RN05 no Início:** carona "só para mulheres" não aparece para quem não é do gênero feminino nem para visitante (`visivelPara()`, a mesma regra da busca) | `caronas.js`, `inicio.js` | `telas` (falha com o código antigo) |
+| 10.2 | **Redesign:** tokens com escalas, elevação em camadas, realce de superfície, movimento e camadas; ícones SVG próprios; topo fixo com navegação no computador e barra inferior com ícones no celular; componentes novos (avatar, cabeçalho de tela, fatos, selo de situação, botão de ícone com contador, base única de diálogos); todas as telas recompostas | `css/*`, `index.html`, `icones.js`, `componentes.js`, telas | suíte inteira |
+| 10.2 | **Privacidade (RNF02):** consentimentos com data, baixar os dados (JSON), revogar o aceite de convivência, excluir a conta com anonimização | `privacidade.js`, `contas.js`, `perfil.js`, `acesso.js` | `privacidade` |
+| 10.2 | **Reputação (US10):** média no próprio Perfil e na lista de quem pede vaga | `perfil.js`, `minhas.js` | `privacidade` |
+| 10.2 | **Chave PIX fictícia (RF12):** cadastrada pelo motorista no Perfil e mostrada no pagamento | `regras.js`, `perfil.js`, `pagamentoTela.js` | `privacidade` |
+| 10.2 | **Telefone do motorista (RNF12)** na viagem em andamento, para o passageiro confirmado | `viagemAtiva.js` | `privacidade` |
+| 10.2 | Rodapé com a disciplina **Projeto de Software** | `index.html` | manual |
+| 10.3 | **Centro de notificações:** todas as notificações no **sino** do topo, com o número de não lidas; a caixa mostra as **não lidas em cima** e as **lidas embaixo**; marcar uma ou todas como lidas. Saíram a seção Avisos de Caronas e o contador da navegação | `centroNotificacoes.js`, `avisos.js`, `notificacoes.js`, `app.js`, `minhas.js` | `notificacoes` (8 testes) |
+
+### Defeitos achados e corrigidos durante a etapa
+| # | Defeito | Como foi achado | Correção |
+|---|---|---|---|
+| 1 | Chat e pagamento negados depois de uma nova solicitação | Leitura do código na auditoria, confirmado com teste isolado | 10.0 |
+| 2 | Caronas "só para mulheres" visíveis no Início para qualquer pessoa | Navegador (conectado como Carlos) | 10.1 |
+| 3 | Ao trocar de tela, o título ficava escondido sob o topo fixo | Navegador | `router.js`: foco sem rolar e a tela nova começa do alto |
+| 4 | Na tela Acesso com parâmetro (`?excluida=1`) aparecia o botão "Entrar" e o topo estourava a largura do celular | Medição de largura no navegador (375 px) | `app.js` compara a rota sem parâmetros; o topo encolhe em telas estreitas |
+| 5 | Ao marcar uma notificação como lida, a caixa rolava sozinha | Navegador | foco sem rolar |
+
+### Verificação
+| Item | Resultado |
+|---|---|
+| `node --check` em todos os módulos | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 176/176 (eram 149 no início da etapa) |
+| Testes ajustados (só o seletor) | `avaliacao.test.mjs`: o botão "⭐ Avaliar" virou "Avaliar" (ícone no lugar do emoji); `emergencia.test.mjs`: o SVG do mapa é buscado dentro da figura (os botões também têm SVG); `telas.test.mjs` (RF07): o aviso é conferido no centro de notificações |
+| Navegador, computador (1280 px) | Login, Início, Buscar, Oferecer, Caronas, iniciar viagem (modo demonstração), emergência, chat (envio), concluir, avaliar, pagar, histórico, perfil, exclusão de conta e sino: OK, console sem erros |
+| Navegador, tablet (768 px) e celular (375 px) | Sem rolagem lateral; barra inferior com ícones; diálogos sobem de baixo no celular |
+| Teclado | Pular para o conteúdo, marca, navegação e sino em ordem; anel de foco visível; Esc fecha a caixa e o foco volta ao sino |
+| Contraste | 28 pares novos medidos, todos AA |
+| Leitor de tela, celular real (discagem, SMS, localização), conexão 4G | **Não executado** |
+
+### Limites conhecidos
+- Sem servidor: exclusão, download e notificações valem só para este navegador.
+- A exclusão é bloqueada enquanto houver carona em curso (aberta ou em andamento) como motorista ou passageiro.
+- A caixa de notificações mostra até 30 lidas (as mais recentes); as mais antigas continuam guardadas.
+- Abrir a caixa não marca nada como lido: a pessoa escolhe marcar uma ou todas.
 
 ## Teste de ponta a ponta no navegador (fim da Etapa 8)
 
@@ -298,7 +353,7 @@ Observação: `tests/dom-falso.mjs` é um DOM mínimo só para testes em Node; n
 ### Limites conhecidos
 - Avisos são simulados (sem push, e-mail ou SMS) e só aparecem para o usuário ao abrir o app.
 - Sem servidor: dois usuários só "se falam" no mesmo navegador, trocando de conta.
-- A tela Início ainda lista as caronas "só para mulheres" a todos.
+- A tela Início ainda lista as caronas "só para mulheres" a todos. *Resolvido na Etapa 10.1.*
 - Caronas fictícias têm datas relativas e vencem em poucos dias.
 - Nada impede que a mesma passageira esteja em duas caronas no mesmo horário.
 

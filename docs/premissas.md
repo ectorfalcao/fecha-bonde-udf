@@ -30,7 +30,7 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Tolerância de atraso:** 5, 10, 15 ou 20 minutos. **Contribuição:** de 0 (gratuita) a 999.
 - **Turno "Integral"** casa com qualquer filtro de turno.
 - **Grupo só para mulheres (RN05):** só motoristas do gênero feminino podem criar; o grupo não aparece para quem não é do gênero feminino e some da lista se houver passageiro não feminino confirmado. A regra para passageira que entra no grupo segue em aberto (D7).
-- **Início:** lista todas as caronas, inclusive as "só para mulheres". Pendência a decidir.
+- **Início:** lista todas as caronas, inclusive as "só para mulheres". Pendência a decidir. *Decidido na Etapa 10.1: o Início segue a mesma regra da busca.*
 
 ## Premissas adicionais da Etapa 7
 - **Cancelamento pelo motorista (RF09):** a documentação diz "antecedência mínima configurada" sem valor. Adotadas **2 horas**, e abaixo disso o cancelamento é **bloqueado** (não apenas avisado). Valor em `ANTECEDENCIA_CANCELAR_CARONA_H` (`js/grupos.js`).
@@ -117,4 +117,48 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Defeito corrigido (9.3):** no celular, o campo de mensagem do chat empurrava o botão "Enviar" para fora da tela (campo de texto em flexbox sem `min-width: 0`). Achado na medição de largura do teste de ponta a ponta.
 - **Pagamento (9.4):** o valor aparece primeiro, grande, com o carimbo SIMULADO; depois rota, motorista e data da conclusão; chave e código PIX num cartão, com o código em fonte de código.
 - **Estados (9.4):** erro (vermelho, ✖), atenção (âmbar, ⚠), informação (verde-petróleo, ℹ) e sem resultados (borda tracejada, sempre com uma saída) já tinham forma própria. Faltava o carregamento: "Obtendo sua localização…" na emergência ganhou um indicador girando, que fica parado para quem pediu menos movimento no sistema.
-- **Navegação (9.4):** o número de avisos novos virou um círculo ao lado de "Caronas" (antes "Caronas (2)" quebrava em duas linhas no celular); o leitor de tela continua ouvindo "Caronas, 2 aviso(s) novo(s)". Links de texto passaram do azul padrão do navegador para o verde-petróleo escuro.
+- **Navegação (9.4):** o número de avisos novos virou um círculo ao lado de "Caronas" (antes "Caronas (2)" quebrava em duas linhas no celular); o leitor de tela continua ouvindo "Caronas, 2 aviso(s) novo(s)". Links de texto passaram do azul padrão do navegador para o verde-petróleo escuro. *Substituído na Etapa 10.3: o número de não lidas fica no sino do topo.*
+
+## Etapa 10: modernização da interface (decisões do grupo)
+Decididas depois da auditoria de requisitos do início da etapa (resumo em `matriz-rastreabilidade.md`).
+
+- **Defeito do chat e do pagamento (10.0):** corrigir antes do redesign, num commit próprio. Quando a pessoa tem mais de uma solicitação na mesma carona (cancelou e pediu de novo), vale a confirmada; senão a ativa (pendente ou espera); senão a mais recente.
+- **RN05 no Início (10.1):** o Início segue a regra da busca. Carona "só para mulheres" não aparece para quem não é do gênero feminino nem para visitante sem sessão.
+- **Nome da disciplina:** **Projeto de Software** (curso de Análise e Desenvolvimento de Sistemas). O rodapé e o README dizem isso; antes diziam "Análise e Projeto de Sistemas". Ver inconsistência 7.
+- **Inclusões aprovadas:** privacidade/LGPD no Perfil, média de avaliação no Perfil, chave PIX fictícia do motorista e telefone do motorista na viagem.
+
+### Identidade visual (10.2)
+- **Mantida e refinada:** asfalto, verde-petróleo e âmbar, fonte Inter, a "linha" de transporte do percurso e a faixa tracejada de rua no topo. Ganharam escalas completas, sombras em camadas com a cor do asfalto (nunca preto puro), um realce leve na borda de cima das superfícies e gradientes discretos no botão principal, no topo e no destaque do Início.
+- **Vermelho continua só para emergência e erro.** O contador de não lidas usa o âmbar escuro (`--alerta`).
+- **Ícones:** desenhados para o projeto em SVG (`js/icones.js`), sem biblioteca e sem rede. Substituem os emojis, que mudavam de aparência entre sistemas. São decorativos: o texto ou o nome acessível do botão diz a mesma coisa. Os símbolos ✔ ⚠ ✖ continuam no texto dos estados, porque fazem parte da leitura ("Pagamento ⚠ Pendente").
+- **Navegação:** a mesma lista de 5 itens fica no topo no computador (a partir de 64rem) e numa barra inferior com ícones no celular.
+- **Botão indisponível:** "Iniciar viagem" e "Cancelar carona" fora do prazo ficam com aparência de indisponível (`aria-disabled`), mas continuam focáveis e explicam o motivo ao serem acionados, como antes.
+- **Diálogos:** uma base única (`abrirDialogo` em `componentes.js`), com botão de fechar. No celular o modal vira uma folha que sobe de baixo. Existe uma variante de painel lateral, ainda sem uso, para painéis futuros.
+- **Animações:** curtas (até 320 ms) e desligadas para quem pede menos movimento no sistema.
+
+### Privacidade e dados pessoais (10.2, RNF02/RN12)
+- **Excluir a conta = anonimizar.** Saem os dados pessoais (nome, e-mail, telefone, curso, gênero, fotos, contato de emergência, chave PIX), o veículo, os avisos, os alertas de emergência e as avaliações recebidas. O texto das mensagens enviadas vira "Mensagem removida a pedido do autor (LGPD)" e o comentário das avaliações feitas é apagado (a nota fica na média de quem foi avaliado). Ficam, só com o id, as caronas, as solicitações e os pagamentos, porque fazem parte do histórico e do extrato de outras pessoas.
+- **Bloqueio:** a exclusão é recusada enquanto houver carona em curso (aberta ou em andamento) como motorista ou passageiro, para ninguém ficar sem aviso. A pessoa cancela ou conclui antes.
+- **Depois da exclusão:** a sessão é encerrada e o mesmo e-mail pode criar uma conta nova.
+- **Baixar meus dados:** um arquivo JSON com tudo o que o app guarda sobre a pessoa. As avaliações recebidas vão sem o autor (mesma regra da tela).
+- **Revogar o aceite dos termos de convivência:** as solicitações atuais continuam valendo e o aceite é pedido de novo na próxima solicitação. O aceite dos termos de uso não é revogável à parte: sem ele não há uso do app, então o caminho é excluir a conta.
+- **Localização:** continua lida só no toque da emergência e não é guardada. A permissão é retirada nas configurações do navegador.
+
+### Outras inclusões (10.2)
+- **Chave PIX do motorista (RF12):** opcional e **fictícia**, porque o pagamento é simulado. Aceita de 3 a 77 caracteres, sem espaços, e recusa os formatos de dado pessoal que dá para reconhecer (CPF, CNPJ e telefone). Sem chave cadastrada, o pagamento mostra a chave padrão do protótipo (`pix-ficticio@fechabonde.exemplo`). E-mails reais não têm como ser detectados: o campo pede, por escrito, uma chave inventada.
+- **Reputação (US10):** a média aparece no próprio Perfil e, para o motorista, ao lado de cada pessoa que pede vaga. Não há perfil público de terceiros: a "exibição pública" da US10 fica coberta pelo cartão da carona (motorista) e pela tela de aprovação (passageiros).
+- **Telefone do motorista (RNF12):** na tela da viagem em andamento, só para o passageiro confirmado, com toque que abre a discagem. O motorista não vê o próprio número.
+
+### Centro de notificações (10.3)
+- **Um lugar só:** todas as notificações ficam no **sino** do canto superior direito, que aparece para quem está conectado. Saíram a seção "Avisos" da tela Caronas e o contador do item Caronas na navegação.
+- **Caixa:** as **não lidas em cima** e as **lidas embaixo**, cada grupo da mais nova para a mais antiga. A não lida tem o selo "Nova" e o marcador âmbar (nunca só a cor).
+- **Lida:** abrir a caixa **não** marca nada como lido. A pessoa marca uma ("Marcar como lida") ou todas ("Marcar todas como lidas").
+- **Limite:** a caixa mostra até 30 lidas (as mais recentes); as mais antigas continuam guardadas.
+- **Ações:** as notificações são texto. As ações (aprovar, pagar, avaliar) continuam em Caronas, com o atalho "Ver minhas caronas" na própria caixa.
+- **Acessibilidade:** a caixa é o `<dialog>` nativo (foco preso, Esc fecha e o foco volta ao sino). O número do sino é visual e o nome acessível diz por extenso ("Notificações: 3 não lida(s)"). No celular a caixa sobe de baixo.
+
+### Inconsistências documentais registradas na Etapa 10 (continuação da lista da Etapa 8)
+7. **Nome da disciplina:** o README e o rodapé diziam "Análise e Projeto de Sistemas"; a equipe informou "Projeto de Software". O código foi corrigido; a documentação deve conferir.
+8. **Matrícula:** RF01 e RN01 aceitam "e-mail institucional **ou** matrícula ativa verificada"; US01 e UC01 falam só de e-mail. O protótipo implementa só o e-mail.
+9. **Ponto de encontro:** RNF12 e RN12 pedem que o ponto de encontro da viagem ativa fique em cache offline, mas o grupo decidiu (Etapa 9.3) não ter campo de ponto de encontro: ele é combinado em texto no chat. O RNF12 fica parcial.
+10. **Numeração das histórias:** no PDF "RFs-RNFs-USs", a história do cadastro de veículo aparece sem número (falta "US02"), logo depois da US01.
