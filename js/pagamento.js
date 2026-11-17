@@ -4,6 +4,8 @@
 // Pagamentos pendentes não são gravados: são DERIVADOS (confirmado + concluída + valor > 0 + sem registro),
 // como as vagas disponíveis (D10).
 
+import { solicitacaoVigente } from "./grupos.js";
+
 export const CHAVE_PIX_FICTICIA = "pix-ficticio@fechabonde.exemplo"; // não é uma chave real: nunca use dados reais
 
 const nao = (motivo, codigo) => ({ ok: false, motivo, codigo });
@@ -14,7 +16,7 @@ export const pagamentoDe = (caronaId, passageiroId, pagamentos) =>
 export function podePagar({ carona, passageiroId, solicitacoes = [], pagamentos = [] }) {
   if (!carona) return nao("Carona não encontrada.", "nao_encontrada");
   if (!(carona.valor > 0)) return nao("Esta carona é gratuita: não há pagamento.", "gratuita");
-  const minha = solicitacoes.find((s) => s.caronaId === carona.id && s.passageiroId === passageiroId);
+  const minha = solicitacaoVigente(carona.id, passageiroId, solicitacoes);
   if (minha?.status !== "confirmada") return nao("Só quem fez a viagem como passageiro confirmado paga a contribuição.", "permissao");
   if (carona.status !== "concluida") return nao("O pagamento é liberado depois que o motorista concluir a viagem.", "estado");
   if (pagamentoDe(carona.id, passageiroId, pagamentos)) return nao("O pagamento desta viagem já foi registrado.", "pago");

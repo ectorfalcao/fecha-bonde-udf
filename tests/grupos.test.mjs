@@ -164,3 +164,12 @@ test("falha de gravação é informada, sem quebrar", () => {
   globalThis.localStorage.setItem = original;
   assert.deepEqual([r.ok, r.codigo], [false, "gravacao"]);
 });
+
+// Etapa 10: quem cancela e pede de novo tem duas solicitações na mesma carona; vale a confirmada (ou a ativa).
+test("solicitacaoVigente: prefere confirmada, depois ativa, depois a mais recente", () => {
+  const s = (id, status, criadaEm) => ({ id, caronaId: "c", passageiroId: "p", status, criadaEm });
+  assert.equal(G.solicitacaoVigente("c", "p", [s("a", "cancelada", "1"), s("b", "confirmada", "2")]).id, "b");
+  assert.equal(G.solicitacaoVigente("c", "p", [s("a", "cancelada", "1"), s("b", "espera", "2")]).id, "b");
+  assert.equal(G.solicitacaoVigente("c", "p", [s("a", "cancelada", "1"), s("b", "recusada", "2")]).id, "b");
+  assert.equal(G.solicitacaoVigente("c", "x", [s("a", "confirmada", "1")]), null);
+});

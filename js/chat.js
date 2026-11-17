@@ -2,6 +2,8 @@
 // A sala é liberada exclusivamente para membros confirmados (motorista e passageiras/os confirmados)
 // e é arquivada automaticamente 2 horas após a conclusão da viagem (RN07).
 
+import { solicitacaoVigente } from "./grupos.js";
+
 export const JANELA_ARQUIVAMENTO_CHAT_H = 2; // RN07: desativada e arquivada 2 horas após encerramento da viagem
 export const TAMANHO_MAX_MENSAGEM = 500;
 
@@ -22,9 +24,7 @@ export function podeAcessarChat({ carona, usuarioId, solicitacoes = [] }) {
   if (carona.status === "cancelada") return nao("Esta carona foi cancelada.", "cancelada");
 
   const eMotorista = carona.motoristaId === usuarioId;
-  const minhaSolicitacao = solicitacoes.find(
-    (s) => s.caronaId === carona.id && s.passageiroId === usuarioId
-  );
+  const minhaSolicitacao = solicitacaoVigente(carona.id, usuarioId, solicitacoes);
 
   if (!eMotorista && !minhaSolicitacao) {
     return nao("Você não faz parte do grupo desta carona.", "permissao");

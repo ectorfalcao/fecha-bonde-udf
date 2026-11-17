@@ -21,6 +21,17 @@ export function rotuloStatus(s, carona = null) {
   return ROTULOS[s.status] ?? s.status;
 }
 
+// A solicitação que vale para a pessoa nesta carona. Quem cancela pode pedir de novo (premissa da Etapa 7),
+// então pode haver mais de uma: vale a confirmada; senão a ativa (pendente ou espera); senão a mais recente.
+// Etapa 10: antes, chat e pagamento olhavam só a PRIMEIRA (a cancelada) e negavam acesso a quem foi confirmado depois.
+export function solicitacaoVigente(caronaId, passageiroId, sols) {
+  const minhas = sols.filter((s) => s.caronaId === caronaId && s.passageiroId === passageiroId);
+  return minhas.find((s) => s.status === "confirmada")
+    ?? minhas.find((s) => ATIVAS.includes(s.status))
+    ?? [...minhas].sort((a, b) => String(b.criadaEm ?? "").localeCompare(String(a.criadaEm ?? "")))[0]
+    ?? null;
+}
+
 const daCarona = (carona, sols) => sols.filter((s) => s.caronaId === carona.id);
 export const vagasLivres = (carona, sols) =>
   Math.max(0, carona.vagasTotal - daCarona(carona, sols).filter((s) => s.status === "confirmada").length);

@@ -286,3 +286,14 @@ test("telaChat: faixa diz de qual carona é o chat; sem mensagens, mostra a dica
   enviarMensagem({ caronaId: "c1", remetenteId: "u1", texto: "Na estação, às 18h25" });
   assert.doesNotMatch(textoDe(telaChat(new URLSearchParams({ carona: "c1" }))), /◎ Ponto de encontro/);
 });
+
+// Etapa 10 (defeito corrigido): quem cancelou e pediu de novo, e foi confirmado, entra no chat.
+test("RF10: passageira que cancelou e pediu de novo, já confirmada, acessa o chat", () => {
+  const carona = { id: "cx", motoristaId: "m", status: "aberta" };
+  const sols = [
+    { id: "s1", caronaId: "cx", passageiroId: "p", status: "cancelada", canceladaPor: "passageiro", criadaEm: "2026-11-01" },
+    { id: "s2", caronaId: "cx", passageiroId: "p", status: "confirmada", criadaEm: "2026-11-02" }
+  ];
+  assert.deepEqual(ChatRegras.podeAcessarChat({ carona, usuarioId: "p", solicitacoes: sols }), { ok: true, papel: "passageiro" });
+  assert.equal(ChatRegras.podeAcessarChat({ carona, usuarioId: "p", solicitacoes: [sols[0]] }).ok, false);
+});

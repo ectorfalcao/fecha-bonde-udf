@@ -110,3 +110,9 @@ test("Caronas: passageiro vê pendente e o botão Pagar; motorista vê quem pago
   assert.equal(botao(t, `Pagar ${moeda(7.5)}`), null);
   semLixo(t);
 });
+
+// Etapa 10 (defeito corrigido): a solicitação cancelada antiga não impede o pagamento da viagem feita.
+test("podePagar: quem cancelou e pediu de novo, e viajou confirmado, paga normalmente", () => {
+  const sols2 = [{ caronaId: "c", passageiroId: "p", status: "cancelada", criadaEm: "1" }, { caronaId: "c", passageiroId: "p", status: "confirmada", criadaEm: "2" }];
+  assert.deepEqual(P.podePagar({ carona: base, passageiroId: "p", solicitacoes: sols2 }), { ok: true, valor: 8 });
+});
