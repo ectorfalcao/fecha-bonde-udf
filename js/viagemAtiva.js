@@ -31,7 +31,7 @@ function cartaoViagem(u, c) {
   return el("li", { class: "carona viagem" }, el("h3", {}, rota(c)),
     el("button", { type: "button", class: "botao perigo largo", "aria-label": `Emergência: abrir opções de ajuda, viagem ${rota(c)}`, onclick: () => abrirEmergencia(c, motorista, veiculo) }, comIcone("sirene", "Emergência")),
     el("p", { class: "nota" }, "Abre a discagem para a polícia (190) ou um SMS para o seu contato de emergência. O aplicativo não aciona nenhum serviço por conta própria."),
-    mapaViagem(c),
+    mapaViagem(c, { souMotorista }), // Etapa 11: mapa real; o motorista pode compartilhar o GPS
     // Etapa 9.3: placa e carro primeiro, para conferir na hora de embarcar.
     fatos([veiculo && ["Veículo", [`${veiculo.modelo} ${veiculo.cor}, placa ${veiculo.placa}`, " ", el("span", { class: "placa", "aria-hidden": "true" }, el("span", {}, veiculo.placa))]],
       ["Motorista", el("span", { class: "pessoa" }, avatar(motorista?.nome, "sm"), el("span", { class: "pessoa-texto" }, motorista?.nome ?? "—"))],

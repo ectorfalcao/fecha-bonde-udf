@@ -3,6 +3,7 @@ import { listar, obter, atualizar } from "./dados.js";
 import { notificar } from "./notificacoes.js";
 import { modoDemo } from "./demo.js";
 import { podeIniciarViagem, podeConcluirViagem, planoAoIniciar } from "./viagem.js";
+import { pararCompartilhamento } from "./posicoes.js";
 
 const ERRO_GRAVAR = { ok: false, motivo: "Não foi possível gravar no armazenamento do navegador.", codigo: "gravacao" };
 const NAO_ENCONTRADA = { ok: false, motivo: "Carona não encontrada.", codigo: "permissao" };
@@ -31,6 +32,7 @@ export function concluirViagem(caronaId, motoristaId, { agora = new Date() } = {
   const v = podeConcluirViagem(c);
   if (!v.ok) return v;
   if (!atualizar("caronas", c.id, { status: "concluida", concluidaEm: agora.toISOString() })) return ERRO_GRAVAR;
+  pararCompartilhamento(c.id); // Etapa 11: para o GPS do motorista e apaga a última posição guardada (RN08)
   const passageiros = listar("solicitacoes").filter((s) => s.caronaId === c.id && s.status === "confirmada");
   const pagar = c.valor > 0 ? " Pague a contribuição (simulada) em Caronas." : "";
   for (const s of passageiros) notificar(s.passageiroId, `A viagem ${rotaDe(c)} foi concluída.${pagar} Avalie o motorista em Caronas.`);

@@ -19,6 +19,12 @@ Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 
 
 **Etapa 8 concluída (fluxos funcionais).**
 
+**Etapa 11: mapa real** (branch `etapa-11-mapa-real`).
+- A tela *Viagem em andamento* mostra um **mapa de verdade do OpenStreetMap** (biblioteca Leaflet), com a **rota pelas ruas** (serviço OSRM) e o carro.
+- O **motorista** pode tocar em "Compartilhar minha localização (GPS)": o carro passa a seguir o GPS real dele. Sem servidor, a passageira só vê esse GPS no mesmo navegador (duas abas); fora disso vê a posição estimada, e a tela explica.
+- Sem internet, a tela volta ao mapa esquemático SIMULADO. As coordenadas dos locais foram conferidas no OpenStreetMap (o campus estava cerca de 3 km fora do lugar).
+- Precisa de internet para o mapa real; o app continua funcionando sem ela.
+
 **Etapa 10: modernização da interface** (branch `etapa-10-redesign`).
 - 10.0: correção de defeito: quem cancelava e pedia vaga de novo, já confirmado, ficava sem chat e sem pagamento (`solicitacaoVigente()` em `grupos.js`).
 - 10.1: RN05 também no Início: carona "só para mulheres" não aparece para quem não é do gênero feminino nem para visitante.
@@ -43,7 +49,7 @@ Veja `docs/matriz-rastreabilidade.md` e `docs/premissas.md`.
 
 ## Estrutura
 - `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`, `telas.css` (arranjo de cada tela, Etapa 10), `fontes/` (Inter e sua licença OFL)
-- `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js`, `chat.js`, `pagamento.js`, `avaliacao.js` e `historico.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js`, `mensagens.js`, `pagamentos.js` e `avaliacoes.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`, `icones.js` (ícones SVG), `privacidade.js` (regras de LGPD) e `contas.js` (operações), `avisos.js` (lista de notificações), `centroNotificacoes.js` (sino e caixa de notificações)
+- `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js`, `chat.js`, `pagamento.js`, `avaliacao.js` e `historico.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js`, `mensagens.js`, `pagamentos.js` e `avaliacoes.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`, `icones.js` (ícones SVG), `privacidade.js` (regras de LGPD) e `contas.js` (operações), `avisos.js` (lista de notificações), `centroNotificacoes.js` (sino e caixa de notificações), `mapaReal.js` (Leaflet e OpenStreetMap), `rotas.js` (rota pelas ruas, OSRM) e `posicoes.js` (GPS do motorista)
 - Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `viagemAtiva.js` (viagem e emergência), `chatTela.js` (chat do grupo), `mapa.js` (mapa simulado da viagem), `pagamentoTela.js` (pagamento simulado), `avaliacaoTela.js` (avaliação), `historicoTela.js` (histórico e extrato), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
 - `#/ambiente`: verificação do ambiente (tela da Etapa 3)
 
@@ -66,6 +72,7 @@ Precisa do Node 20 ou superior. Nenhum pacote para instalar.
 - `pagamento.test.mjs`: regras, registro, aviso ao motorista e telas do pagamento simulado (Etapa 8.5).
 - `privacidade.test.mjs`: exclusão com anonimização, download dos dados, revogação, chave PIX fictícia e telas do Perfil, viagem e pagamento (Etapa 10).
 - `notificacoes.test.mjs`: sino, caixa com não lidas em cima e lidas embaixo, marcar uma ou todas como lidas (Etapa 10.3).
+- `mapa.test.mjs`: rota do OSRM (com buscador falso, sem rede), posição no trajeto, GPS do motorista e tela da viagem (Etapa 11).
 - `telas.test.mjs`: renderiza as telas com um DOM falso (`dom-falso.mjs`, auxiliar) e simula os cliques. Também falha se aparecer "null", "undefined" ou "[object" no texto da tela. **Não substitui** o teste manual no navegador.
 
 Os testes foram **recriados na Etapa 8.0**: os arquivos anteriores estavam vazios, então os resultados antigos não puderam ser reverificados. Não existe `modelo.test.mjs`.

@@ -14,7 +14,7 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RF08 | Lista de espera | Buscar / Caronas | **Implementado** (o 1º da fila vira "pendente"; o motorista ainda aprova) | `tests/grupos.test.mjs` + manual | Lotou: fila; vagou: próximo é chamado | OK (automatizado e manual) |
 | RF09 | Cancelamento | Caronas | **Implementado** (motorista só com 2 h de antecedência: premissa) | `tests/grupos.test.mjs`, `tests/telas.test.mjs` + manual | Passageiro libera vaga; motorista avisa todos | OK (automatizado e manual) |
 | RF10 | Chat condicionado | Chat | **Implementado** (sala em tempo real para membros confirmados; arquivamento em 2h; defeito de nova solicitação corrigido na 10.0) | `tests/chat.test.mjs` + manual | Troca de mensagens entre motorista e confirmados; bloqueio a terceiros | OK (automatizado; navegador com duas abas no teste de ponta a ponta) |
-| RF11 | Mapa e rastreamento | Viagem | **Parcial/Simulado** (mapa esquemático; posição estimada pelo tempo, sem GPS) | `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa com origem, destino e veículo avançando, rotulado SIMULADO | Automatizado OK; navegador OK, desktop e celular (teste de ponta a ponta) |
+| RF11 | Mapa e rastreamento | Viagem | **Parcial** (Etapa 11: mapa real do OpenStreetMap, rota pelas ruas pelo OSRM e GPS do motorista compartilhado no mesmo navegador; sem servidor, não chega a outro aparelho; esquema SIMULADO como reserva sem internet) | `tests/mapa.test.mjs`, `tests/viagem.test.mjs`, `tests/emergencia.test.mjs` | Mapa real com rota e veículo; GPS do motorista quando houver | Automatizado OK; navegador OK, computador e celular (Etapa 11) |
 | RF12 | Pagamento | Pagamento | **Simulado** (PIX fictício depois da viagem concluída; cartão indisponível; chave PIX fictícia cadastrada pelo motorista desde a 10.2) | `tests/pagamento.test.mjs` | Passageiro confirmado paga uma vez após a conclusão; motorista vê pago/pendente | Automatizado OK; navegador OK (teste de ponta a ponta) |
 | RF13 | Histórico e extrato | Histórico | **Implementado** (extrato com valores simulados) | `tests/historico.test.mjs` | Todas as viagens concluídas da pessoa e totais pagos, a pagar, recebidos e a receber | Automatizado OK; navegador OK (teste de ponta a ponta) |
 | RF14 | Avaliação mútua | Avaliação | **Implementado** (1 a 5 estrelas + comentário opcional; não bloqueia o uso, ver inconsistência 2; média no Perfil e na aprovação desde a 10.2) | `tests/avaliacao.test.mjs` | Após a conclusão, motorista e passageiros se avaliam uma vez; média aparece no cartão | Automatizado OK; navegador OK (teste de ponta a ponta) |
@@ -35,6 +35,41 @@ Status: Pendente | Parcial | Implementado | Simulado
 | RNF10 | WCAG 2.1 AA | Todas | Parcial (rótulos, erros com símbolo, estado nunca só por cor, botões com nome acessível, foco visível, menos movimento e alto contraste do sistema; **contraste medido nas Etapas 9 e 10**) | Etapa 9: 16 pares. Etapa 10: 28 pares novos, todos AA (texto ≥ 4,5:1, contornos ≥ 3:1). Teclado: ordem e foco conferidos no navegador. Leitor de tela: a executar | Texto com contraste AA | Contraste OK; teclado OK (amostra) |
 | RNF11 | Android/iOS | PWA | Pendente (parcial) | a definir | | |
 | RNF12 | Cache offline | Viagem | Parcial (store.js; sem Service Worker; telefone do motorista na viagem desde a 10.2; sem ponto de encontro, ver inconsistência 9) | `tests/privacidade.test.mjs` (telefone) | Dados da carona ativa à mão | Telefone OK; offline não testado |
+
+## Etapa 11: mapa real (RF11, RN08, US07; branch `etapa-11-mapa-real`)
+
+| Item | Situação | Arquivos | Teste |
+|---|---|---|---|
+| Mapa real do OpenStreetMap (Leaflet 1.9.4, carregado sob demanda com verificação de integridade) na tela *Viagem em andamento* | Implementado | `mapaReal.js`, `mapa.js`, `componentes.css` | navegador (Node não carrega a biblioteca: teste garante que fica o esquema) |
+| Rota pelas ruas (OSRM), guardada por par de locais; linha reta tracejada se o serviço falhar | Implementado | `rotas.js` | `tests/mapa.test.mjs` (buscador falso, sem rede) |
+| Posição estimada andando pela rota, na proporção do tempo previsto | Implementado | `rotas.js` (`pontoNaRota`), `mapa.js` | `tests/mapa.test.mjs` |
+| GPS do motorista por escolha (botão), última posição neste navegador, outras abas recebem; validade de 2 min; apagado ao parar, ao negar a permissão e ao concluir | Implementado | `posicoes.js`, `mapa.js`, `viagens.js` | `tests/mapa.test.mjs` |
+| Mapa esquemático como reserva sem internet (RNF12), rotulado SIMULADO | Mantido | `mapa.js` | `tests/emergencia.test.mjs` |
+| Coordenadas dos 10 locais conferidas no OpenStreetMap (campus: cerca de 3 km; Jardim Botânico: cerca de 1,8 km) | Corrigido | `caronas.js` | `tests/viagem.test.mjs` passou a ler as coordenadas da lista |
+| Texto de privacidade do Perfil atualizado (GPS do motorista) | Corrigido | `perfil.js` | manual |
+| Rastreamento entre aparelhos diferentes | **Não existe** (exige servidor; inconsistência 12) | n/a | n/a |
+
+### Defeitos achados e corrigidos durante a parte
+| # | Defeito | Como foi achado | Correção |
+|---|---|---|---|
+| 1 | A regra antiga `.mapa svg` (feita para o esquema) esticava a bandeira da atribuição do Leaflet e o ícone do botão de GPS | Navegador | regra restrita ao desenho esquemático (`.mapa-area > svg`) |
+| 2 | O rótulo "UDF Campus Sede" era cortado na borda; afastar o enquadramento deixava o mapa pequeno no celular | Navegador (1280 e 375 px) | rótulos virados para dentro do mapa |
+
+### Verificação
+| Item | Resultado |
+|---|---|
+| `node --check` nos módulos novos e alterados | OK |
+| Suíte completa `node --test tests/*.test.mjs` | 188/188 (12 novos em `mapa.test.mjs`) |
+| Sensibilidade | os testes de GPS e de rota usam geolocalização e buscador falsos; o teste de concluir a viagem falharia sem `pararCompartilhamento` em `viagens.js` |
+| Navegador, computador (1280 px) | Mapa real carregado, rota pelas ruas de 19,2 km (Águas Claras → UDF), marcadores e rótulos, carro na posição estimada; com uma posição de GPS gravada, o carro foi para ela com o anel e o círculo de precisão, e a legenda passou a dizer "pelo GPS do motorista" |
+| Navegador, celular (375 px) | Mapa ocupa a largura, sem rolagem lateral; passageira (mesmo navegador) vê o GPS do motorista |
+| GPS real do aparelho (permissão do navegador) e o mapa sem internet no navegador | **Não executado** (cobertos pelos testes com geolocalização falsa e pelo esquema em Node) |
+
+### Limites conhecidos
+- Sem servidor: o GPS do motorista só chega a outras abas do mesmo navegador.
+- O servidor público do OSRM é de demonstração: pode ficar lento ou fora do ar. Nesse caso, linha reta.
+- Os azulejos do OpenStreetMap precisam de internet; a rota guardada não basta para desenhar o mapa real offline.
+- A chegada prevista continua sendo a estimativa do app, não o tempo do OSRM.
 
 ## Etapa 10: modernização da interface (branch `etapa-10-redesign`)
 

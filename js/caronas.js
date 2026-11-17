@@ -2,19 +2,20 @@
 import { TURNOS, CAPACIDADE_MAX } from "./regras.js";
 
 export const CAMPUS_ID = "campus";
-// Coordenadas APROXIMADAS, só para demonstrar o filtro de raio. Não servem para navegação.
-// Regiões vêm das respostas da pesquisa de validação (seção 5 da documentação).
+// Coordenadas dos locais (Etapa 11: conferidas no OpenStreetMap/Nominatim para o mapa real).
+// Campus = endereço do UDF (W5 Sul, SQS 304, Asa Sul); regiões = centro da região administrativa ou cidade.
+// Regiões vêm das respostas da pesquisa de validação (seção 5 da documentação). Não servem para navegação.
 export const LOCAIS = [
-  { id: "campus", nome: "UDF Campus Sede (Asa Sul)", lat: -15.830, lng: -47.910 },
-  { id: "aguas-claras", nome: "Águas Claras", lat: -15.834, lng: -48.027 },
-  { id: "guara", nome: "Guará", lat: -15.819, lng: -47.978 },
-  { id: "taguatinga", nome: "Taguatinga", lat: -15.833, lng: -48.057 },
-  { id: "cruzeiro-novo", nome: "Cruzeiro Novo", lat: -15.793, lng: -47.938 },
-  { id: "jardim-botanico", nome: "Jardim Botânico", lat: -15.876, lng: -47.800 },
-  { id: "paranoa", nome: "Paranoá", lat: -15.774, lng: -47.779 },
-  { id: "planaltina-df", nome: "Planaltina (DF)", lat: -15.620, lng: -47.650 },
-  { id: "planaltina-go", nome: "Planaltina de Goiás", lat: -15.453, lng: -47.614 },
-  { id: "valparaiso", nome: "Valparaíso de Goiás", lat: -16.065, lng: -47.975 }
+  { id: "campus", nome: "UDF Campus Sede (Asa Sul)", lat: -15.80255, lng: -47.8998 },
+  { id: "aguas-claras", nome: "Águas Claras", lat: -15.84199, lng: -48.02812 },
+  { id: "guara", nome: "Guará", lat: -15.82356, lng: -47.97681 },
+  { id: "taguatinga", nome: "Taguatinga", lat: -15.83352, lng: -48.05657 },
+  { id: "cruzeiro-novo", nome: "Cruzeiro Novo", lat: -15.79605, lng: -47.93915 },
+  { id: "jardim-botanico", nome: "Jardim Botânico", lat: -15.86389, lng: -47.78852 },
+  { id: "paranoa", nome: "Paranoá", lat: -15.77544, lng: -47.77976 },
+  { id: "planaltina-df", nome: "Planaltina (DF)", lat: -15.61819, lng: -47.65557 },
+  { id: "planaltina-go", nome: "Planaltina de Goiás", lat: -15.45715, lng: -47.6089 },
+  { id: "valparaiso", nome: "Valparaíso de Goiás", lat: -16.06863, lng: -47.97649 }
 ];
 export const localPorId = (id) => LOCAIS.find((l) => l.id === id) ?? null;
 export const localPorNome = (n) => LOCAIS.find((l) => l.nome === n) ?? null;

@@ -82,7 +82,7 @@ Pendentes na documentação (fora do código): D2 (Kanban × Scrum, 2 sprints ×
 - **Modelo de dados:** Coleção `mensagens` com atributos `id`, `caronaId`, `remetenteId`, `texto`, `criadaEm`, espelhando o Diagrama de Classes (`chatGrupo` e `Mensagem`).
 - **Segurança e acessibilidade (RNF10):** Limite de 500 caracteres, sanitização de nós sem uso de `innerHTML`, anúncios com `role="log"` e `aria-live="polite"`.
 ## Premissas adicionais da Etapa 8.4
-- **Mapa (RF11):** esquemático, desenhado em SVG com as coordenadas aproximadas da lista de locais. Sem biblioteca nem imagens de mapa: funciona offline e não envia dados a terceiros.
+- **Mapa (RF11):** esquemático, desenhado em SVG com as coordenadas aproximadas da lista de locais. Sem biblioteca nem imagens de mapa: funciona offline e não envia dados a terceiros. *Substituído na Etapa 11: mapa real (OpenStreetMap); o esquema virou a reserva sem internet.*
 - **Posição do veículo:** estimada pelo tempo desde o início da viagem, em linha reta da partida ao destino, usando o mesmo tempo previsto da chegada estimada (30 km/h, trajeto 30% maior). Passado o tempo previsto, o veículo fica no destino até o motorista concluir.
 - **Onde aparece:** só na tela *Viagem em andamento*, abaixo do botão de emergência, para o motorista e as passageiras confirmadas. Mapas na busca e na oferta ficam para o refinamento visual.
 - **Rastreamento antes do início (RN08/US07: 15 min antes):** não há posição a compartilhar sem GPS; a viagem só aparece no mapa depois de iniciada. Inconsistência 4 (RF11 "X minutos") continua registrada.
@@ -162,3 +162,35 @@ Decididas depois da auditoria de requisitos do início da etapa (resumo em `matr
 8. **Matrícula:** RF01 e RN01 aceitam "e-mail institucional **ou** matrícula ativa verificada"; US01 e UC01 falam só de e-mail. O protótipo implementa só o e-mail.
 9. **Ponto de encontro:** RNF12 e RN12 pedem que o ponto de encontro da viagem ativa fique em cache offline, mas o grupo decidiu (Etapa 9.3) não ter campo de ponto de encontro: ele é combinado em texto no chat. O RNF12 fica parcial.
 10. **Numeração das histórias:** no PDF "RFs-RNFs-USs", a história do cadastro de veículo aparece sem número (falta "US02"), logo depois da US01.
+
+## Etapa 11: mapa real (decisões do grupo)
+Substitui o mapa SIMULADO da tela *Viagem em andamento* (Etapa 8.4) por um mapa de verdade. Escolhas feitas pela equipe:
+
+- **Provedor: OpenStreetMap**, desenhado com a biblioteca **Leaflet 1.9.4**. Gratuito, sem chave e sem cadastro. O RF11 cita Google Maps e Mapbox; os dois exigem conta e chave (o Google, também faturamento), por isso ficaram de fora. Ver inconsistência 11.
+- **Rota pelas ruas: serviço público OSRM** (servidor de demonstração, gratuito). Mostra o caminho real e a distância. Se o serviço não responder em 7 s, a rota vira uma linha reta, tracejada e com aviso na legenda.
+- **Posição do carro: GPS do motorista**, com a estimativa pelo tempo como reserva.
+
+### Como funciona
+- **Carregamento:** a biblioteca vem de um CDN (unpkg) só quando a tela da viagem abre, com verificação de integridade (SRI): se o arquivo for alterado no caminho, o navegador recusa. A tela abre com o mapa esquemático e troca pelo mapa real assim que ele carrega.
+- **Sem internet:** fica o mapa esquemático da Etapa 8.4, rotulado SIMULADO. É a reserva offline (RNF12). Nos testes em Node, também.
+- **Rota guardada:** a rota de cada par de locais fica neste navegador. A mesma origem e destino não consultam o OSRM de novo, e o desenho funciona depois sem internet (os azulejos do mapa, não).
+- **Coordenadas conferidas:** com um mapa real, as coordenadas aproximadas da Etapa 6 ficariam visivelmente fora do lugar. Elas foram conferidas no OpenStreetMap (Nominatim). O campus mudou cerca de 3 km: passou a ser o endereço do UDF (W5 Sul, SQS 304, Asa Sul). O Jardim Botânico mudou cerca de 1,8 km; as outras regiões já estavam certas. Distâncias e tempos estimados mudaram um pouco por causa disso.
+- **Chegada prevista:** continua a mesma estimativa do resto do app (30 km/h e trajeto 30% maior que a linha reta), para não mostrar dois horários diferentes. O OSRM só fornece o desenho e a distância da rota.
+- **Posição estimada:** sem GPS, o carro anda **pela rota** (não mais em linha reta), na proporção do tempo previsto.
+
+### GPS do motorista (RN08, US07)
+- **Por escolha:** só o motorista tem o botão "Compartilhar minha localização (GPS)" na tela da viagem em andamento. Nada é lido sem o toque, e o navegador pede a permissão.
+- **Enquanto compartilha:** o aparelho lê o GPS e grava só a **última** posição (no máximo a cada 3 s) neste navegador. O compartilhamento continua mesmo trocando de tela dentro do app.
+- **Quem vê:** sem servidor, a posição **não chega a outro aparelho**. A passageira vê o GPS do motorista se usar o mesmo navegador (demonstração com duas abas); fora disso, vê a posição estimada, e a tela explica o motivo.
+- **Validade:** posição com mais de 2 minutos não é mostrada como real.
+- **Apagada:** quando o motorista toca em "Parar de compartilhar", quando a permissão é negada e quando a viagem é concluída.
+- **Janela de 15 minutos (RN08):** o compartilhamento só existe com a viagem em andamento, e ela só pode ser iniciada 15 minutos antes da saída (ou pelo modo demonstração).
+
+### Privacidade
+- **Serviços externos:** o mapa pede imagens ao OpenStreetMap (que fica sabendo a região vista) e pede a rota ao OSRM, enviando só as coordenadas fixas da lista de locais (nunca a posição de uma pessoa). A biblioteca vem do unpkg.
+- **O GPS do motorista não é enviado a nenhum serviço:** ele só posiciona o marcador. Os azulejos pedidos para mostrar a região em volta dele revelam a área, como em qualquer mapa on-line.
+- **Perfil:** o texto de privacidade passou a dizer que, para o motorista que compartilha, a localização também é lida durante a viagem.
+
+### Inconsistências documentais registradas na Etapa 11
+11. **Provedor do mapa:** RF11 e UC15 citam Google Maps ou Mapbox; o protótipo usa OpenStreetMap, que é gratuito e dispensa chave. A documentação deve citar o provedor adotado.
+12. **Rastreamento entre aparelhos:** RF11, US07 e UC15 pressupõem que a posição do motorista chegue ao passageiro em tempo real (RNF05: 200 ms). Isso exige um servidor (ou um serviço de tempo real), que o protótipo não tem. Hoje a posição só é compartilhada dentro do mesmo navegador.

@@ -160,7 +160,7 @@ export function telaPerfil() {
       el("h3", { id: "h-privacidade", class: "secao-titulo" }, icone("escudo", { tamanho: 20 }), "Privacidade e seus dados (LGPD)"),
       el("p", { class: "nota" }, u.termosUsoEm ? `Termos de uso aceitos em ${dataHora(u.termosUsoEm)}. ` : "",
         u.termosConvivenciaEm ? `Termos de convivência aceitos em ${dataHora(u.termosConvivenciaEm)}.` : "Termos de convivência ainda não aceitos (o aceite é pedido na primeira solicitação de vaga)."),
-      el("p", { class: "nota" }, "A localização só é lida quando você toca no botão de emergência e não é guardada. A permissão pode ser retirada nas configurações do navegador."),
+      el("p", { class: "nota" }, "Localização: lida quando você toca no botão de emergência (não é guardada) e, se você for motorista e escolher compartilhar o GPS, durante a viagem (só a última posição fica neste navegador e é apagada quando você para ou conclui). A permissão pode ser retirada nas configurações do navegador."),
       retorno,
       el("div", { class: "linha-acoes" },
         el("button", { type: "button", class: "botao secundario", onclick: baixar }, comIcone("baixar", "Baixar meus dados")),
