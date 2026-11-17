@@ -39,7 +39,7 @@ export const linkBotao = (texto, href, variante = "", nomeIcone = null) =>
 // entra no rótulo por extenso. Base pronta para o sino de notificações.
 export function botaoIcone({ nomeIcone, rotulo, href = null, onclick = null, contador = 0, classe = "" }) {
   const conteudo = [icone(nomeIcone, { tamanho: 20 }), contador > 0 && el("span", { class: "contador", "aria-hidden": "true" }, contador > 99 ? "99+" : String(contador))];
-  const nome = contador > 0 ? `${rotulo}, ${contador} novo(s)` : rotulo;
+  const nome = contador > 0 ? `${rotulo}: ${contador} não lida(s)` : rotulo;
   return href
     ? el("a", { class: `botao-icone ${classe}`.trim(), href, "aria-label": nome, title: rotulo }, conteudo)
     : el("button", { type: "button", class: `botao-icone ${classe}`.trim(), "aria-label": nome, title: rotulo, onclick }, conteudo);

@@ -6,6 +6,7 @@ import { el } from "../js/componentes.js";
 import { iniciarDados, listar, obter, atualizar } from "../js/dados.js";
 import { salvar } from "../js/store.js";
 import { naoLidas } from "../js/notificacoes.js";
+import { conteudoNotificacoes } from "../js/centroNotificacoes.js";
 import { cancelarCarona } from "../js/solicitacoes.js";
 import { telaBuscar } from "../js/buscar.js";
 import { telaMinhasCaronas } from "../js/minhas.js";
@@ -74,11 +75,14 @@ test("RF07: motorista vê o pedido, aprova, e a passageira vê a confirmação e
   entrar("u2");
   const p = telaMinhasCaronas();
   assert.match(textoDe(p), /Confirmada/);
-  assert.match(textoDe(p), /Sua vaga na carona .* foi aprovada/);
-  assert.ok(naoLidas("u2") >= 1);
-  botao(p, "Marcar todos como lidos").click();
-  assert.equal(naoLidas("u2"), 0);
   semLixo(p, "Minhas caronas (passageira)");
+  // Etapa 10.3: o aviso fica no centro de notificações (sino do topo), não mais em Caronas.
+  assert.doesNotMatch(textoDe(p), /Sua vaga na carona .* foi aprovada/);
+  const centro = conteudoNotificacoes(obter("usuarios", "u2"));
+  assert.match(textoDe(centro), /Sua vaga na carona .* foi aprovada/);
+  assert.ok(naoLidas("u2") >= 1);
+  botao(centro, "Marcar todas como lidas").click();
+  assert.equal(naoLidas("u2"), 0);
 });
 
 test("RF09: passageira cancela pela tela e o motorista é avisado", async () => {

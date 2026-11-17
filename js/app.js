@@ -15,7 +15,7 @@ import { telaHistorico } from "./historicoTela.js";
 import { usuarioAtual, acessoLiberado } from "./sessao.js";
 import { listar } from "./dados.js";
 import { viagensAtivasDe } from "./viagem.js";
-import { naoLidas } from "./notificacoes.js";
+import { botaoNotificacoes } from "./centroNotificacoes.js";
 import { modoDemo } from "./demo.js";
 import { el, estadoVazio, linkBotao, avatar, icone } from "./componentes.js";
 
@@ -46,28 +46,29 @@ const lista = el("ul", {}, NAV.map(([caminho, rotulo, nomeIcone]) =>
   el("li", {}, el("a", { href: `#${caminho}` }, el("span", { class: "nav-icone" }, icone(nomeIcone, { tamanho: 22 })), el("span", { class: "nav-rotulo" }, rotulo)))));
 nav.append(lista);
 
-// Contador de avisos novos no item "Caronas" (RF07 a RF09: notificações simuladas).
-// O número é visual; o leitor de tela ouve "Caronas, 2 aviso(s) novo(s)".
-const linkCaronas = lista.querySelector('a[href="#/caronas"]');
-const atualizarAvisos = () => {
-  const u = usuarioAtual(), n = u ? naoLidas(u.id) : 0;
-  linkCaronas.querySelector(".contador")?.remove();
-  if (n) linkCaronas.append(el("span", { class: "contador", "aria-hidden": "true" }, n > 99 ? "99+" : String(n)));
-  n ? linkCaronas.setAttribute("aria-label", `Caronas, ${n} aviso(s) novo(s)`) : linkCaronas.removeAttribute("aria-label");
-};
-addEventListener("avisos-alterados", atualizarAvisos);
-
-// Área de ações do topo: quem está conectado (leva ao Perfil) ou "Entrar".
-// Etapa 10: é aqui que o futuro sino de notificações entra (botaoIcone + contador, em componentes.js).
+// Área de ações do topo: sino de notificações + pessoa conectada (leva ao Perfil), ou "Entrar".
+// Etapa 10.3: TODAS as notificações ficam no sino (centroNotificacoes.js); a navegação não tem mais contador.
 const acoesTopo = document.getElementById("topo-acoes");
+let sino = null;
 const atualizarTopo = () => {
   const u = usuarioAtual();
   const logado = u && acessoLiberado(u);
   const primeiroNome = (u?.nome || u?.email || "").split(/[\s@]/)[0];
-  acoesTopo.replaceChildren(logado
-    ? el("a", { class: "usuario-chip", href: "#/perfil", "aria-label": `Seu perfil: ${u.nome || u.email}` }, avatar(u.nome || u.email, "sm"), el("span", { class: "nome" }, primeiroNome))
-    : caminhoBase() !== "/acesso" ? linkBotao("Entrar", "#/acesso", "claro", "usuario") : "");
+  sino = logado ? botaoNotificacoes(u) : null;
+  acoesTopo.replaceChildren(...(logado
+    ? [sino, el("a", { class: "usuario-chip", href: "#/perfil", "aria-label": `Seu perfil: ${u.nome || u.email}` }, avatar(u.nome || u.email, "sm"), el("span", { class: "nome" }, primeiroNome))]
+    : caminhoBase() !== "/acesso" ? [linkBotao("Entrar", "#/acesso", "claro", "usuario")] : []));
 };
+// Notificação nova ou marcada como lida: atualiza o número NO MESMO botão (com a caixa aberta, o foco
+// volta para ele quando ela fecha; trocar o elemento faria o foco se perder).
+const atualizarSino = () => {
+  const u = usuarioAtual();
+  if (!sino || !u) return;
+  const novo = botaoNotificacoes(u);
+  sino.replaceChildren(...novo.childNodes);
+  sino.setAttribute("aria-label", novo.getAttribute("aria-label"));
+};
+addEventListener("avisos-alterados", atualizarSino);
 
 // Faixa "viagem em andamento" (Etapa 8.2): em qualquer tela, leva à viagem, onde fica o botão de emergência (RN11).
 const faixa = el("div", { class: "faixa-viagem" });
@@ -82,7 +83,7 @@ const atualizarFaixa = () => {
     linkBotao("Abrir viagem e emergência", "#/viagem", "claro", "sirene"))] : []));
 };
 addEventListener("viagem-alterada", atualizarFaixa);
-addEventListener("sessao-alterada", () => { atualizarAvisos(); atualizarFaixa(); atualizarTopo(); });
+addEventListener("sessao-alterada", () => { atualizarFaixa(); atualizarTopo(); });
 
 // Modo demonstração (Etapa 8.1): quando ligado, o cabeçalho avisa em qualquer tela.
 const seloDemo = document.querySelector(".selo-demo");
@@ -97,7 +98,6 @@ atualizarSelo();
 
 iniciarDados();
 iniciar(document.getElementById("conteudo"), (caminho) => {
-  atualizarAvisos();
   atualizarFaixa();
   atualizarTopo();
   lista.querySelectorAll("a").forEach((a) =>

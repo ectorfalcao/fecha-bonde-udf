@@ -16,3 +16,9 @@ export function marcarLidas(id) {
   avisarMudanca();
   return ok;
 }
+// Etapa 10.3 (centro de notificações): marca UMA notificação, e só se for da própria pessoa.
+export function marcarLida(usuarioId, notificacaoId) {
+  const ok = salvar("notificacoes", listar("notificacoes").map((n) => (n.id === notificacaoId && n.usuarioId === usuarioId ? { ...n, lida: true } : n)));
+  avisarMudanca();
+  return ok;
+}

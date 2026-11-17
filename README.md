@@ -19,6 +19,12 @@ Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 
 
 **Etapa 8 concluída (fluxos funcionais).**
 
+**Etapa 10: modernização da interface** (branch `etapa-10-redesign`).
+- 10.0: correção de defeito: quem cancelava e pedia vaga de novo, já confirmado, ficava sem chat e sem pagamento (`solicitacaoVigente()` em `grupos.js`).
+- 10.1: RN05 também no Início: carona "só para mulheres" não aparece para quem não é do gênero feminino nem para visitante.
+- 10.2: redesign completo (tokens com elevação, ícones SVG próprios, topo com navegação no computador e barra inferior com ícones no celular, todas as telas recompostas) e inclusões: **privacidade/LGPD** no Perfil (baixar dados, revogar aceite, excluir conta com anonimização), **reputação** no Perfil e na aprovação, **chave PIX fictícia** do motorista, **telefone do motorista** na viagem.
+- 10.3: **centro de notificações**: todas as notificações ficam no **sino** do canto superior direito (com o número de não lidas). Ele abre uma caixa com as **não lidas em cima** e as **lidas embaixo**; dá para marcar uma ou todas como lidas. Caronas e a barra de navegação não mostram mais avisos.
+
 **Etapa 9 concluída: refinamento visual** (linguagem de mapa de transporte).
 - 9.1 concluída: nova paleta (asfalto, verde-petróleo, âmbar), fonte Inter guardada no projeto e contraste AA medido.
 - 9.2 concluída: **cartão de carona com percurso** (partida, destino, horários de saída e chegada em destaque) em Início, Buscar, Caronas e Histórico.
@@ -36,8 +42,8 @@ Etapa 7 concluída: acesso e perfil (Etapa 5), oferta e busca de caronas (Etapa 
 Veja `docs/matriz-rastreabilidade.md` e `docs/premissas.md`.
 
 ## Estrutura
-- `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`, `fontes/` (Inter e sua licença OFL)
-- `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js`, `chat.js`, `pagamento.js`, `avaliacao.js` e `historico.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js`, `mensagens.js`, `pagamentos.js` e `avaliacoes.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`
+- `css/`: `tokens.css` (identidade), `base.css`, `componentes.css`, `telas.css` (arranjo de cada tela, Etapa 10), `fontes/` (Inter e sua licença OFL)
+- `js/`: `app.js` (rotas, navegação e faixa de viagem), `router.js`, `dados.js` (modelo e dados fictícios), `store.js` (persistência), `regras.js`, `caronas.js`, `grupos.js`, `viagem.js`, `emergencia.js`, `chat.js`, `pagamento.js`, `avaliacao.js` e `historico.js` (regras puras), `solicitacoes.js`, `viagens.js`, `alertasEmergencia.js`, `mensagens.js`, `pagamentos.js` e `avaliacoes.js` (operações), `notificacoes.js` (avisos simulados), `demo.js` (modo demonstração), `sessao.js`, `componentes.js`, `icones.js` (ícones SVG), `privacidade.js` (regras de LGPD) e `contas.js` (operações), `avisos.js` (lista de notificações), `centroNotificacoes.js` (sino e caixa de notificações)
 - Telas: `inicio.js`, `acesso.js`, `perfil.js`, `buscar.js`, `oferecer.js`, `minhas.js` (Caronas), `viagemAtiva.js` (viagem e emergência), `chatTela.js` (chat do grupo), `mapa.js` (mapa simulado da viagem), `pagamentoTela.js` (pagamento simulado), `avaliacaoTela.js` (avaliação), `historicoTela.js` (histórico e extrato), `cartao.js` (cartão de carona), `termos.js`, `ambiente.js`. `pendente.js` (placeholder) está sem uso no momento.
 - `#/ambiente`: verificação do ambiente (tela da Etapa 3)
 
@@ -58,6 +64,8 @@ Precisa do Node 20 ou superior. Nenhum pacote para instalar.
 - `avaliacao.test.mjs`: quem avalia quem, regras, média, aviso e telas da avaliação (Etapa 8.6).
 - `historico.test.mjs`: viagens do histórico, extrato e telas (Etapa 8.7).
 - `pagamento.test.mjs`: regras, registro, aviso ao motorista e telas do pagamento simulado (Etapa 8.5).
+- `privacidade.test.mjs`: exclusão com anonimização, download dos dados, revogação, chave PIX fictícia e telas do Perfil, viagem e pagamento (Etapa 10).
+- `notificacoes.test.mjs`: sino, caixa com não lidas em cima e lidas embaixo, marcar uma ou todas como lidas (Etapa 10.3).
 - `telas.test.mjs`: renderiza as telas com um DOM falso (`dom-falso.mjs`, auxiliar) e simula os cliques. Também falha se aparecer "null", "undefined" ou "[object" no texto da tela. **Não substitui** o teste manual no navegador.
 
 Os testes foram **recriados na Etapa 8.0**: os arquivos anteriores estavam vazios, então os resultados antigos não puderam ser reverificados. Não existe `modelo.test.mjs`.

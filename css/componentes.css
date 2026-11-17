@@ -593,3 +593,28 @@ fieldset > .opcao:last-of-type { margin-bottom: var(--espaco-15); }
 /* Ação destrutiva discreta (ex.: excluir conta): texto vermelho, fundo só no hover */
 .botao.discreto.perigo-texto { --b-texto: var(--perigo); }
 .botao.discreto.perigo-texto:hover { background: var(--perigo-100); }
+
+/* =============================== Centro de notificações (Etapa 10.3) ===============================
+   Sino no topo + caixa com as notificações (não lidas em cima, lidas embaixo).
+   Computador: caixa ancorada no canto superior direito, logo abaixo do sino. Celular: folha que sobe de baixo. */
+.topo .botao-icone.sino { color: var(--texto-inverso); }
+.topo .contador { box-shadow: 0 0 0 2px var(--asfalto-900); }
+@media (min-width: 40rem) {
+  .dialogo.notificacoes {
+    margin: 4.25rem max(var(--margem-tela), calc((100vw - var(--largura-app)) / 2 + var(--margem-tela))) auto auto;
+    width: min(26rem, calc(100vw - 2rem)); max-height: min(40rem, calc(100dvh - 5.5rem));
+  }
+  .dialogo.notificacoes[open] { animation-name: caixa-descer; }
+  .dialogo.notificacoes::backdrop { background: rgb(15 24 33 / 0.28); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@keyframes caixa-descer { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
+.dialogo.notificacoes .acoes { margin-top: var(--espaco-2); justify-content: stretch; }
+.dialogo.notificacoes .acoes .botao { flex: 1 1 auto; }
+.centro-corpo:focus { outline: none; }
+.centro-avisos { display: grid; gap: var(--espaco-3); }
+.centro-topo { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin: 0 0 0.625rem; }
+.centro-topo h3 { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: var(--texto-sm); font-weight: var(--peso-forte); text-transform: uppercase; letter-spacing: 0.06em; color: var(--texto-suave); }
+.centro-topo .botao { min-height: 2.25rem; padding-inline: 0.625rem; font-size: var(--texto-sm); }
+.centro-em-dia { margin: 0; padding: 0.75rem 1rem; border-radius: var(--raio); background: var(--superficie-2); border: 1px dashed var(--borda); }
+.lista-avisos .marcar-lida { min-height: 2.25rem; margin: 0.25rem 0 0 -0.625rem; padding: 0 0.625rem; font-size: var(--texto-sm); }
+.lista-avisos li.lido p { color: var(--texto-suave); }

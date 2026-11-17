@@ -3,7 +3,6 @@ import { listar, obter, vagasDisponiveis } from "./dados.js";
 import { usuarioAtual } from "./sessao.js";
 import { aprovar, recusar, cancelarSolicitacao, cancelarCarona } from "./solicitacoes.js";
 import { iniciarViagem, concluirViagem } from "./viagens.js";
-import { doUsuario, marcarLidas } from "./notificacoes.js";
 import { ATIVAS, posicaoNaFila, filaOrdenada, podeCancelarCarona } from "./grupos.js";
 import { podeIniciarViagem } from "./viagem.js";
 import { modoDemo, definirModoDemo } from "./demo.js";
@@ -11,7 +10,6 @@ import { historicoDe } from "./historico.js";
 import { cartaoViagemConcluida } from "./historicoTela.js";
 import { topoCarona, pontosVagas, seloSituacao } from "./cartao.js";
 import { mediaDe, textoMedia } from "./avaliacao.js";
-import { listaAvisos } from "./avisos.js";
 
 const RECENTES = 3; // viagens concluídas mostradas em Caronas
 
@@ -21,7 +19,7 @@ const hora = (iso) => new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute
 const tituloSecao = (id, nomeIcone, texto, contagem = null) =>
   el("h3", { id }, icone(nomeIcone, { tamanho: 20 }), texto, contagem != null && selo(String(contagem), "neutro"));
 
-// RF07, RF08, RF09, RN06 (Etapa 7) e ciclo da viagem (Etapa 8.1).
+// RF07, RF08, RF09, RN06 (Etapa 7) e ciclo da viagem (Etapa 8.1). Os avisos ficam no sino do topo (centroNotificacoes.js).
 // Passageiro: acompanha e cancela. Motorista: aprova, recusa, cancela, inicia e conclui a viagem.
 export function telaMinhasCaronas() {
   const retorno = el("div", { tabindex: "-1" });
@@ -40,7 +38,7 @@ export function telaMinhasCaronas() {
     const oferecidas = listar("caronas").filter((c) => c.motoristaId === u.id && (c.status === "aberta" || c.status === "em_andamento"))
       .sort((a, b) => new Date(a.dataHoraSaida) - new Date(b.dataHoraSaida));
     const encerradas = concluidasDe(u, todas);
-    const blocos = [blocoAvisos(u)];
+    const blocos = []; // Etapa 10.3: as notificações saíram daqui e ficam todas no sino do topo
     if (minhas.length) blocos.push(blocoPassageiro(u, minhas));
     if (oferecidas.length) blocos.push(blocoMotorista(u, oferecidas));
     if (encerradas.length) blocos.push(blocoConcluidas(u, encerradas, todas));
@@ -52,17 +50,6 @@ export function telaMinhasCaronas() {
   }
 
   const concluidasDe = (u, todas) => historicoDe(u.id, listar("caronas"), todas);
-
-  function blocoAvisos(u) {
-    const todos = doUsuario(u.id), novos = todos.filter((n) => !n.lida).length;
-    return el("section", { class: "secao", "aria-labelledby": "h-avisos" },
-      el("h3", { id: "h-avisos" }, icone("sino", { tamanho: 20 }), novos ? `Avisos (${novos} nova${novos > 1 ? "s" : ""})` : "Avisos"),
-      todos.length
-        ? [listaAvisos(todos, { limite: 8 }),
-           novos > 0 && el("div", { class: "lista-avisos-rodape" },
-             el("button", { type: "button", class: "botao discreto", onclick: () => { marcarLidas(u.id); desenhar(); } }, comIcone("check", "Marcar todos como lidos")))]
-        : el("p", { class: "nota" }, "Nenhum aviso por enquanto. Os avisos são simulados dentro do app."));
-  }
 
   function blocoPassageiro(u, minhas) {
     const todas = listar("solicitacoes");
