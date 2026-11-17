@@ -135,3 +135,13 @@ test("cartão de carona: percurso com partida, destino e horários; mesmo cartã
     semLixo(tela, "cartão");
   }
 });
+
+// Etapa 10: RN05 também no Início. Antes, a carona "só para mulheres" (c2, da Mariana) aparecia para qualquer pessoa.
+test("RN05: Início só mostra carona só para mulheres a usuária do gênero feminino", () => {
+  assert.doesNotMatch(textoDe(telaInicio()), /Guará →/, "visitante sem sessão");
+  entrar("u1");
+  assert.doesNotMatch(textoDe(telaInicio()), /Guará →/, "usuário do gênero masculino");
+  assert.match(textoDe(telaInicio()), /Águas Claras →/);
+  entrar("u2");
+  assert.match(textoDe(telaInicio()), /Guará →/, "usuária do gênero feminino");
+});

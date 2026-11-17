@@ -91,13 +91,17 @@ export const minutosDoDia = (d) => d.getHours() * 60 + d.getMinutes();
 export const exclusivaFeminina = (c, ctx) =>
   Boolean(c.apenasMulheres) && ctx.motoristaDe(c)?.genero === "feminino" && ctx.passageirosConfirmados(c).every((p) => p.genero === "feminino");
 
+// RN05: carona só para mulheres só aparece para usuária do gênero feminino (e some se houver passageiro não feminino).
+// Vale para a busca e, desde a Etapa 10, também para o Início (antes, o Início mostrava essas caronas a qualquer pessoa).
+export const visivelPara = (c, ctx) => !c.apenasMulheres || (ctx.usuario?.genero === "feminino" && exclusivaFeminina(c, ctx));
+
 // RF06 + RN05. ctx injeta o acesso a dados: { usuario, motoristaDe(c), passageirosConfirmados(c) }.
 // Premissas: (1) caronas só para mulheres nunca aparecem para quem não é do gênero feminino; (2) turno "Integral" casa com qualquer filtro.
 export function filtrarCaronas(caronas, f, ctx, agora = new Date()) {
   const partida = f.partidaId ? localPorId(f.partidaId) : null;
   return caronas
     .filter((c) => c.status === "aberta" && new Date(c.dataHoraSaida) > agora)
-    .filter((c) => !c.apenasMulheres || (ctx.usuario?.genero === "feminino" && exclusivaFeminina(c, ctx)))
+    .filter((c) => visivelPara(c, ctx))
     .filter((c) => !f.soMulheres || c.apenasMulheres)
     .filter((c) => !f.turno || c.turno === f.turno || c.turno === "Integral")
     .filter((c) => f.chegarAteMin == null || minutosDoDia(chegadaEstimada(c)) <= f.chegarAteMin)
