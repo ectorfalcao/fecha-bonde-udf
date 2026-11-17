@@ -18,6 +18,18 @@ export const placaValida = (p) => /^[A-Z]{3}\d[A-Z0-9]\d{2}$/.test(normalizarPla
 export const telefoneValido = (t) => /^\d{10,11}$/.test(String(t ?? "").replace(/\D/g, ""));
 export const capacidadeValida = (n) => Number.isInteger(Number(n)) && Number(n) >= CAPACIDADE_MIN && Number(n) <= CAPACIDADE_MAX;
 
+// RF12 (Etapa 10): chave PIX que o motorista cadastra para receber. Opcional e FICTÍCIA (o pagamento é simulado):
+// recusa os formatos de dado pessoal que dá para reconhecer (CPF, CNPJ, telefone). Devolve "" quando está boa.
+export const CHAVE_PIX_MAX = 77; // tamanho máximo de uma chave PIX
+export function erroChavePix(chave) {
+  const c = String(chave ?? "").trim();
+  if (!c) return "";
+  if (c.length < 3 || c.length > CHAVE_PIX_MAX || /\s/.test(c)) return `Use de 3 a ${CHAVE_PIX_MAX} caracteres, sem espaços.`;
+  if (/^[\d.\-/()+]+$/.test(c) && [10, 11, 12, 13, 14].includes(c.replace(/\D/g, "").length))
+    return "Não use CPF, CNPJ ou telefone: o protótipo só aceita uma chave inventada (ex.: seunome@pix.exemplo).";
+  return "";
+}
+
 export function gerarCodigo() { // 6 dígitos; em produção seria gerado e enviado pelo servidor
   const n = globalThis.crypto?.getRandomValues ? globalThis.crypto.getRandomValues(new Uint32Array(1))[0] : Math.floor(Math.random() * 2 ** 32);
   return String(n % 1_000_000).padStart(6, "0");
@@ -40,6 +52,7 @@ export function validarPerfil(d) {
   if (d.motorista) {
     if (!d.cnhNome) e.cnh = "Envie a foto da CNH.";
     Object.assign(e, validarVeiculo(d.veiculo ?? {}));
+    if (erroChavePix(d.chavePix)) e.chavePix = erroChavePix(d.chavePix);
   }
   return e;
 }

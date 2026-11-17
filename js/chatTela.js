@@ -1,4 +1,4 @@
-import { el, aviso, linkBotao, estadoVazio, dataHora } from "./componentes.js";
+import { el, aviso, linkBotao, estadoVazio, dataHora, comIcone } from "./componentes.js";
 import { obter, listar } from "./dados.js";
 import { usuarioAtual } from "./sessao.js";
 import { podeAcessarChat, estadoDoChat, membrosDoChat, TAMANHO_MAX_MENSAGEM } from "./chat.js";
@@ -22,7 +22,8 @@ export function telaChat(params) {
       estadoVazio({
         titulo: "Nenhuma carona selecionada",
         texto: "Acesse o chat a partir da tela de Caronas ou da Viagem em andamento.",
-        acao: linkBotao("Ir para Caronas", "#/caronas", "secundario")
+        acao: linkBotao("Ir para Caronas", "#/caronas", "secundario", "carro"),
+        nomeIcone: "chat"
       })
     );
   }
@@ -65,7 +66,7 @@ export function telaChat(params) {
       el("p", {}, el("strong", {}, rotaDe(carona)),
         el("span", { class: "nota" }, `${dataHora(carona.dataHoraSaida)} · motorista ${motorista?.nome ?? "—"} · ${pessoas} pessoa(s) no grupo`))),
     el("p", { class: "chat-sistema" }, "Só o motorista e quem está confirmado nesta carona leem e escrevem aqui."),
-    linkBotao("← Voltar para Caronas", "#/caronas", "secundario")
+    linkBotao("Voltar para Caronas", "#/caronas", "discreto", "voltar")
   );
 
   // Avisos contextuais de estado (RN07)
@@ -158,7 +159,7 @@ export function telaChat(params) {
     const btnEnviar = el("button", {
       type: "submit",
       class: "botao"
-    }, "Enviar");
+    }, comIcone("avancar", "Enviar"));
 
     formulario = el("form", {
       class: "form-chat",
@@ -190,7 +191,7 @@ export function telaChat(params) {
 
   desenharMensagens();
 
-  const container = el("div", { class: "chat-container" },
+  const container = el("div", { class: "chat-container tela-chat" },
     cabecalho,
     avisoEstado,
     areaMensagens,

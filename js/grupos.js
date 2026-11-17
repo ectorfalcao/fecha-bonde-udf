@@ -6,18 +6,25 @@ export const ATIVAS = ["pendente", "confirmada", "espera"];
 // Premissa: a documentação diz "antecedência mínima configurada" (RF09) sem valor. Adotamos 2 horas.
 export const ANTECEDENCIA_CANCELAR_CARONA_H = 2;
 
+// Etapa 10: texto sem emoji; a tela mostra cada situação num selo com ícone e cor (seloSituacao, em cartao.js).
 const ROTULOS = {
-  pendente: "⏳ Aguardando aprovação do motorista",
-  confirmada: "✔ Confirmada",
-  espera: "⌛ Na lista de espera",
-  recusada: "✖ Recusada pelo motorista",
-  cancelada: "✖ Cancelada"
+  pendente: "Aguardando aprovação do motorista",
+  confirmada: "Confirmada",
+  espera: "Na lista de espera",
+  recusada: "Recusada pelo motorista",
+  cancelada: "Cancelada"
 };
+// Chave visual da situação (pendente, confirmada, espera, recusada, cancelada, andamento, concluida).
+export function situacaoDe(s, carona = null) {
+  if (s.status === "confirmada" && carona?.status === "em_andamento") return "andamento";
+  if (s.status === "confirmada" && carona?.status === "concluida") return "concluida";
+  return s.status;
+}
 export function rotuloStatus(s, carona = null) {
-  if (s.status === "cancelada" && s.canceladaPor === "motorista") return "✖ Carona cancelada pelo motorista";
-  if (s.status === "cancelada" && s.canceladaPor === "sistema") return "✖ Não atendida: a viagem já começou";   // Etapa 8.1
-  if (s.status === "confirmada" && carona?.status === "em_andamento") return "🚗 Viagem em andamento";
-  if (s.status === "confirmada" && carona?.status === "concluida") return "🏁 Viagem concluída";
+  if (s.status === "cancelada" && s.canceladaPor === "motorista") return "Carona cancelada pelo motorista";
+  if (s.status === "cancelada" && s.canceladaPor === "sistema") return "Não atendida: a viagem já começou";   // Etapa 8.1
+  if (situacaoDe(s, carona) === "andamento") return "Viagem em andamento";
+  if (situacaoDe(s, carona) === "concluida") return "Viagem concluída";
   return ROTULOS[s.status] ?? s.status;
 }
 

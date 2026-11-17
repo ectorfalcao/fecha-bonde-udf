@@ -1,19 +1,21 @@
-import { el, aviso, campo, linkBotao } from "./componentes.js";
+import { el, aviso, campo, linkBotao, cabecalhoTela, estadoVazio, comIcone, icone } from "./componentes.js";
 import { LOCAIS, TOLERANCIAS, DIAS_SEMANA, gerarOcorrencias, validarOferta, turnoDaHora, localPorId, dataHoraDe } from "./caronas.js";
 import { TURNOS, CAPACIDADE_MAX } from "./regras.js";
 import { inserir } from "./dados.js";
 import { usuarioAtual, veiculoDe, pendenciasDe } from "./sessao.js";
 
+const CABECALHO = { titulo: "Oferecer carona", descricao: "Publique o trajeto, o horário e as vagas. Passageiros com rotas parecidas pedem para entrar." };
+
 // RF04 (criar carona), RF05 (recorrência semanal), RN04 (vagas <= capacidade do veículo), RN05 (grupo só para mulheres).
 export function telaOferecer() {
-  const raiz = el("div");
+  const raiz = el("div", { class: "tela-estreita" });
   let publicadas = 0;
   const desenhar = () => { raiz.replaceChildren(...conteudo().filter(Boolean)); }; // filter: replaceChildren(null) escreveria "null" na tela
 
   function conteudo() {
-    const u = usuarioAtual(), v = veiculoDe(u), pend = pendenciasDe(u), cab = el("h2", {}, "Oferecer carona");
-    if (!u.motorista) return [cab, aviso("alerta", "Para oferecer caronas, marque \"Quero oferecer carona\" no seu perfil."), linkBotao("Ir para o perfil", "#/perfil")];
-    if (pend.length || !v) return [cab, aviso("alerta", `Complete o perfil antes de oferecer caronas (RN02). Falta: ${pend.join(", ")}.`), linkBotao("Ir para o perfil", "#/perfil")];
+    const u = usuarioAtual(), v = veiculoDe(u), pend = pendenciasDe(u), cab = cabecalhoTela(CABECALHO);
+    if (!u.motorista) return [cab, estadoVazio({ titulo: "Você ainda não é motorista", texto: "Para oferecer caronas, marque \"Quero oferecer carona\" no seu perfil e cadastre o veículo.", nomeIcone: "carro", acao: linkBotao("Ir para o perfil", "#/perfil", "", "usuario") })];
+    if (pend.length || !v) return [cab, aviso("alerta", `Complete o perfil antes de oferecer caronas (RN02). Falta: ${pend.join(", ")}.`), linkBotao("Ir para o perfil", "#/perfil", "", "usuario")];
 
     const max = Math.min(CAPACIDADE_MAX, v.capacidade), hoje = new Date();
     const iso = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
@@ -30,15 +32,17 @@ export function telaOferecer() {
       regras: campo({ id: "regras", rotulo: "Regras do veículo", ajuda: "Opcional. Ex.: espaço para bagagem.", obrigatorio: false }),
       dataFim: campo({ id: "dataFim", rotulo: "Repetir até", tipo: "date", obrigatorio: false })
     };
+    f.regras.no.className = "campo campo-largo";
     f.hora.entrada.addEventListener("change", () => { if (!f.turno.entrada.value && f.hora.entrada.value) f.turno.entrada.value = turnoDaHora(Number(f.hora.entrada.value.slice(0, 2))); });
 
     const cMulheres = u.genero === "feminino" && el("input", { type: "checkbox", id: "apenasMulheres" });
     const eMulheres = el("p", { class: "campo-erro", id: "apenasMulheres-erro", hidden: true });
     const cRec = el("input", { type: "checkbox", id: "recorrente" });
+    // Dias da semana em pílulas: cada uma é uma caixa de seleção de verdade (teclado e leitor de tela continuam funcionando)
     const dias = DIAS_SEMANA.map(([n, nome]) => ({ n, no: el("input", { type: "checkbox", id: `dia-${n}`, value: String(n) }), nome }));
     const eDias = el("p", { class: "campo-erro", id: "dias-erro", hidden: true });
-    const secRec = el("fieldset", { hidden: true }, el("legend", {}, "Dias da semana"),
-      dias.map((d) => el("label", { class: "opcao", for: `dia-${d.n}` }, d.no, d.nome)), eDias, f.dataFim.no);
+    const secRec = el("fieldset", { hidden: true }, el("legend", {}, icone("calendario", { tamanho: 18 }), "Dias da semana"),
+      el("div", { class: "chips" }, dias.map((d) => el("label", { class: "chip", for: `dia-${d.n}` }, d.no, d.nome))), eDias, f.dataFim.no);
     cRec.addEventListener("change", () => { secRec.hidden = !cRec.checked; });
     const mostrar = (p, msg) => { p.hidden = !msg; p.textContent = msg ? `✖ ${msg}` : ""; };
 
@@ -65,15 +69,23 @@ export function telaOferecer() {
     };
 
     return [cab,
-      publicadas ? aviso("info", `${publicadas} carona(s) publicada(s). Elas já aparecem na busca.`) : null,
-      publicadas ? el("p", {}, linkBotao("Ver na busca", "#/buscar", "secundario")) : null,
-      el("p", { class: "nota" }, `Veículo: ${v.modelo} ${v.cor}, placa ${v.placa}.`),
+      publicadas ? aviso("sucesso", `${publicadas} carona(s) publicada(s). Elas já aparecem na busca.`) : null,
+      publicadas ? el("p", {}, linkBotao("Ver na busca", "#/buscar", "secundario", "busca")) : null,
+      // Resumo do veículo: a placa desenhada como placa, como o passageiro vai procurar na rua
+      el("div", { class: "cartao veiculo-resumo" },
+        el("span", { class: "proxima-icone", "aria-hidden": "true" }, icone("carro", { tamanho: 24 })),
+        el("p", {}, el("strong", {}, `${v.modelo} ${v.cor}`), el("span", { class: "nota" }, `Placa ${v.placa} · comporta ${v.capacidade} passageiro(s)`)),
+        el("span", { class: "placa", "aria-hidden": "true" }, el("span", {}, v.placa))),
       el("form", { novalidate: true, onsubmit: publicar },
-        el("fieldset", {}, el("legend", {}, "Trajeto e horário"), f.origem.no, f.destino.no, f.data.no, f.hora.no, f.tolerancia.no, f.turno.no),
-        el("fieldset", {}, el("legend", {}, "Vagas e valor"), f.vagas.no, f.valor.no, f.regras.no,
+        el("fieldset", {}, el("legend", {}, icone("rota", { tamanho: 18 }), "Trajeto e horário"),
+          el("div", { class: "grade-campos" }, f.origem.no, f.destino.no, f.data.no, f.hora.no, f.tolerancia.no, f.turno.no)),
+        el("fieldset", {}, el("legend", {}, icone("usuarios", { tamanho: 18 }), "Vagas e valor"),
+          el("div", { class: "grade-campos" }, f.vagas.no, f.valor.no, f.regras.no),
           cMulheres && el("label", { class: "opcao", for: "apenasMulheres" }, cMulheres, "Carona só para mulheres"), eMulheres),
-        el("fieldset", {}, el("legend", {}, "Repetição"), el("label", { class: "opcao", for: "recorrente" }, cRec, "Repetir toda semana")),
-        secRec, el("button", { type: "submit", class: "botao" }, "Publicar carona"))];
+        el("fieldset", {}, el("legend", {}, icone("repetir", { tamanho: 18 }), "Repetição"),
+          el("label", { class: "opcao", for: "recorrente" }, cRec, "Repetir toda semana")),
+        secRec,
+        el("div", { class: "publicar" }, el("button", { type: "submit", class: "botao grande" }, comIcone("check", "Publicar carona"))))];
   }
   desenhar();
   return raiz;

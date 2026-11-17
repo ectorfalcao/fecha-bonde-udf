@@ -1,24 +1,43 @@
-import { el, aviso, selo, campo } from "./componentes.js";
+import { el, aviso, selo, campo, comIcone, linkBotao } from "./componentes.js";
 import { textoDominios, emailInstitucionalValido, senhaValida, normalizarEmail } from "./regras.js";
 import { iniciarDesafio, confirmarDesafio, usuarioAtual, sair, pendenciasDe } from "./sessao.js";
 import { pedirAceiteUso } from "./termos.js";
 
+const NS = "http://www.w3.org/2000/svg";
+const svg = (tag, attrs = {}) => { const n = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, String(v)); return n; };
+const logo = () => {
+  const s = svg("svg", { width: 30, height: 30, viewBox: "0 0 32 32", "aria-hidden": "true", focusable: "false" });
+  s.append(svg("path", { d: "M6 24 C 6 14, 26 20, 26 8", fill: "none", stroke: "#e8a317", "stroke-width": "2.5", "stroke-dasharray": "3 3", "stroke-linecap": "round" }),
+    svg("circle", { cx: 6, cy: 24, r: 4, fill: "#fff" }), svg("circle", { cx: 26, cy: 8, r: 4, fill: "#5cc3ba" }));
+  return s;
+};
+
 // UC01: e-mail institucional + senha -> código (simulado) -> termos de uso -> perfil.
-export function telaAcesso() {
-  const raiz = el("div");
-  let etapa = "email", email = "", codigo = "", mensagem = null;
+// Etapa 10: cartão central com os dois passos indicados; aviso de conta excluída (LGPD) quando vem do Perfil.
+export function telaAcesso(params) {
+  const raiz = el("div", { class: "acesso" });
+  let etapa = "email", email = "", codigo = "", mensagem = params?.get?.("excluida") ? aviso("sucesso", "Sua conta foi excluída e seus dados pessoais foram apagados deste navegador.") : null;
+
+  const passos = () => el("ol", { class: "passos", "aria-label": "Etapas do acesso" },
+    el("li", { "aria-current": etapa === "email" ? "step" : null }, el("span", { class: "num" }, "1"), "E-mail"),
+    el("li", { "aria-current": etapa === "codigo" ? "step" : null }, el("span", { class: "num" }, "2"), "Código"));
 
   const desenhar = () => {
     const u = usuarioAtual();
-    raiz.replaceChildren(...[el("h2", {}, "Acesso"), mensagem, u && etapa === "email" ? conectado(u) : etapa === "email" ? formEmail() : formCodigo()].filter(Boolean)); // replaceChildren(null) escreveria "null" na tela
+    const conteudo = u && etapa === "email" ? conectado(u) : etapa === "email" ? formEmail() : formCodigo();
+    raiz.replaceChildren(el("section", { class: "cartao acesso-cartao", "aria-labelledby": "h-acesso" },
+      el("div", { class: "acesso-topo" }, el("span", { class: "marca-logo" }, logo()),
+        el("h2", { id: "h-acesso" }, "Acesso"),
+        el("p", {}, "Entre com o seu e-mail institucional do UDF.")),
+      ...[!(u && etapa === "email") && passos(), mensagem, conteudo].filter(Boolean))); // replaceChildren(null) escreveria "null" na tela
     mensagem = null;
   };
 
   function conectado(u) {
     return el("div", {}, aviso("info", `Você está conectado como ${u.email}.`),
       el("div", { class: "linha-acoes" },
-        el("a", { class: "botao", href: "#/perfil" }, "Ir para o perfil"),
-        el("button", { type: "button", class: "botao secundario", onclick: () => { sair(); desenhar(); } }, "Sair")));
+        linkBotao("Ir para o perfil", "#/perfil", "", "usuario"),
+        el("button", { type: "button", class: "botao secundario", onclick: () => { sair(); desenhar(); } }, comIcone("sair", "Sair"))));
   }
 
   function formEmail() {
@@ -34,11 +53,11 @@ export function telaAcesso() {
       raiz.querySelector("#codigo")?.focus();
     } },
       aviso("alerta", "Simulação: não há servidor. A senha é apenas validada (não é gravada) e o código de verificação aparece na tela."),
-      fE.no, fS.no, el("button", { type: "submit", class: "botao" }, "Receber código"));
+      fE.no, fS.no, el("button", { type: "submit", class: "botao grande" }, comIcone("avancar", "Receber código")));
   }
 
   function formCodigo() {
-    const fC = campo({ id: "codigo", rotulo: "Código de verificação", ajuda: "Digite o código de 6 dígitos.", autocomplete: "one-time-code" });
+    const fC = campo({ id: "codigo", rotulo: "Código de verificação", ajuda: "Digite o código de 6 dígitos.", autocomplete: "one-time-code", extra: { inputmode: "numeric" } });
     return el("form", { novalidate: true, onsubmit: async (ev) => {
       ev.preventDefault();
       const r = confirmarDesafio(email, fC.entrada.value);
@@ -53,9 +72,9 @@ export function telaAcesso() {
     } },
       el("div", { class: "codigo-simulado" }, selo("Simulado"), el("span", {}, `Código enviado para ${email}:`), el("output", {}, codigo)),
       fC.no,
+      el("button", { type: "submit", class: "botao grande" }, comIcone("check", "Confirmar código")),
       el("div", { class: "linha-acoes" },
-        el("button", { type: "submit", class: "botao" }, "Confirmar código"),
-        el("button", { type: "button", class: "botao secundario", onclick: () => { etapa = "email"; desenhar(); } }, "Usar outro e-mail")));
+        el("button", { type: "button", class: "botao discreto", onclick: () => { etapa = "email"; desenhar(); } }, comIcone("voltar", "Usar outro e-mail"))));
   }
 
   desenhar();

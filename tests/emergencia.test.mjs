@@ -183,7 +183,8 @@ test("mapa: rota quase horizontal fica baixa, com ruas de fundo e chegada em des
   iniciar();
   salvar("sessao", "u2");
   const t = telaViagemAtiva();
-  const svg = achar(t, (e) => e.tagName === "SVG");
+  // Etapa 10: os botões também têm ícones SVG; o desenho do mapa é o SVG dentro da figura.
+  const svg = achar(achar(t, (e) => e.tagName === "FIGURE"), (e) => e.tagName === "SVG");
   const [, , w, h] = svg.getAttribute("viewBox").split(" ").map(Number);
   assert.equal(w, 320);
   assert.ok(h >= 150 && h < 200, `altura ${h}`);                   // antes: sempre 200

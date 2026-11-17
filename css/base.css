@@ -1,94 +1,154 @@
+/* Base: reset, tipografia, estrutura da página (topo, conteúdo, rodapé) e utilitários. Só usa tokens. */
 *, *::before, *::after { box-sizing: border-box; }
 
-html { font-size: 100%; } /* respeita o tamanho de fonte escolhido pelo usuário (RNF10) */
+html { font-size: 100%; scrollbar-gutter: stable; -webkit-text-size-adjust: 100%; } /* respeita o tamanho de fonte escolhido (RNF10) */
 
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: var(--fonte);
   color: var(--texto);
-  background: var(--fundo);
   line-height: 1.5;
   font-variant-numeric: tabular-nums; /* horários e valores alinhados em listas */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Fundo com profundidade: brilho verde-petróleo bem leve no alto e grade de ruas que some para baixo */
+  background:
+    radial-gradient(60rem 22rem at 50% -6rem, rgb(13 107 107 / 0.10), transparent 70%),
+    var(--fundo);
 }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 26rem;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(var(--sombra-cor) / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--sombra-cor) / 0.035) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+}
+
+h1, h2, h3, h4 { line-height: var(--entrelinha-titulo); letter-spacing: -0.012em; text-wrap: balance; }
+p { text-wrap: pretty; }
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+code { font-family: var(--fonte-codigo); }
+
+/* Links de texto na cor da marca. 7,9:1 ou mais nos fundos usados. */
+a { color: var(--marca-texto); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+/* Foco sempre visível (RNF10): anel âmbar escuro, com folga, igual em todo o app */
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; border-radius: var(--raio-sm); }
 
 /* Link para teclado/leitor de tela pular direto ao conteúdo */
 .skip-link {
-  position: absolute;
-  left: var(--espaco-1);
-  top: -4rem;
-  background: var(--petroleo-900);
-  color: #fff;
-  padding: var(--espaco-1) var(--espaco-2);
-  border-radius: var(--raio);
-  z-index: 10;
+  position: fixed; left: var(--espaco-2); top: -4rem; z-index: var(--z-modal);
+  background: var(--petroleo-900); color: var(--texto-inverso); font-weight: var(--peso-forte);
+  padding: var(--espaco-1) var(--espaco-2); border-radius: var(--raio); box-shadow: var(--sombra-3);
 }
 .skip-link:focus { top: var(--espaco-1); }
 
-/* Links de texto na cor da marca (antes: azul padrão do navegador). 7,6:1 ou mais nos fundos usados. */
-a { color: var(--petroleo-900); }
-
-/* Foco sempre visível */
-:focus-visible {
-  outline: 3px solid var(--alerta);
-  outline-offset: 2px;
-}
-
+/* ---------- Topo: marca, navegação (no computador) e área de ações ---------- */
 .topo {
-  position: relative;
-  background: var(--asfalto-900);
-  color: #fff;
-  padding: var(--espaco-2) var(--espaco-2) calc(var(--espaco-2) + 6px);
+  position: sticky; top: 0; z-index: var(--z-topo);
+  color: var(--texto-inverso);
+  background: var(--gradiente-asfalto);
+  box-shadow: var(--realce-escuro), 0 6px 20px -10px rgb(var(--sombra-cor) / 0.6);
+  /* sem transform, filter ou backdrop-filter: a barra inferior (position: fixed) mora dentro do topo */
 }
 /* Linha tracejada de rua: o elemento de identidade urbana do produto */
 .topo::after {
   content: "";
   position: absolute;
   inset: auto 0 0 0;
-  height: 4px;
+  height: 3px;
   background: repeating-linear-gradient(90deg, var(--ambar-500) 0 1.5rem, transparent 1.5rem 2.5rem);
+  opacity: 0.9;
 }
-.topo-conteudo { max-width: var(--largura-app); margin: 0 auto; display: flex; align-items: center; gap: var(--espaco-2); flex-wrap: wrap; }
-.marca { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: var(--espaco-1); }
-.marca svg { flex: none; }
-.marca span { font-weight: 400; opacity: 0.9; }
-.selo-demo { margin: 0; font-size: var(--texto-sm); color: var(--asfalto-100); }
+.topo-conteudo {
+  max-width: var(--largura-app); margin: 0 auto;
+  display: flex; align-items: center; gap: var(--espaco-2);
+  min-height: 4rem; padding: var(--espaco-1) var(--margem-tela) calc(var(--espaco-1) + 3px);
+}
+.marca { display: flex; align-items: center; gap: var(--espaco-15); flex: 0 1 auto; min-width: 0; } /* encolhe no celular; o selo quebra linha */
+.marca-nome { margin: 0; font-weight: var(--peso-normal); }
+.marca-nome a { color: inherit; text-decoration: none; border-radius: var(--raio-sm); }
+.marca-nome a::after { content: ""; position: absolute; inset: 0; } /* a marca inteira (logo + nome) leva ao Início */
+.marca { position: relative; }
+.marca-logo {
+  display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: var(--raio);
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.02));
+  box-shadow: var(--realce-escuro), 0 0 0 1px rgb(255 255 255 / 0.08);
+}
+.marca-texto { display: grid; line-height: 1.15; min-width: 0; }
+.marca-nome { font-size: 1.125rem; letter-spacing: -0.02em; }
+.marca-nome strong { font-weight: var(--peso-destaque); }
+.marca-nome span { color: var(--petroleo-400); font-weight: var(--peso-forte); }
+.selo-demo { margin: 0; font-size: var(--texto-xs); font-weight: var(--peso-medio); color: var(--asfalto-200); letter-spacing: 0.01em; }
+.selo-demo.ligado {
+  justify-self: start; margin-top: 2px; padding: 1px var(--espaco-1); border-radius: var(--raio-pilula);
+  background: var(--ambar-500); color: var(--asfalto-900); font-weight: var(--peso-destaque);
+}
+.topo-acoes { margin-left: auto; display: flex; align-items: center; gap: var(--espaco-1); flex: none; }
+@media (max-width: 29.99rem) {
+  .marca-logo { width: 2.25rem; height: 2.25rem; }
+  .topo-acoes .botao { min-height: 2.5rem; padding: 0 0.75rem; }
+}
 
+/* ---------- Conteúdo ---------- */
 main {
+  flex: 1;
+  width: 100%;
   max-width: var(--largura-app);
   margin: 0 auto;
-  padding: var(--espaco-2) var(--espaco-2) calc(var(--altura-nav) + var(--espaco-4));
+  padding: var(--espaco-3) var(--margem-tela) var(--espaco-4);
 }
 main:focus { outline: none; }
-main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(--petroleo-900); }
+main > div > h2:first-child, main > h2 { font-size: var(--texto-xl); margin: 0 0 var(--espaco-2); color: var(--texto); }
+/* Cada tela entra com um deslize curto (some para quem pede menos movimento) */
+main > * { animation: entrar var(--duracao-3) var(--curva) both; }
+@keyframes entrar { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-.cartao {
-  background: var(--superficie);
-  border: 1px solid var(--borda);
-  border-radius: var(--raio);
-  box-shadow: var(--sombra);
-  padding: var(--espaco-3);
+/* No celular a barra de navegação fica fixa embaixo: o rodapé reserva o espaço dela */
+.rodape {
+  text-align: center; color: var(--texto-suave); font-size: var(--texto-sm);
+  padding: var(--espaco-2) var(--margem-tela) calc(var(--altura-nav) + var(--espaco-3) + env(safe-area-inset-bottom, 0px));
 }
-.cartao h2 { margin-top: 0; color: var(--petroleo-900); }
+.rodape small { display: block; max-width: var(--largura-texto); margin: 0 auto; font-size: inherit; }
 
+/* Computador: a navegação sobe para o topo, então nada precisa ficar livre embaixo */
+@media (min-width: 64rem) {
+  main { padding-top: var(--espaco-4); padding-bottom: var(--espaco-5); }
+  .rodape { padding-bottom: var(--espaco-3); border-top: 1px solid var(--borda-sutil); }
+}
+
+/* ---------- Utilitários ---------- */
+.nota { color: var(--texto-suave); font-size: var(--texto-sm); }
+/* Só para leitor de tela e navegação por títulos (o desenho mostra o mesmo para quem enxerga) */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+
+/* Tela de verificação do ambiente (Etapa 3) */
 .verificacao { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espaco-1); }
-.verificacao li {
-  display: flex;
-  gap: var(--espaco-1);
-  padding: var(--espaco-1) var(--espaco-2);
-  border-radius: var(--raio);
-  border: 1px solid var(--borda);
-}
-.verificacao li.ok { background: var(--petroleo-100); }
+.verificacao li { display: flex; gap: var(--espaco-1); padding: var(--espaco-15) var(--espaco-2); border-radius: var(--raio); border: 1px solid var(--borda); background: var(--superficie); box-shadow: var(--sombra-1); }
+.verificacao li.ok { background: var(--petroleo-50); border-color: var(--petroleo-200); }
 .verificacao li.falha { background: var(--perigo-100); border-color: var(--perigo); }
 .verificacao strong { min-width: 4.5rem; }
 
-.nota { color: var(--texto-suave); font-size: 0.875rem; }
-
-/* Só para leitor de tela e navegação por títulos (o percurso desenhado mostra o mesmo para quem enxerga) */
-.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-
-.rodape { text-align: center; padding: var(--espaco-3) var(--espaco-2); color: var(--texto-suave); }
-
+/* Menos movimento: sem animações nem transições (RNF10) */
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Alto contraste do sistema (Windows): sombras e gradientes somem; bordas garantem a leitura */
+@media (forced-colors: active) {
+  .cartao, .carona, .botao, .aviso, .selo, .campo input, .campo select, .dialogo, .nav-principal { border: 1px solid CanvasText; }
+  .botao[aria-current="page"], .nav-principal a[aria-current="page"] { outline: 2px solid Highlight; }
 }

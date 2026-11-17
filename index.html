@@ -2,28 +2,38 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Fecha Bonde UDF: caronas compartilhadas entre estudantes do UDF (protótipo acadêmico).">
   <meta name="theme-color" content="#15202b">
   <title>Fecha Bonde UDF</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315202b'/%3E%3Cpath d='M7 24C7 15 25 20 25 9' fill='none' stroke='%23e8a317' stroke-width='2.5' stroke-dasharray='3 3' stroke-linecap='round'/%3E%3Ccircle cx='7' cy='24' r='3.5' fill='%23fff'/%3E%3Ccircle cx='25' cy='9' r='3.5' fill='%235cc3ba'/%3E%3C/svg%3E">
+  <link rel="preload" href="css/fontes/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/telas.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
   <header class="topo">
     <div class="topo-conteudo">
-      <h1 class="marca">
-        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-          <path d="M6 24 C 6 14, 26 20, 26 8" fill="none" stroke="#e8a317" stroke-width="2.5" stroke-dasharray="3 3" stroke-linecap="round"/>
-          <circle cx="6" cy="24" r="4" fill="#fff"/><circle cx="26" cy="8" r="4" fill="#5cc3ba"/>
-        </svg>
-        <span><strong>Fecha Bonde</strong> UDF</span>
-      </h1>
-      <p class="selo-demo">Protótipo acadêmico · dados fictícios</p>
+      <div class="marca">
+        <span class="marca-logo">
+          <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <path d="M6 24 C 6 14, 26 20, 26 8" fill="none" stroke="#e8a317" stroke-width="2.5" stroke-dasharray="3 3" stroke-linecap="round"/>
+            <circle cx="6" cy="24" r="4" fill="#fff"/><circle cx="26" cy="8" r="4" fill="#5cc3ba"/>
+          </svg>
+        </span>
+        <div class="marca-texto">
+          <h1 class="marca-nome"><a href="#/"><strong>Fecha Bonde</strong> <span>UDF</span></a></h1>
+          <p class="selo-demo">Protótipo acadêmico · dados fictícios</p>
+        </div>
+      </div>
+      <!-- Celular: barra fixa embaixo. Computador: links no topo. Mesma lista, montada por app.js. -->
+      <nav id="nav-principal" class="nav-principal" aria-label="Navegação principal"></nav>
+      <!-- Ações do topo: pessoa conectada (e, no futuro, o sino de notificações) -->
+      <div id="topo-acoes" class="topo-acoes"></div>
     </div>
   </header>
 
@@ -31,10 +41,8 @@
     <noscript>Este aplicativo precisa de JavaScript para funcionar.</noscript>
   </main>
 
-  <nav id="nav-principal" class="nav-inferior" aria-label="Navegação principal"></nav>
-
   <footer class="rodape">
-    <small>Projeto da disciplina Análise e Projeto de Sistemas · UDF · todos os dados são fictícios.</small>
+    <small>Disciplina Projeto de Software · Análise e Desenvolvimento de Sistemas · UDF. Protótipo acadêmico: todos os dados são fictícios.</small>
   </footer>
 
   <script type="module" src="js/app.js"></script>

@@ -1,0 +1,151 @@
+/* Composição de cada tela (Etapa 10). Os componentes ficam em componentes.css; aqui só o arranjo. */
+
+/* =============================== Início =============================== */
+.hero {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; gap: var(--espaco-3); align-items: center;
+  margin: 0 0 var(--espaco-4); padding: var(--espaco-4) var(--espaco-3);
+  border-radius: var(--raio-xl); color: var(--texto-inverso);
+  background:
+    radial-gradient(36rem 18rem at 88% -10%, rgb(92 195 186 / 0.26), transparent 62%),
+    radial-gradient(28rem 16rem at -10% 120%, rgb(232 163 23 / 0.10), transparent 60%),
+    linear-gradient(140deg, var(--asfalto-800), var(--asfalto-950));
+  box-shadow: var(--realce-escuro), var(--sombra-3);
+}
+/* Grade de ruas bem leve, mais visível do lado da ilustração */
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+  -webkit-mask-image: radial-gradient(ellipse 70% 90% at 85% 40%, #000, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 90% at 85% 40%, #000, transparent 75%);
+}
+.hero-texto { max-width: 36rem; }
+.hero-sobretitulo { margin: 0 0 0.625rem; font-size: var(--texto-xs); font-weight: var(--peso-forte); letter-spacing: 0.1em; text-transform: uppercase; color: var(--petroleo-400); }
+.hero h2 { margin: 0; font-size: var(--texto-2xl); font-weight: var(--peso-destaque); letter-spacing: -0.03em; color: var(--texto-inverso); }
+.hero-texto > p:not(.hero-sobretitulo):not(.hero-nota) { margin: 0.75rem 0 0; color: var(--asfalto-200); font-size: 1.0625rem; max-width: 30rem; }
+.hero-acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: var(--espaco-3); }
+.hero-nota { display: flex; align-items: center; gap: 0.5rem; margin: var(--espaco-3) 0 0; font-size: var(--texto-sm); color: var(--asfalto-200); }
+.hero-nota .icone { color: var(--petroleo-400); }
+.hero-arte { display: none; }
+@media (min-width: 48rem) {
+  .hero { grid-template-columns: minmax(0, 1fr) minmax(14rem, 20rem); padding: var(--espaco-5) var(--espaco-5); }
+  .hero-arte { display: block; width: 100%; height: auto; filter: drop-shadow(0 12px 24px rgb(0 0 0 / 0.35)); }
+}
+
+/* Próxima viagem de quem está conectado */
+.proxima {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.875rem 1rem; align-items: center;
+  margin: calc(-1 * var(--espaco-2)) 0 var(--espaco-4);
+}
+.proxima-icone { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: var(--raio-lg); background: var(--petroleo-50); color: var(--marca); box-shadow: inset 0 0 0 1px var(--petroleo-100); }
+.proxima-texto { display: grid; gap: 0.125rem; min-width: 0; }
+.proxima-texto .rotulo { font-size: 0.6875rem; font-weight: var(--peso-forte); text-transform: uppercase; letter-spacing: 0.08em; color: var(--texto-suave); }
+.proxima-rota { display: flex; align-items: center; gap: 0.625rem; font-weight: var(--peso-forte); font-size: 1.0625rem; flex-wrap: wrap; }
+.proxima .linha-acoes { grid-column: 1 / -1; margin: 0; }
+@media (min-width: 40rem) { .proxima { grid-template-columns: auto minmax(0, 1fr) auto; } .proxima .linha-acoes { grid-column: auto; } }
+
+.secao-topo { display: flex; align-items: baseline; justify-content: space-between; gap: var(--espaco-2); flex-wrap: wrap; margin: 0 0 var(--espaco-15); }
+.secao-topo h2, .secao-topo h3 { margin: 0; font-size: var(--texto-lg); font-weight: var(--peso-destaque); letter-spacing: -0.015em; }
+
+/* =============================== Buscar =============================== */
+.layout-busca { display: grid; gap: var(--espaco-3); align-items: start; }
+@media (min-width: 64rem) {
+  .layout-busca { grid-template-columns: 20rem minmax(0, 1fr); gap: var(--espaco-4); }
+  .layout-busca .filtros { position: sticky; top: 6rem; }
+}
+.filtros fieldset { margin: 0; }
+.filtros .opcao { margin-bottom: var(--espaco-15); }
+.resultados-topo { display: flex; align-items: center; justify-content: space-between; gap: var(--espaco-2); flex-wrap: wrap; margin: 0 0 var(--espaco-15); }
+.resultados-topo .nota { margin: 0; font-weight: 600; }
+.carona .acao-carona { margin-top: var(--espaco-2); }
+.carona .acao-carona .botao { width: 100%; }
+.carona .acao-carona .nota { margin: 0; }
+
+/* =============================== Oferecer =============================== */
+.veiculo-resumo { display: flex; align-items: center; gap: 1rem; margin: 0 0 var(--espaco-3); }
+.veiculo-resumo .proxima-icone { width: 3rem; height: 3rem; }
+.veiculo-resumo p { margin: 0; display: grid; gap: 0.125rem; }
+.veiculo-resumo .placa { margin-left: auto; }
+.publicar { display: flex; justify-content: flex-end; margin-top: var(--espaco-3); }
+@media (max-width: 39.99rem) { .publicar .botao { width: 100%; } }
+
+/* =============================== Caronas =============================== */
+.ferramentas-teste { border-style: dashed; background: var(--superficie-2); box-shadow: none; }
+.carona-cabeca { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: var(--espaco-15); flex-wrap: wrap; }
+
+/* =============================== Viagem em andamento =============================== */
+.carona.viagem { display: grid; gap: var(--espaco-2); }
+.carona.viagem > * { margin: 0; }
+.carona.viagem > h3:not(.sr-only) { font-size: var(--texto-xl); letter-spacing: -0.02em; }
+@media (min-width: 56rem) {
+  .carona.viagem {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); column-gap: var(--espaco-4);
+    grid-template-areas: "titulo titulo" "mapa emergencia" "mapa nota" "mapa fatos" "mapa acoes";
+    grid-template-rows: auto auto auto 1fr auto;
+    padding: var(--espaco-3) var(--espaco-4);
+  }
+  .carona.viagem > h3 { grid-area: titulo; }
+  .carona.viagem > .botao.perigo { grid-area: emergencia; }
+  .carona.viagem > p.nota { grid-area: nota; }
+  .carona.viagem > .mapa { grid-area: mapa; align-self: start; }
+  .carona.viagem > dl { grid-area: fatos; align-self: start; }
+  .carona.viagem > .linha-acoes { grid-area: acoes; }
+}
+.carona.viagem > .botao.perigo { min-height: 3.5rem; font-size: 1.125rem; border-radius: var(--raio-lg); }
+.dialogo .linha-acoes .botao { flex: 1 1 14rem; }
+
+/* =============================== Chat =============================== */
+.tela-chat { max-width: var(--largura-texto); margin-inline: auto; }
+
+/* =============================== Perfil =============================== */
+.layout-perfil { display: grid; gap: var(--espaco-3); align-items: start; }
+@media (min-width: 64rem) {
+  .layout-perfil { grid-template-columns: 21rem minmax(0, 1fr); gap: var(--espaco-4); }
+  .layout-perfil > aside { position: sticky; top: 6rem; }
+}
+.perfil-topo { display: grid; justify-items: center; text-align: center; gap: 0.25rem; padding-top: var(--espaco-4); overflow: hidden; }
+.perfil-topo::after {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 4.5rem; z-index: 0;
+  background: radial-gradient(18rem 6rem at 70% 0, rgb(92 195 186 / 0.35), transparent 70%), var(--gradiente-asfalto);
+}
+.perfil-topo > * { position: relative; z-index: 1; }
+.perfil-topo h3 { margin: 0.625rem 0 0; font-size: var(--texto-lg); }
+.perfil-topo p { margin: 0; }
+.perfil-topo .selos { justify-content: center; margin: 0.625rem 0 0.25rem; }
+.reputacao { display: inline-flex; align-items: center; gap: 0.375rem; margin-top: 0.5rem; padding: 0.375rem 0.875rem; border-radius: var(--raio-pilula); background: var(--ambar-100); color: var(--alerta); font-weight: var(--peso-forte); font-size: var(--texto-sm); }
+.reputacao .icone { fill: var(--ambar-500); }
+.layout-perfil aside .aviso { margin-top: var(--espaco-2); margin-bottom: 0; }
+.privacidade p { margin: 0 0 0.75rem; }
+.privacidade .linha-acoes { margin-top: 0.5rem; }
+.sair { display: flex; justify-content: flex-end; margin-top: var(--espaco-2); }
+
+/* =============================== Acesso =============================== */
+.acesso { max-width: 28rem; margin: var(--espaco-2) auto 0; }
+.acesso-cartao { padding: var(--espaco-3); }
+@media (min-width: 40rem) { .acesso-cartao { padding: var(--espaco-4); } }
+.acesso-topo { display: grid; justify-items: center; text-align: center; gap: 0.5rem; margin-bottom: var(--espaco-3); }
+.acesso-topo .marca-logo { width: 3.5rem; height: 3.5rem; border-radius: var(--raio-lg); background: var(--gradiente-asfalto); box-shadow: var(--realce-escuro), var(--sombra-2); }
+.acesso-topo h2 { margin: 0.5rem 0 0; font-size: var(--texto-xl); font-weight: var(--peso-destaque); letter-spacing: -0.025em; }
+.acesso-topo p { margin: 0; color: var(--texto-suave); }
+.passos { list-style: none; display: flex; gap: 0.5rem; justify-content: center; margin: 0 0 var(--espaco-3); padding: 0; font-size: var(--texto-sm); font-weight: 600; color: var(--texto-suave); }
+.passos li { display: flex; align-items: center; gap: 0.375rem; }
+.passos li + li::before { content: ""; width: 1.5rem; height: 2px; margin-right: 0.25rem; background: var(--borda); border-radius: 2px; }
+.passos .num { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--superficie-3); font-size: var(--texto-xs); }
+.passos [aria-current="step"] { color: var(--marca-texto); }
+.passos [aria-current="step"] .num { background: var(--marca); color: var(--texto-inverso); }
+.acesso form .botao[type="submit"] { width: 100%; }
+.acesso .linha-acoes .botao { flex: 1 1 auto; }
+
+/* =============================== Pagamento, avaliação e histórico =============================== */
+.recibo::after {
+  content: ""; position: absolute; left: 1rem; right: 1rem; bottom: -1px; height: 0;
+  border-bottom: 2px dashed var(--borda);
+}
+.pessoa-avaliada { display: flex; align-items: center; gap: 0.75rem; margin-bottom: var(--espaco-15); }
+.pessoa-avaliada h3 { margin: 0 !important; }
+.pessoa-avaliada p { margin: 0; }
+.avaliacao-feita { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-weight: 600; color: var(--petroleo-900); }
+.proxima-texto p, .proxima-texto h2 { margin: 0; }
+/* Formulário dentro de um cartão: sem caixa dentro de caixa */
+.carona fieldset { background: none; box-shadow: none; border: 0; padding: 0; margin-bottom: var(--espaco-15); }

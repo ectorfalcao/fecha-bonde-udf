@@ -1,6 +1,9 @@
-/* Tokens de design: único lugar onde cores, espaços e fontes são definidos.
+/* Tokens de design: único lugar onde cores, espaços, sombras, raios, tipografia e movimento são definidos.
    Mudar a identidade visual = mudar só este arquivo.
-   Etapa 9 (refinamento visual): linguagem de mapa de transporte. Contrastes medidos para WCAG 2.1 AA (RNF10). */
+   Etapa 9: linguagem de mapa de transporte (asfalto, verde-petróleo, âmbar).
+   Etapa 10: a mesma identidade com profundidade: escalas completas, elevação em camadas, realce de superfície,
+   movimento e camadas de empilhamento (prontas para o futuro centro de notificações).
+   Contrastes de texto medidos para WCAG 2.1 AA (RNF10); os valores ficam anotados ao lado. */
 
 /* Inter guardada no projeto (licença OFL em fontes/OFL-Inter.txt): funciona offline (RNF12) e não consulta serviço externo. */
 @font-face {
@@ -12,51 +15,123 @@
 }
 
 :root {
-  /* Verde-petróleo: ações principais, destino, item ativo. Branco sobre o 700: 6,3:1 */
+  /* ---------- Cores da marca ---------- */
+  /* Verde-petróleo: ações principais, destino, item ativo. Branco sobre o 700: 6,3:1; o 900 sobre branco: 7,9:1 */
+  --petroleo-950: #073f3f;
   --petroleo-900: #0a5656;
+  --petroleo-800: #0b6161;
   --petroleo-700: #0d6b6b;   /* cor principal */
+  --petroleo-600: #12807e;
+  --petroleo-400: #5cc3ba;   /* só sobre o asfalto (7,8:1 no 900, 6,9:1 no 800) e em desenhos; nunca texto sobre claro */
+  --petroleo-200: #b9e0dc;
   --petroleo-100: #e2f1f0;
+  --petroleo-50: #f0f8f7;
 
-  /* Neutros (levemente azulados, como asfalto) */
-  --texto: #17212b;          /* sobre o fundo: 14,9:1 */
-  --texto-suave: #4b5966;    /* sobre o fundo: 6,6:1 */
-  --fundo: #f3f5f7;
-  --superficie: #ffffff;
-  --borda: #d5dce3;
-
-  /* Asfalto: topo, linhas de percurso e contornos dos marcadores */
+  /* Asfalto: topo, linhas de percurso, contornos, texto */
+  --asfalto-950: #0f1821;
   --asfalto-900: #15202b;    /* texto branco sobre ele: 16,5:1 */
+  --asfalto-800: #1d2a37;
   --asfalto-700: #2a3947;
-  --asfalto-100: #d6e0e8;    /* texto claro sobre o asfalto */
+  --asfalto-500: #5b6b7a;
+  --asfalto-300: #a6b3bf;
+  --asfalto-200: #c4cfd9;    /* texto claro sobre o asfalto-900: 10,4:1 */
+  --asfalto-100: #d6e0e8;
+  --asfalto-50: #eef2f6;
 
   /* Âmbar: ponto de atenção */
-  --ambar-500: #e8a317;      /* só marcadores, bordas e faixa de rua: 2,2:1 no branco, NUNCA cor de texto */
-  --alerta: #a35a06;         /* texto e borda de atenção: 5,2:1 no branco */
+  --ambar-500: #e8a317;      /* só marcadores, bordas, selo sobre escuro e faixa de rua: 2,2:1 no branco, NUNCA texto sobre claro */
+  --ambar-200: #f7d999;
   --ambar-100: #fdf2dc;
+  --alerta: #a35a06;         /* texto e borda de atenção: 5,2:1 no branco, 4,7:1 sobre o âmbar-100; branco sobre ele: 5,2:1 */
 
   /* Perigo: só emergência e erro */
-  --perigo: #b42318;         /* texto branco: 6,6:1 */
+  --perigo: #b42318;         /* texto branco: 6,6:1; sobre o perigo-100: 5,8:1 */
+  --perigo-800: #912018;
+  --perigo-200: #f6c4bf;
   --perigo-100: #fdecea;
 
-  /* Tipografia */
-  --fonte: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  /* ---------- Papéis (use estes nas telas) ---------- */
+  --texto: #17212b;          /* sobre o fundo: 14,9:1 */
+  --texto-suave: #4b5966;    /* sobre o fundo: 6,6:1; sobre branco: 7,2:1 */
+  --texto-inverso: #ffffff;
+  --fundo: #f2f5f8;
+  --superficie: #ffffff;
+  --superficie-2: #f7f9fb;   /* área rebaixada dentro de um cartão */
+  --superficie-3: #edf1f5;   /* trilhos, barras de progresso, chips neutros */
+  --borda: #d5dce3;
+  --borda-sutil: #e5eaef;
+  --borda-forte: #788694;    /* contorno de campos: 3,7:1 no branco (WCAG 1.4.11) */
+  --foco: #a35a06;           /* anel de foco: âmbar escuro, visível em claro e em verde */
+  --marca: var(--petroleo-700);
+  --marca-texto: var(--petroleo-900);
 
-  /* Escala tipográfica */
+  /* ---------- Tipografia ---------- */
+  --fonte: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --fonte-codigo: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --texto-xs: 0.75rem;
   --texto-sm: 0.875rem;
   --texto-md: 1rem;
   --texto-lg: 1.25rem;
   --texto-xl: 1.75rem;
+  --texto-2xl: clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem);
+  --peso-normal: 400;
+  --peso-medio: 550;
+  --peso-forte: 700;
+  --peso-destaque: 800;
+  --entrelinha-titulo: 1.2;
 
-  /* Layout */
-  --largura-app: 40rem;
-  --altura-nav: 4rem;
-  --alvo-min: 2.75rem;    /* alvo de toque mínimo (~44 px) */
+  /* ---------- Layout ---------- */
+  --largura-app: 72rem;      /* área útil no computador */
+  --largura-texto: 44rem;    /* formulários e leitura */
+  --altura-nav: 4.25rem;     /* barra inferior no celular */
+  --alvo-min: 2.75rem;       /* alvo de toque mínimo (~44 px) */
+  --margem-tela: clamp(1rem, 0.6rem + 1.6vw, 2rem);
 
-  /* Espaçamento, raios, sombra */
+  /* ---------- Espaçamento (base 4 px) ---------- */
+  --espaco-05: 0.25rem;
   --espaco-1: 0.5rem;
+  --espaco-15: 0.75rem;
   --espaco-2: 1rem;
   --espaco-3: 1.5rem;
   --espaco-4: 2rem;
+  --espaco-5: 3rem;
+
+  /* ---------- Raios ---------- */
+  --raio-sm: 0.5rem;
   --raio: 0.75rem;
-  --sombra: 0 1px 3px rgb(0 0 0 / 0.12);
+  --raio-lg: 1rem;
+  --raio-xl: 1.25rem;
+  --raio-pilula: 999px;
+
+  /* ---------- Elevação: luz vinda de cima, sombra curta e nítida + sombra longa e difusa ---------- */
+  --sombra-cor: 21 32 43;    /* asfalto, em RGB, para sombras naturais (nunca preto puro) */
+  --sombra-1: 0 1px 2px rgb(var(--sombra-cor) / 0.06), 0 1px 3px rgb(var(--sombra-cor) / 0.05);
+  --sombra-2: 0 1px 2px rgb(var(--sombra-cor) / 0.05), 0 4px 14px -4px rgb(var(--sombra-cor) / 0.12);
+  --sombra-3: 0 2px 4px rgb(var(--sombra-cor) / 0.05), 0 14px 32px -8px rgb(var(--sombra-cor) / 0.18);
+  --sombra-4: 0 4px 10px rgb(var(--sombra-cor) / 0.08), 0 28px 64px -16px rgb(var(--sombra-cor) / 0.35);
+  --sombra: var(--sombra-2); /* compatibilidade com a Etapa 9 */
+  /* Realce: reflexo discreto na borda de cima das superfícies (dá volume sem efeito 3D) */
+  --realce: inset 0 1px 0 rgb(255 255 255 / 0.85);
+  --realce-escuro: inset 0 1px 0 rgb(255 255 255 / 0.14);
+  --realce-botao: inset 0 1px 0 rgb(255 255 255 / 0.18), inset 0 -1px 0 rgb(0 0 0 / 0.12);
+
+  /* Gradientes da marca (usados com moderação: botão principal, topo e destaque do Início) */
+  --gradiente-marca: linear-gradient(180deg, var(--petroleo-600) 0%, var(--petroleo-700) 55%, var(--petroleo-800) 100%);
+  --gradiente-asfalto: linear-gradient(180deg, var(--asfalto-800) 0%, var(--asfalto-900) 100%);
+  --gradiente-perigo: linear-gradient(180deg, #c62a1e 0%, var(--perigo) 60%, var(--perigo-800) 100%);
+  --gradiente-superficie: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+
+  /* ---------- Movimento (desligado para quem pede menos movimento: base.css) ---------- */
+  --duracao-1: 120ms;
+  --duracao-2: 200ms;
+  --duracao-3: 320ms;
+  --curva: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --curva-saida: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ---------- Camadas de empilhamento ---------- */
+  --z-faixa: 10;
+  --z-nav: 20;
+  --z-topo: 30;
+  --z-painel: 40;            /* painéis e menus que abrem do topo (ex.: futuro centro de notificações) */
+  --z-modal: 50;
 }

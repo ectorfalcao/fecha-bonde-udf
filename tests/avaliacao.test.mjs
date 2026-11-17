@@ -107,11 +107,11 @@ test("Caronas: avaliação pendente com botão; depois de avaliar vira 'Feita'",
   salvar("sessao", "u1");
   let t = telaMinhasCaronas();
   assert.match(textoDe(t), /Avaliação⚠ 1 pendente\(s\)/);
-  assert.equal(botao(t, "⭐ Avaliar").getAttribute("href"), "#/avaliacao?carona=c1");
+  assert.equal(botao(t, "Avaliar").getAttribute("href"), "#/avaliacao?carona=c1");
   avaliar({ caronaId: "c1", avaliadorId: "u1", avaliadoId: "u2", nota: 5 });
   t = telaMinhasCaronas();
   assert.match(textoDe(t), /Avaliação✔ Feita/);
-  assert.equal(botao(t, "⭐ Avaliar"), null);
+  assert.equal(botao(t, "Avaliar"), null);
   semLixo(t);
 });
 test("cartão da busca mostra a média do motorista, ou 'sem avaliações'", () => {
